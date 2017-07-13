@@ -45,3 +45,4 @@ application/logs/*
 !application/logs/.htaccess
 /vendor/
 >>>>>>> fe84cef579b643e24856037c1afdf5bbaebd0638
+application/controllers/Login.php
