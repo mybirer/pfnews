@@ -8,8 +8,25 @@ class Home extends MY_Controller {
         parent::__construct();
     }
 
+
     public function index()
     {
-        echo "ok  thats good!";
+        $data = array();
+        # Set Layout
+//        $this->template->set_layout('frontend_layout');
+        $this->template->title('Welcome to CodeIgniter');
+        $this->template->set_partial('header', 'partials/header');
+        $this->template->set_partial('footer', 'partials/footer');
+        $this->template->build('home', $data);
+    }
+    public function login()
+    {
+        $data = array();
+        # Set Layout
+        $this->template->set_layout('frontend_layout');
+        $this->template->title('Login page CodeIgniter');
+        $this->template->set_partial('header', 'partials/header');
+        $this->template->set_partial('footer', 'partials/footer');
+        $this->template->build('login', $data);
     }
 }

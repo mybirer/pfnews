@@ -1,0 +1,11 @@
+h1.dashboard-title {
+    text-align: center;
+    font-size: 45pt;
+    font-weight: bold;
+    padding: 50px;
+}
+
+.dashboard-slogan {
+    text-align: center;
+    font-size: 18pt;
+}

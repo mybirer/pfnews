@@ -1,0 +1,1 @@
+nbane limon yapma adamın ahsabını bozma
