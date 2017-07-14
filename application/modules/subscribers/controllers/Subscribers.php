@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Dashboard extends BE_Controller {
+class Subscribers extends BE_Controller {
 
     public function __construct()
     {
@@ -11,8 +11,11 @@ class Dashboard extends BE_Controller {
     public function index()
     {
         $data = array();
+        # Set Layout
+        $this->load->model('subscribers_model','modeli');
+        $result = $this->modeli->get($data);
 
         $this->template->title('Printf News');
-        $this->template->build('Dashboard', $data);
+        $this->template->build('Subscribers', $data);
     }
 }
