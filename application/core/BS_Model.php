@@ -6,8 +6,8 @@
  * Time: 15:39
  */
     class BS_Model extends CI_Model{
-        private $table_name;
-        
+        protected $table_name;
+
         public function __construct($table_name)
         {
             parent::__construct();
