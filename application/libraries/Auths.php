@@ -65,6 +65,27 @@ class Auths {
         // No users were found
         return TRUE;
     }
+
+    /**
+     * Check whether the username is unique
+     *
+     * @access	public
+     * @param	string [$username] The username to query
+     * @return	boolean
+     */
+    public function username_exist($username)
+    {
+        // Read users where username matches
+        $query = $this->ci->db->where($this->username_field, $username)->get($this->user_table);
+        // If there are users
+        if ($query->num_rows() > 0)
+        {
+            // Username is not available
+            return TRUE;
+        }
+        // No users were found
+        return FALSE;
+    }
     /**
      * Generate a salt
      *

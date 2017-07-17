@@ -1,0 +1,77 @@
+h1.dashboard-title {
+    text-align: center;
+    font-size: 45pt;
+    font-weight: bold;
+    padding: 50px;
+}
+
+.dashboard-slogan {
+    text-align: center;
+    font-size: 18pt;
+}
+
+.box-toolbox::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.box-toolbox .search-form {
+    max-width: 200px;
+}
+
+.box-toolbox {margin-top: 10px;}
+
+
+td.edit-link a {width: 100%;display: block;padding: 10px;}
+
+td.edit-link {
+    background-color: #ffe4c4;
+    padding: 0 !important;
+}
+
+ul.ui-autocomplete.ui-widget-content {
+    z-index: 1100;
+    max-width: 450px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    list-style: none;
+    padding: 0;
+    /* display: block !important; */
+    background-color: #fff;
+}
+
+ul.ui-autocomplete.ui-widget-content .ui-menu-item {
+    padding: 10px;
+    list-style: none;
+}
+
+ul.ui-autocomplete.ui-widget-content .ui-menu-item.ui-state-focus {
+    background-color: #ddd;
+}
+
+ul.sub-list-vertical {
+    width:100%;
+    margin: 0;
+}
+ul.sub-list-vertical li {
+    float: left;
+    padding: 0;
+    margin-right: 29px;
+}
+
+ul.sub-list-vertical::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+ul.sub-list-vertical .checkbox {
+    margin: 0;
+}
+.bg-white {
+    background-color: #fff;
+}
+.cursor-pointer{
+    cursor: pointer;
+}

@@ -14,6 +14,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/packages/adminlte/css/AdminLTE.min.css');?>">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/packages/adminlte/css/skins/_all-skins.min.css');?>">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/backend_styles.css');?>">
+        <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/style.css');?>">
         <script type="text/javascript" src="<?php echo base_url('assets/js/jquery-3.2.1.min.js');?>"></script>
 
         <!--[if lt IE 9]>

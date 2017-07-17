@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 09, 2017 at 11:19 AM
+-- Generation Time: Jul 17, 2017 at 01:20 PM
 -- Server version: 5.7.14
--- PHP Version: 5.6.25
+-- PHP Version: 7.0.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -25,28 +25,91 @@ USE `pf_news`;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pf_adverts`
+--
+
+DROP TABLE IF EXISTS `pf_adverts`;
+CREATE TABLE IF NOT EXISTS `pf_adverts` (
+  `pkadvert` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `location` varchar(30) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `start_date` timestamp NULL DEFAULT NULL,
+  `finish_date` timestamp NULL DEFAULT NULL,
+  `embed` text,
+  `image` varchar(255) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `click` int(11) NOT NULL DEFAULT '0',
+  `view` int(11) NOT NULL DEFAULT '0',
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pkadvert`),
+  KEY `location` (`location`),
+  KEY `created_by` (`created_by`),
+  KEY `active` (`active`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `pf_adverts`
+--
+
+INSERT INTO `pf_adverts` (`pkadvert`, `name`, `description`, `location`, `created_at`, `created_by`, `start_date`, `finish_date`, `embed`, `image`, `link`, `click`, `view`, `active`) VALUES
+(2, 'name', 'description', 'location', '2017-07-13 15:09:40', 1, NULL, NULL, NULL, NULL, NULL, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `pf_articles`
 --
 
 DROP TABLE IF EXISTS `pf_articles`;
-CREATE TABLE `pf_articles` (
-  `pkarticle` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_articles` (
+  `pkarticle` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `summary` varchar(255) NOT NULL,
-  `content` text NOT NULL,
-  `category_id` int(11) NOT NULL,
+  `summary` text,
+  `content` longtext NOT NULL,
+  `category_id` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
-  `updated_by` int(11) NOT NULL,
-  `publish_date` timestamp NOT NULL,
-  `image` varchar(255) NOT NULL,
-  `thumbnail` varchar(255) NOT NULL,
-  `author` varchar(255) NOT NULL,
-  `showed` int(11) NOT NULL,
-  `allow_comments` tinyint(1) NOT NULL,
-  `comments` int(11) NOT NULL,
-  `state` varchar(30) NOT NULL
+  `updated_by` int(11) DEFAULT NULL,
+  `publish_date` timestamp NULL DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `thumbnail` varchar(255) DEFAULT NULL,
+  `author` varchar(255) DEFAULT NULL,
+  `view` int(11) NOT NULL DEFAULT '0',
+  `allow_comments` tinyint(1) NOT NULL DEFAULT '0',
+  `comments` int(11) NOT NULL DEFAULT '0',
+  `state` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`pkarticle`),
+  KEY `fk_category` (`category_id`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pf_bulletins`
+--
+
+DROP TABLE IF EXISTS `pf_bulletins`;
+CREATE TABLE IF NOT EXISTS `pf_bulletins` (
+  `pkbulletin` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `content` text,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `news` text NOT NULL,
+  `publish_date` timestamp NULL DEFAULT NULL,
+  `state` varchar(30) DEFAULT NULL,
+  `params` text,
+  PRIMARY KEY (`pkbulletin`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -56,18 +119,21 @@ CREATE TABLE `pf_articles` (
 --
 
 DROP TABLE IF EXISTS `pf_categories`;
-CREATE TABLE `pf_categories` (
-  `pkcategory` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_categories` (
+  `pkcategory` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL COMMENT 'Kategorinin görünen ismi',
+  `name` varchar(255) NOT NULL COMMENT 'Kategorinin kısaltma ismi.(unique)',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
-  `parent_id` int(11) NOT NULL,
-  `order_number` int(11) NOT NULL,
-  `top_menu` tinyint(1) NOT NULL,
-  `type` varchar(25) NOT NULL,
-  `params` text NOT NULL
+  `parent_id` int(11) DEFAULT NULL,
+  `order_number` int(11) DEFAULT NULL COMMENT 'Kategorinin görüntülenme sırası',
+  `top_menu` tinyint(1) DEFAULT NULL COMMENT 'Bu kategori menüde yer alacak mı',
+  `type` varchar(25) NOT NULL COMMENT 'article,news,video,gallery',
+  `params` text,
+  PRIMARY KEY (`pkcategory`),
+  KEY `created_by` (`created_by`),
+  KEY `parent_category` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -77,23 +143,34 @@ CREATE TABLE `pf_categories` (
 --
 
 DROP TABLE IF EXISTS `pf_comments`;
-CREATE TABLE `pf_comments` (
-  `pkcomment` int(11) NOT NULL,
-  `fullname` varchar(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_comments` (
+  `pkcomment` int(11) NOT NULL AUTO_INCREMENT,
+  `fullname` varchar(50) DEFAULT NULL,
   `email` varchar(50) NOT NULL,
   `content` text NOT NULL,
-  `object_id` int(11) NOT NULL,
-  `module_name` varchar(20) NOT NULL,
-  `ip` varchar(16) NOT NULL,
+  `object_id` int(11) NOT NULL COMMENT 'news_id,article_id',
+  `module_name` varchar(20) NOT NULL COMMENT 'page,news,article',
+  `ip` varchar(50) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `subscriber_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `parent_id` int(11) NOT NULL,
-  `likes` int(11) NOT NULL,
-  `dislikes` int(11) NOT NULL,
-  `state` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `subscriber_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `likes` int(11) NOT NULL DEFAULT '0',
+  `dislikes` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) NOT NULL DEFAULT '1' COMMENT '1- beklemede; 2- Onaylandı; 3-çöp',
+  PRIMARY KEY (`pkcomment`),
+  KEY `fk_subscriber` (`subscriber_id`),
+  KEY `fk_user` (`user_id`),
+  KEY `fk_parent_comment` (`parent_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `pf_comments`
+--
+
+INSERT INTO `pf_comments` (`pkcomment`, `fullname`, `email`, `content`, `object_id`, `module_name`, `ip`, `created_at`, `updated_at`, `subscriber_id`, `user_id`, `parent_id`, `likes`, `dislikes`, `status`) VALUES
+(2, 'Muhammed Yusuf ERDEn', 'cwyusef@gmail.com', 'teşekkürler teşekkürler teşekkürler teşekkürler teşekkürler teşekkürler teşekkürler .', 22, 'news', '127.0.0.1', '2017-07-16 11:14:48', '2017-07-16 11:14:48', NULL, NULL, NULL, 0, 0, 3);
 
 -- --------------------------------------------------------
 
@@ -102,14 +179,16 @@ CREATE TABLE `pf_comments` (
 --
 
 DROP TABLE IF EXISTS `pf_forms`;
-CREATE TABLE `pf_forms` (
-  `pkform` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_forms` (
+  `pkform` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `description` text NOT NULL,
+  `description` text,
   `content` longtext NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
-  `params` text NOT NULL
+  `params` text,
+  PRIMARY KEY (`pkform`),
+  KEY `created_by` (`created_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -119,25 +198,30 @@ CREATE TABLE `pf_forms` (
 --
 
 DROP TABLE IF EXISTS `pf_galleries`;
-CREATE TABLE `pf_galleries` (
-  `pkgallery` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_galleries` (
+  `pkgallery` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `content` text NOT NULL,
+  `content` text,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
-  `publish_date` timestamp NOT NULL,
-  `category_id` int(11) NOT NULL,
+  `publish_date` timestamp NULL DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
   `thumbnail` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
-  `order_number` int(11) NOT NULL,
-  `showed` int(11) NOT NULL,
+  `order_number` int(11) DEFAULT NULL,
+  `view` int(11) NOT NULL DEFAULT '0',
   `allow_comments` tinyint(1) NOT NULL DEFAULT '1',
-  `comments` int(11) NOT NULL,
-  `state` varchar(30) NOT NULL,
+  `comments` int(11) NOT NULL DEFAULT '0',
+  `state` varchar(30) DEFAULT NULL,
   `news_id` int(11) DEFAULT NULL,
   `video_id` int(11) DEFAULT NULL,
-  `params` text NOT NULL
+  `params` text,
+  PRIMARY KEY (`pkgallery`),
+  KEY `created_by` (`created_by`),
+  KEY `fk_category` (`category_id`),
+  KEY `fk_news` (`news_id`),
+  KEY `fk_video` (`video_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -147,20 +231,41 @@ CREATE TABLE `pf_galleries` (
 --
 
 DROP TABLE IF EXISTS `pf_gallery_images`;
-CREATE TABLE `pf_gallery_images` (
-  `pkgalleryimage` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_gallery_images` (
+  `pkgalleryimage` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `description` text NOT NULL,
+  `description` text,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
   `gallery_id` int(11) NOT NULL,
   `thumbnail` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
-  `order_number` int(11) NOT NULL,
-  `showed` int(11) NOT NULL,
-  `likes` int(11) NOT NULL,
-  `dislikes` int(11) NOT NULL
+  `order_number` int(11) DEFAULT NULL,
+  `view` int(11) NOT NULL DEFAULT '0',
+  `likes` int(11) NOT NULL DEFAULT '0',
+  `dislikes` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pkgalleryimage`),
+  KEY `created_by` (`created_by`),
+  KEY `fk_gallery` (`gallery_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pf_likes`
+--
+
+DROP TABLE IF EXISTS `pf_likes`;
+CREATE TABLE IF NOT EXISTS `pf_likes` (
+  `pklike` int(11) NOT NULL AUTO_INCREMENT,
+  `object_id` int(11) NOT NULL,
+  `likes` int(11) DEFAULT NULL,
+  `dislikes` int(11) DEFAULT NULL,
+  `module` varchar(20) NOT NULL COMMENT 'resim,yorum',
+  `ip` varchar(50) DEFAULT NULL,
+  `session_id` varchar(40) NOT NULL,
+  PRIMARY KEY (`pklike`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -170,15 +275,19 @@ CREATE TABLE `pf_gallery_images` (
 --
 
 DROP TABLE IF EXISTS `pf_logs`;
-CREATE TABLE `pf_logs` (
-  `pklog` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_logs` (
+  `pklog` int(11) NOT NULL AUTO_INCREMENT,
   `module_name` varchar(255) NOT NULL,
   `action` varchar(255) NOT NULL,
-  `description` varchar(5000) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `created_by` int(11) NOT NULL,
-  `usertype` int(11) NOT NULL COMMENT 'Bu log bir user tarafından mı oluşturuldu yoksa subscriber tarafından mı oluşturuldu. Yani created_by ı ayırt etmeye yarıyor',
-  `ip` varchar(16) NOT NULL
+  `description` varchar(5000) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_id` int(11) DEFAULT NULL,
+  `subscriber_id` int(11) DEFAULT NULL,
+  `session_id` varchar(40) DEFAULT NULL,
+  `ip` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`pklog`),
+  KEY `user_id` (`user_id`),
+  KEY `subscriber_id` (`subscriber_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -188,30 +297,33 @@ CREATE TABLE `pf_logs` (
 --
 
 DROP TABLE IF EXISTS `pf_modules`;
-CREATE TABLE `pf_modules` (
-  `pkmodule` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `pf_modules` (
+  `pkmodule` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  PRIMARY KEY (`pkmodule`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `pf_modules`
 --
 
-INSERT INTO `pf_modules` (`pkmodule`, `name`) VALUES
-(1, 'Sayfa'),
-(2, 'Haber'),
-(3, 'Galeri'),
-(4, 'Video Galeri'),
-(5, 'Makale'),
-(6, 'Köşe Yazısı'),
-(7, 'Kullanıcılar'),
-(8, 'Bülten'),
-(9, 'SEO'),
-(10, 'Anket'),
-(11, 'Reklam'),
-(12, 'Mesaj'),
-(13, 'Yorum'),
-(14, 'Sistem Logları');
+INSERT INTO `pf_modules` (`pkmodule`, `name`, `title`) VALUES
+(1, 'sayfa', 'Sayfa'),
+(2, 'metinhaber', 'Metin Haber'),
+(3, 'fotogaleri', 'Foto Galeri'),
+(4, 'videogaleri', 'Video Galeri'),
+(5, 'makale', 'Makale'),
+(7, 'kullanici', 'Kullanıcı'),
+(8, 'bulten', 'Bülten'),
+(9, 'seo', 'SEO'),
+(10, 'anket', 'Anket'),
+(11, 'reklam', 'Reklam'),
+(12, 'mesaj', 'Mesaj'),
+(13, 'yorum', 'Yorum'),
+(14, 'log', 'Log'),
+(15, 'istatistik', 'İstatistik Raporlama'),
+(16, 'sosyal', 'Sosyal Medya');
 
 -- --------------------------------------------------------
 
@@ -220,41 +332,48 @@ INSERT INTO `pf_modules` (`pkmodule`, `name`) VALUES
 --
 
 DROP TABLE IF EXISTS `pf_news`;
-CREATE TABLE `pf_news` (
-  `pknews` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_news` (
+  `pknews` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `summary` text NOT NULL,
+  `summary` text,
   `content` longtext NOT NULL,
-  `category_id` int(11) NOT NULL,
+  `category_id` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
-  `updated_by` int(11) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
   `thumbnail` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
   `featured_image` varchar(255) NOT NULL,
-  `state` varchar(30) NOT NULL,
-  `confirmed` tinyint(1) NOT NULL,
-  `confirmed_by` int(11) NOT NULL,
-  `allow_comments` tinyint(1) NOT NULL,
-  `comments` int(11) NOT NULL,
-  `showed` int(11) NOT NULL,
+  `state` varchar(30) DEFAULT NULL,
+  `confirmed` tinyint(1) NOT NULL DEFAULT '0',
+  `confirmed_by` int(11) DEFAULT NULL,
+  `allow_comments` tinyint(1) NOT NULL DEFAULT '0',
+  `comments` int(11) NOT NULL DEFAULT '0',
+  `view` int(11) NOT NULL DEFAULT '0',
   `gallery_id` int(11) DEFAULT NULL,
   `video_id` int(11) DEFAULT NULL,
-  `video` varchar(500) NOT NULL,
-  `editor` varchar(255) NOT NULL,
-  `params` text NOT NULL,
-  `devmanset` tinyint(1) NOT NULL,
-  `manset` tinyint(1) NOT NULL,
-  `manset2` tinyint(1) NOT NULL,
-  `mansetyani` tinyint(1) NOT NULL,
-  `mansetalti` tinyint(1) NOT NULL,
-  `gundem` tinyint(1) NOT NULL,
-  `sondakika` tinyint(1) NOT NULL,
-  `flash` tinyint(1) NOT NULL,
-  `spot` tinyint(1) NOT NULL,
-  `special` tinyint(1) NOT NULL,
-  `source` varchar(255) NOT NULL
+  `video` varchar(500) DEFAULT NULL,
+  `editor` varchar(255) DEFAULT NULL,
+  `params` text,
+  `devmanset` tinyint(1) NOT NULL DEFAULT '0',
+  `manset` tinyint(1) NOT NULL DEFAULT '0',
+  `manset2` tinyint(1) NOT NULL DEFAULT '0',
+  `mansetyani` tinyint(1) NOT NULL DEFAULT '0',
+  `mansetalti` tinyint(1) NOT NULL DEFAULT '0',
+  `gundem` tinyint(1) NOT NULL DEFAULT '0',
+  `sondakika` tinyint(1) NOT NULL DEFAULT '0',
+  `flash` tinyint(1) NOT NULL DEFAULT '0',
+  `spot` tinyint(1) NOT NULL DEFAULT '0',
+  `special` tinyint(1) NOT NULL DEFAULT '0',
+  `source` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`pknews`),
+  UNIQUE KEY `updated_by` (`updated_by`),
+  KEY `created_by` (`created_by`),
+  KEY `confirmed_by` (`confirmed_by`),
+  KEY `fkcategory` (`category_id`),
+  KEY `fk_gallery` (`gallery_id`),
+  KEY `fk_video` (`video_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -264,11 +383,46 @@ CREATE TABLE `pf_news` (
 --
 
 DROP TABLE IF EXISTS `pf_news_tag_map`;
-CREATE TABLE `pf_news_tag_map` (
-  `pkntm` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_news_tag_map` (
+  `pkntm` int(11) NOT NULL AUTO_INCREMENT,
   `news_id` int(11) NOT NULL,
-  `tag_id` int(11) NOT NULL
+  `tag_id` int(11) NOT NULL,
+  PRIMARY KEY (`pkntm`),
+  KEY `news_id` (`news_id`),
+  KEY `tag_id` (`tag_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pf_pages`
+--
+
+DROP TABLE IF EXISTS `pf_pages`;
+CREATE TABLE IF NOT EXISTS `pf_pages` (
+  `pkpage` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `summary` text,
+  `content` longtext NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by` int(11) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `publish_date` timestamp NULL DEFAULT NULL,
+  `allow_comments` tinyint(1) NOT NULL DEFAULT '0',
+  `comments` int(11) NOT NULL DEFAULT '0',
+  `state` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`pkpage`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `pf_pages`
+--
+
+INSERT INTO `pf_pages` (`pkpage`, `title`, `summary`, `content`, `created_at`, `updated_at`, `created_by`, `updated_by`, `publish_date`, `allow_comments`, `comments`, `state`) VALUES
+(2, 'İletişim', NULL, 'İletişim bilgilerimize aşağıdaki adresten ulaşabilirsiniz.', '2017-07-17 09:37:20', '2017-07-17 09:37:20', 1, NULL, NULL, 0, 0, 'published');
 
 -- --------------------------------------------------------
 
@@ -277,21 +431,33 @@ CREATE TABLE `pf_news_tag_map` (
 --
 
 DROP TABLE IF EXISTS `pf_subscribers`;
-CREATE TABLE `pf_subscribers` (
-  `pksubscriber` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `surname` varchar(100) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `country` varchar(100) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_subscribers` (
+  `pksubscriber` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
   `email` varchar(50) NOT NULL,
-  `username` varchar(255) NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
-  `last_visit` timestamp NOT NULL,
+  `last_visit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ip` varchar(16) NOT NULL,
+  `ip` varchar(50) DEFAULT NULL,
   `banned` tinyint(1) NOT NULL DEFAULT '0',
-  `ban_message` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `ban_message` varchar(255) DEFAULT NULL,
+  `banned_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`pksubscriber`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `username` (`username`),
+  KEY `banned_by` (`banned_by`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `pf_subscribers`
+--
+
+INSERT INTO `pf_subscribers` (`pksubscriber`, `name`, `city`, `country`, `email`, `username`, `password`, `last_visit`, `created_at`, `ip`, `banned`, `ban_message`, `banned_by`) VALUES
+(2, NULL, NULL, NULL, 'nane', NULL, '$2a$16$m6F3.jE3SvhOSWWdqsfp0uvW0.XuHD6bKjLyfHOAKYXRPQxSLoTZS', '2017-07-16 21:11:25', '2017-07-16 21:11:25', NULL, 0, NULL, NULL),
+(3, NULL, NULL, NULL, 'cwyusef@gmail.com', NULL, '$2a$16$rpGoyabsh94opz0iFY05ZOKIXc9daq6Mza7o7TkVh7mNWeQm.Zsp.', '2017-07-17 07:33:17', '2017-07-17 07:33:17', NULL, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -300,15 +466,18 @@ CREATE TABLE `pf_subscribers` (
 --
 
 DROP TABLE IF EXISTS `pf_surveys`;
-CREATE TABLE `pf_surveys` (
-  `pksurvey` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_surveys` (
+  `pksurvey` int(11) NOT NULL AUTO_INCREMENT,
   `question` text NOT NULL,
   `options` text NOT NULL,
   `status` varchar(20) NOT NULL,
-  `created_at` timestamp NOT NULL,
-  `updated_at` timestamp NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
-  `updated_by` int(11) NOT NULL
+  `updated_by` int(11) DEFAULT NULL,
+  PRIMARY KEY (`pksurvey`),
+  KEY `created_by` (`created_by`),
+  KEY `updated_by` (`updated_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -318,13 +487,15 @@ CREATE TABLE `pf_surveys` (
 --
 
 DROP TABLE IF EXISTS `pf_survey_votes`;
-CREATE TABLE `pf_survey_votes` (
-  `pksurveyvote` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_survey_votes` (
+  `pksurveyvote` int(11) NOT NULL AUTO_INCREMENT,
   `survey_id` int(11) NOT NULL,
   `options` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ip` varchar(16) NOT NULL,
-  `islogged` tinyint(1) NOT NULL
+  `ip` varchar(50) DEFAULT NULL,
+  `session_id` varchar(40) NOT NULL,
+  PRIMARY KEY (`pksurveyvote`),
+  KEY `survey_id` (`survey_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -334,9 +505,10 @@ CREATE TABLE `pf_survey_votes` (
 --
 
 DROP TABLE IF EXISTS `pf_tags`;
-CREATE TABLE `pf_tags` (
-  `pktag` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
+CREATE TABLE IF NOT EXISTS `pf_tags` (
+  `pktag` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`pktag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -346,38 +518,58 @@ CREATE TABLE `pf_tags` (
 --
 
 DROP TABLE IF EXISTS `pf_users`;
-CREATE TABLE `pf_users` (
-  `pkuser` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_users` (
+  `pkuser` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(40) NOT NULL,
-  `fullname` varchar(255) NOT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
   `password` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `image` varchar(255) NOT NULL,
-  `thumbnail` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `thumbnail` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) DEFAULT NULL,
-  `order_number` int(11) NOT NULL,
-  `state` varchar(30) NOT NULL,
+  `order_number` int(11) DEFAULT NULL,
+  `state` varchar(30) DEFAULT NULL,
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
-  `persistent` tinyint(1) NOT NULL DEFAULT '0',
-  `params` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `user_type` int(11) DEFAULT NULL,
+  `params` text,
+  PRIMARY KEY (`pkuser`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `username` (`username`),
+  KEY `created_by` (`created_by`),
+  KEY `user_type` (`user_type`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `pf_users`
+--
+
+INSERT INTO `pf_users` (`pkuser`, `username`, `fullname`, `password`, `email`, `image`, `thumbnail`, `created_at`, `updated_at`, `created_by`, `order_number`, `state`, `hidden`, `user_type`, `params`) VALUES
+(1, 'yusuf', NULL, '123', 'cwyusef@gmail.com', NULL, NULL, '2017-07-13 15:09:31', '2017-07-13 15:09:31', NULL, NULL, NULL, 0, 1, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pf_user_viewlevels`
+-- Table structure for table `pf_user_types`
 --
 
-DROP TABLE IF EXISTS `pf_user_viewlevels`;
-CREATE TABLE `pf_user_viewlevels` (
-  `pkuserviewlevel` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `view_levels` varchar(5000) NOT NULL COMMENT 'The view levels that the Admin has'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `pf_user_types`;
+CREATE TABLE IF NOT EXISTS `pf_user_types` (
+  `pkusertype` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(40) NOT NULL COMMENT 'Public title',
+  `modules` text NOT NULL COMMENT 'JSON encoded module privileges',
+  PRIMARY KEY (`pkusertype`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `pf_user_types`
+--
+
+INSERT INTO `pf_user_types` (`pkusertype`, `title`, `modules`) VALUES
+(1, 'Editör', '{\n          metinhaber  :["add","edit","remove","list","confirm"],\n          fotogaleri  :["add","edit","remove","list","confirm"],\n          videogaleri :["add","edit","remove","list","confirm"]\n      }'),
+(2, 'Muhabir', '{\n          metinhaber :["add"],\n          fotogaleri :["add"],\n          videogaleri :["add"]\n      }'),
+(3, 'Yönetici', '{\n    sayfa       :["add","edit","remove","list","confirm"],\n    metinhaber  :["add","edit","remove","list","confirm"],\n    fotogaleri  :["add","edit","remove","list","confirm"],\n    videogaleri :["add","edit","remove","list","confirm"],\n    makale      :["add","edit","remove","list","confirm"],\n    kullanici   :["add","edit","remove","list","confirm"],\n    bulten      :["add","edit","remove","list","confirm"],\n    seo         :["add","edit","remove","list","confirm"],\n    anket       :["add","edit","remove","list","confirm"],\n    reklam      :["add","edit","remove","list","confirm"],\n    mesaj       :["add","edit","remove","list","confirm"],\n    yorum       :["add","edit","remove","list","confirm"],\n    log         :["add","edit","remove","list","confirm"],\n    istatistik  :["add","edit","remove","list","confirm"]\n}');
 
 -- --------------------------------------------------------
 
@@ -386,295 +578,43 @@ CREATE TABLE `pf_user_viewlevels` (
 --
 
 DROP TABLE IF EXISTS `pf_videos`;
-CREATE TABLE `pf_videos` (
-  `pkvideo` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `pf_videos` (
+  `pkvideo` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `embed` text NOT NULL,
-  `content` text NOT NULL,
+  `content` text,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
-  `publish_date` timestamp NOT NULL,
-  `category_id` int(11) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `publish_date` timestamp NULL DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
   `thumbnail` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
-  `watched` int(11) NOT NULL,
-  `allow_comments` tinyint(1) NOT NULL,
-  `comments` int(11) NOT NULL,
-  `state` varchar(30) NOT NULL,
+  `view` int(11) NOT NULL DEFAULT '0',
+  `allow_comments` tinyint(1) NOT NULL DEFAULT '0',
+  `comments` int(11) NOT NULL DEFAULT '0',
+  `state` varchar(30) DEFAULT NULL,
   `news_id` int(11) DEFAULT NULL,
   `gallery_id` int(11) DEFAULT NULL,
-  `params` text NOT NULL
+  `params` text,
+  PRIMARY KEY (`pkvideo`),
+  UNIQUE KEY `updated_by` (`updated_by`),
+  KEY `created_by` (`created_by`),
+  KEY `fk_category` (`category_id`),
+  KEY `fk_news` (`news_id`),
+  KEY `fk_gallery` (`gallery_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `pf_view_levels`
---
-
-DROP TABLE IF EXISTS `pf_view_levels`;
-CREATE TABLE `pf_view_levels` (
-  `pkviewlevels` int(11) NOT NULL,
-  `title` varchar(40) NOT NULL COMMENT 'Public title',
-  `view_level_key` varchar(30) NOT NULL COMMENT 'Unique key',
-  `modules` text NOT NULL COMMENT 'JSON encoded module privileges'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `pf_view_levels`
---
-
-INSERT INTO `pf_view_levels` (`pkviewlevels`, `title`, `view_level_key`, `modules`) VALUES
-(1, 'Editör', 'editor', '{\n          2:["add","edit","remove","list","confirm"],\n          3:["add","edit","remove","list","confirm"],\n          4:["add","edit","remove","list","confirm"]\n      }'),
-(2, 'Muhabir', 'muhabir', '{\n          2:["add"],\n          3:["add"],\n          4:["add"]\n      }'),
-(3, 'Yönetici', 'yonetici', '{\n    1:["add","edit","remove","list","confirm"],\n    2:["add","edit","remove","list","confirm"],\n    3:["add","edit","remove","list","confirm"],\n    4:["add","edit","remove","list","confirm"],\n    5:["add","edit","remove","list","confirm"],\n    6:["add","edit","remove","list","confirm"],\n    7:["add","edit","remove","list","confirm"],\n    8:["add","edit","remove","list","confirm"],\n    9:["add","edit","remove","list","confirm"],\n    10:["add","edit","remove","list","confirm"],\n    11:["add","edit","remove","list","confirm"],\n    12:["add","edit","remove","list","confirm"],\n    13:["add","edit","remove","list","confirm"],\n    14:["add","edit","remove","list","confirm"]\n}');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `pf_articles`
---
-ALTER TABLE `pf_articles`
-  ADD PRIMARY KEY (`pkarticle`),
-  ADD KEY `fk_category` (`category_id`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `updated_by` (`updated_by`) USING BTREE;
-
---
--- Indexes for table `pf_categories`
---
-ALTER TABLE `pf_categories`
-  ADD PRIMARY KEY (`pkcategory`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `parent_category` (`parent_id`);
-
---
--- Indexes for table `pf_comments`
---
-ALTER TABLE `pf_comments`
-  ADD PRIMARY KEY (`pkcomment`),
-  ADD KEY `fk_subscriber` (`subscriber_id`),
-  ADD KEY `fk_user` (`user_id`),
-  ADD KEY `fk_parent_comment` (`parent_id`);
-
---
--- Indexes for table `pf_forms`
---
-ALTER TABLE `pf_forms`
-  ADD PRIMARY KEY (`pkform`),
-  ADD KEY `created_by` (`created_by`);
-
---
--- Indexes for table `pf_galleries`
---
-ALTER TABLE `pf_galleries`
-  ADD PRIMARY KEY (`pkgallery`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `fk_category` (`category_id`),
-  ADD KEY `fk_news` (`news_id`),
-  ADD KEY `fk_video` (`video_id`);
-
---
--- Indexes for table `pf_gallery_images`
---
-ALTER TABLE `pf_gallery_images`
-  ADD PRIMARY KEY (`pkgalleryimage`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `fk_gallery` (`gallery_id`);
-
---
--- Indexes for table `pf_logs`
---
-ALTER TABLE `pf_logs`
-  ADD PRIMARY KEY (`pklog`);
-
---
--- Indexes for table `pf_modules`
---
-ALTER TABLE `pf_modules`
-  ADD PRIMARY KEY (`pkmodule`);
-
---
--- Indexes for table `pf_news`
---
-ALTER TABLE `pf_news`
-  ADD PRIMARY KEY (`pknews`),
-  ADD UNIQUE KEY `updated_by` (`updated_by`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `confirmed_by` (`confirmed_by`),
-  ADD KEY `fkcategory` (`category_id`),
-  ADD KEY `fk_gallery` (`gallery_id`),
-  ADD KEY `fk_video` (`video_id`);
-
---
--- Indexes for table `pf_news_tag_map`
---
-ALTER TABLE `pf_news_tag_map`
-  ADD PRIMARY KEY (`pkntm`),
-  ADD KEY `news_id` (`news_id`),
-  ADD KEY `tag_id` (`tag_id`);
-
---
--- Indexes for table `pf_subscribers`
---
-ALTER TABLE `pf_subscribers`
-  ADD PRIMARY KEY (`pksubscriber`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `username` (`username`);
-
---
--- Indexes for table `pf_surveys`
---
-ALTER TABLE `pf_surveys`
-  ADD PRIMARY KEY (`pksurvey`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `updated_by` (`updated_by`);
-
---
--- Indexes for table `pf_survey_votes`
---
-ALTER TABLE `pf_survey_votes`
-  ADD PRIMARY KEY (`pksurveyvote`),
-  ADD KEY `survey_id` (`survey_id`);
-
---
--- Indexes for table `pf_tags`
---
-ALTER TABLE `pf_tags`
-  ADD PRIMARY KEY (`pktag`);
-
---
--- Indexes for table `pf_users`
---
-ALTER TABLE `pf_users`
-  ADD PRIMARY KEY (`pkuser`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD KEY `created_by` (`created_by`);
-
---
--- Indexes for table `pf_user_viewlevels`
---
-ALTER TABLE `pf_user_viewlevels`
-  ADD PRIMARY KEY (`pkuserviewlevel`),
-  ADD KEY `fk_user` (`user_id`);
-
---
--- Indexes for table `pf_videos`
---
-ALTER TABLE `pf_videos`
-  ADD PRIMARY KEY (`pkvideo`),
-  ADD KEY `created_by` (`created_by`),
-  ADD KEY `fk_category` (`category_id`),
-  ADD KEY `fk_news` (`news_id`),
-  ADD KEY `fk_gallery` (`gallery_id`);
-
---
--- Indexes for table `pf_view_levels`
---
-ALTER TABLE `pf_view_levels`
-  ADD PRIMARY KEY (`pkviewlevels`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `pf_articles`
---
-ALTER TABLE `pf_articles`
-  MODIFY `pkarticle` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_categories`
---
-ALTER TABLE `pf_categories`
-  MODIFY `pkcategory` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_comments`
---
-ALTER TABLE `pf_comments`
-  MODIFY `pkcomment` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_forms`
---
-ALTER TABLE `pf_forms`
-  MODIFY `pkform` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_galleries`
---
-ALTER TABLE `pf_galleries`
-  MODIFY `pkgallery` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_gallery_images`
---
-ALTER TABLE `pf_gallery_images`
-  MODIFY `pkgalleryimage` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_logs`
---
-ALTER TABLE `pf_logs`
-  MODIFY `pklog` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_modules`
---
-ALTER TABLE `pf_modules`
-  MODIFY `pkmodule` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
---
--- AUTO_INCREMENT for table `pf_news`
---
-ALTER TABLE `pf_news`
-  MODIFY `pknews` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_news_tag_map`
---
-ALTER TABLE `pf_news_tag_map`
-  MODIFY `pkntm` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_subscribers`
---
-ALTER TABLE `pf_subscribers`
-  MODIFY `pksubscriber` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_surveys`
---
-ALTER TABLE `pf_surveys`
-  MODIFY `pksurvey` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_survey_votes`
---
-ALTER TABLE `pf_survey_votes`
-  MODIFY `pksurveyvote` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_tags`
---
-ALTER TABLE `pf_tags`
-  MODIFY `pktag` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_users`
---
-ALTER TABLE `pf_users`
-  MODIFY `pkuser` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_user_viewlevels`
---
-ALTER TABLE `pf_user_viewlevels`
-  MODIFY `pkuserviewlevel` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_videos`
---
-ALTER TABLE `pf_videos`
-  MODIFY `pkvideo` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `pf_view_levels`
---
-ALTER TABLE `pf_view_levels`
-  MODIFY `pkviewlevels` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `pf_adverts`
+--
+ALTER TABLE `pf_adverts`
+  ADD CONSTRAINT `adverts_created_by` FOREIGN KEY (`created_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pf_articles`
@@ -683,6 +623,13 @@ ALTER TABLE `pf_articles`
   ADD CONSTRAINT `article_category_ibfk` FOREIGN KEY (`category_id`) REFERENCES `pf_categories` (`pkcategory`) ON UPDATE CASCADE,
   ADD CONSTRAINT `article_created_by_ibfk` FOREIGN KEY (`created_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `article_updated_by_ibfk` FOREIGN KEY (`updated_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pf_bulletins`
+--
+ALTER TABLE `pf_bulletins`
+  ADD CONSTRAINT `bulletin_created_by_ibfk` FOREIGN KEY (`created_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `bulletin_updated_by_ibfk` FOREIGN KEY (`updated_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pf_categories`
@@ -722,6 +669,13 @@ ALTER TABLE `pf_gallery_images`
   ADD CONSTRAINT `gimages_fk_gallery_ibfk` FOREIGN KEY (`gallery_id`) REFERENCES `pf_galleries` (`pkgallery`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `pf_logs`
+--
+ALTER TABLE `pf_logs`
+  ADD CONSTRAINT `log_subscriber_ibfk` FOREIGN KEY (`subscriber_id`) REFERENCES `pf_subscribers` (`pksubscriber`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `log_user_ibfk` FOREIGN KEY (`user_id`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
 -- Constraints for table `pf_news`
 --
 ALTER TABLE `pf_news`
@@ -736,7 +690,21 @@ ALTER TABLE `pf_news`
 -- Constraints for table `pf_news_tag_map`
 --
 ALTER TABLE `pf_news_tag_map`
-  ADD CONSTRAINT `news_tag_news_id` FOREIGN KEY (`news_id`) REFERENCES `pf_news` (`pknews`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `news_tag_news_id` FOREIGN KEY (`news_id`) REFERENCES `pf_news` (`pknews`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `news_tag_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `pf_tags` (`pktag`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pf_pages`
+--
+ALTER TABLE `pf_pages`
+  ADD CONSTRAINT `pages_created_by_ibfk` FOREIGN KEY (`created_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `pages_updated_by_ibfk` FOREIGN KEY (`updated_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pf_subscribers`
+--
+ALTER TABLE `pf_subscribers`
+  ADD CONSTRAINT `subscriber_banned_by_ibfk` FOREIGN KEY (`banned_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pf_surveys`
@@ -746,16 +714,17 @@ ALTER TABLE `pf_surveys`
   ADD CONSTRAINT `survey_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
+-- Constraints for table `pf_survey_votes`
+--
+ALTER TABLE `pf_survey_votes`
+  ADD CONSTRAINT `survey_votes_survey_id` FOREIGN KEY (`survey_id`) REFERENCES `pf_surveys` (`pksurvey`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `pf_users`
 --
 ALTER TABLE `pf_users`
-  ADD CONSTRAINT `users_created_by_ibfk` FOREIGN KEY (`created_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
---
--- Constraints for table `pf_user_viewlevels`
---
-ALTER TABLE `pf_user_viewlevels`
-  ADD CONSTRAINT `user_viewlevel_fkuser` FOREIGN KEY (`user_id`) REFERENCES `pf_users` (`pkuser`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `users_created_by_ibfk` FOREIGN KEY (`created_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `users_user_type_ibfk` FOREIGN KEY (`user_type`) REFERENCES `pf_user_types` (`pkusertype`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `pf_videos`
@@ -764,7 +733,8 @@ ALTER TABLE `pf_videos`
   ADD CONSTRAINT `videos_created_by` FOREIGN KEY (`created_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `videos_fk_category` FOREIGN KEY (`category_id`) REFERENCES `pf_categories` (`pkcategory`) ON UPDATE CASCADE,
   ADD CONSTRAINT `videos_fk_gallery` FOREIGN KEY (`gallery_id`) REFERENCES `pf_galleries` (`pkgallery`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `videos_fk_news` FOREIGN KEY (`news_id`) REFERENCES `pf_news` (`pknews`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `videos_fk_news` FOREIGN KEY (`news_id`) REFERENCES `pf_news` (`pknews`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `videos_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

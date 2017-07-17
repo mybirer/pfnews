@@ -83,3 +83,27 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+
+/*
+|--------------------------------------------------------------------------
+| Custom Errors
+|--------------------------------------------------------------------------
+|
+| These errors are used when working with some io operations or etc..
+|
+*/
+defined('ERR_NONE')                           OR define('ERR_NONE', 0);
+defined('ERR_INVALID_EMAIL')                  OR define('ERR_INVALID_EMAIL', 1);
+defined('ERR_INVALID_PASSWORD')               OR define('ERR_INVALID_PASSWORD', 2);
+/*
+|--------------------------------------------------------------------------
+| Custom Responses
+|--------------------------------------------------------------------------
+|
+| These responses are used when working with some methods and operations
+|
+*/
+defined('EMAIL_AVAILABLE')                    OR define('EMAIL_AVAILABLE', 3);
+defined('EMAIL_NOT_AVAILABLE')                OR define('EMAIL_NOT_AVAILABLE', 4);
+
+defined('SESSION_TIMEOUT')                    OR define('SESSION_TIMEOUT', 3600);

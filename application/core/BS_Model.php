@@ -14,6 +14,19 @@
             $this->table_name=$table_name;
         }
 
+        public function select($columns = array(), $where = array())
+        {
+            $query = '';
+            foreach ($columns as $column)
+                $query = $query.$column;
+
+            return $this->ci->db
+                        ->select($query)
+                        ->where($where)
+                        ->get($this->user_table)
+                        ->result();
+        }
+
         public function get($where = array()){
             $result = $this->db
                 ->where($where)

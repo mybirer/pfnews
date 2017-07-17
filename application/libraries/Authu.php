@@ -23,8 +23,12 @@ class Authu {
      */
     private $user_table;
     private $identifier_field;
-    private $username_field;
+    private $email_field;
     private $password_field;
+    private $session_fields;
+    private $user_view_levels;
+    private $view_levels;
+
     /**
      * Constructor
      */
@@ -38,32 +42,33 @@ class Authu {
         // Set config items
         $this->user_table = $authentication_config['user_table'];
         $this->identifier_field = $authentication_config['identifier_field'];
-        $this->username_field = $authentication_config['username_field'];
+        $this->email_field = $authentication_config['email_field'];
         $this->password_field = $authentication_config['password_field'];
+        $this->session_fields = $authentication_config['session_fields'];
         // Load database
         $this->ci->load->database();
         // Load libraries
         $this->ci->load->library('session');
     }
     /**
-     * Check whether the username is unique
+     * Check whether the email is unique
      *
      * @access	public
      * @param	string [$username] The username to query
      * @return	boolean
      */
-    public function username_check($username)
+    public function email_check($email)
     {
-        // Read users where username matches
-        $query = $this->ci->db->where($this->username_field, $username)->get($this->user_table);
+        // Read users where email matches
+        $query = $this->ci->db->where($this->email_field, $email)->get($this->user_table);
         // If there are users
         if ($query->num_rows() > 0)
         {
-            // Username is not available
-            return FALSE;
+            // Email is not available
+            return EMAIL_NOT_AVAILABLE;
         }
         // No users were found
-        return TRUE;
+        return EMAIL_AVAILABLE;
     }
     /**
      * Generate a salt
@@ -98,16 +103,16 @@ class Authu {
      * Create user
      *
      * @access	public
-     * @param	string [$username] The username of the user to be created
+     * @param	string [$email] The email of the user to be created
      * @param	string [$password] The users password
      * @return	integer|boolean Either the user ID or FALSEupon failure
      */
-    public function create_user($username, $password)
+    public function create_user($email, $password)
     {
-        // Ensure username is available
-        if ( ! $this->username_check($username))
+        // Ensure email is available
+        if ( ! $this->email_check($email))
         {
-            // Username is not available
+            // Email is not available
             return FALSE;
         }
         // Generate salt
@@ -116,7 +121,7 @@ class Authu {
         $password = $this->generate_hash($password, $salt);
         // Define data to insert
         $data = array(
-            $this->username_field => $username,
+            $this->email_field => $email,
             $this->password_field => $password
         );
         // If inserting data fails
@@ -132,16 +137,21 @@ class Authu {
      * Login
      *
      * @access	public
-     * @param	string [$username] The username of the user to authenticate
+     * @param	string [$email] The email of the user to authenticate
      * @param	string [$password] The password to authenticate
      * @return	boolean Either TRUE or FALSE depending upon successful login
      */
-    public function login($username, $password)
+    public function login($email, $password)
     {
+        $query = $this->identifier_field.' as identifier, '.$this->email_field.' as email, '.$this->password_field.' as password';
+
+        foreach (array_keys($this->session_fields) as $db_key)
+            $query = $query.', '.$db_key;
+
         // Select user details
         $user = $this->ci->db
-            ->select($this->identifier_field.' as identifier, '.$this->username_field.' as username, '.$this->password_field.' as password')
-            ->where($this->username_field, $username)
+            ->select($query)
+            ->where($this->email_field, $email)
             ->get($this->user_table);
         // Ensure there is a user with that username
         if ($user->num_rows() == 0)
@@ -150,17 +160,24 @@ class Authu {
             return FALSE;
         }
         // Set the user details
-        $user_details = $user->row();
+        $user_details = $user->row_array();
         // Do passwords match
-        if ($this->generate_hash($password, $user_details->password) == $user_details->password)
+        if ($this->generate_hash($password, $user_details['password']) == $user_details['password'])
         {
             // Yes, the passwords match
             // Set the userdata for the current user
-            $this->ci->session->set_userdata(array(
-                'identifier' => $user_details->identifier,
-                'username' => $user_details->username,
-                'logged_in' => $_SERVER['REQUEST_TIME']
-            ));
+            $ses_data = array(
+                'user_id' => $user_details['identifier'],
+                'email' => $user_details['email'],
+                'logged_in' => $_SERVER['REQUEST_TIME'],
+                'last_visit' => time()
+            );
+
+            foreach ($this->session_fields as $db_name => &$ses_name)
+            {
+                $ses_data[$ses_name] = $user_details[$db_name];
+            }
+            $this->ci->session->set_userdata($ses_data);
             return TRUE;
             // The passwords don't match
         } else {
@@ -176,8 +193,13 @@ class Authu {
      */
     public function is_loggedin()
     {
-        // Return true or flase based on the presence of user data
-        return (bool) $this->ci->session->userdata('identifier');
+        $current = time();
+        if ($current-$this->read('last_visit')>SESSION_TIMEOUT){
+            $this->logout();
+            return FALSE;
+        }
+        $this->ci->session->set_userdata('last_visit',$current);
+        return TRUE;
     }
     /**
      * Read user details
@@ -187,38 +209,7 @@ class Authu {
      */
     public function read($key)
     {
-        // Only allow us to read certain data
-        switch ($key)
-        {
-            case 'identifier': {
-                // If the user is not logged in return false
-                if ( ! $this->is_loggedin()) return false;
-                // Return user identifier
-                return (int) $this->ci->session->userdata('identifier');
-                break;
-            }
-            case 'username': {
-                // If the user is not logged in return false
-                if ( ! $this->is_loggedin()) return false;
-                // Return username
-                return (string) $this->ci->session->userdata('username');
-                break;
-            }
-            case 'login': {
-                // If the user is not logged in return false
-                if ( ! $this->is_loggedin()) return false;
-                // Return time the user logged in at
-                return (int) $this->ci->session->userdata('logged_in');
-                break;
-            }
-            case 'logout': {
-                // Return time the user logged out at
-                return (int) $this->ci->session->userdata('logged_out');
-                break;
-            }
-        }
-        // If nothing has been returned yet
-        return false;
+        return $this->ci->session->userdata($key);
     }
     /**
      * Change password
@@ -237,7 +228,7 @@ class Authu {
             if ($this->is_loggedin())
             {
                 // Read the user identifier
-                $user_identifier = $this->ci->session->userdata('identifier');
+                $user_identifier = $this->ci->session->userdata('user_id');
                 // There is no current logged in user
             } else {
                 return FALSE;
@@ -269,13 +260,12 @@ class Authu {
     public function logout()
     {
         // Remove userdata
-        $this->ci->session->unset_userdata('identifier');
-        $this->ci->session->unset_userdata('username');
+        $this->ci->session->unset_userdata('user_id');
+        $this->ci->session->unset_userdata('email');
         $this->ci->session->unset_userdata('logged_in');
-        // Set logged out userdata
-        $this->ci->session->set_userdata(array(
-            'logged_out' => $_SERVER['REQUEST_TIME']
-        ));
+        $this->ci->session->unset_userdata('last_visit');
+        foreach (array_values($this->session_fields) as $ses_name)
+            $this->ci->session->unset_userdata($ses_name);
         // Return true
         return TRUE;
     }
@@ -297,6 +287,23 @@ class Authu {
             return FALSE;
         }
     }
+
+    public function has_access($module, $action)
+    {
+        if(!isset($user_view_levels))
+            $user_view_levels = $this->ci->musers->select('view_levels',array('pkuser' => $this->read('user_id')));
+        if (empty($user_view_levels))
+            return FALSE;
+        $this->ci->load->model('viewlevels_model','mviewlevels');
+
+        if(!isset($view_levels)){
+            $view_levels_list = $this->ci->mviewlevels->where_in('pkviewlevels',$user_view_levels[0]->view_levels);
+
+        }
+
+
+    }
+
 }
 /* End of file Authu.php */
 /* Location: ./application/libraries/Authu.php */

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends BE_Controller {
+class Home extends FE_Controller {
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ class Home extends BE_Controller {
 
     public function isloggedin()
     {
-        $this->load->library('Auths');
+
         if ($this->auths->is_loggedin())
             echo 'logged_in';
         else
@@ -31,14 +31,30 @@ class Home extends BE_Controller {
 
     public function login()
     {
-        $email = $this->input->get('email');
-        $password = $this->input->get('password');
+        if ($this->auths->is_loggedin()){
+            //giriş yapılmış ise
+            redirect('/index');
+        }else{
+            //giriş yapılammış ise
 
-        $this->load->library('Auths');
-        if ($this->auths->login($email,$password))
-            echo 'logged in';
-        else
-            echo 'error';
+            $this->form_validation->set_rules('email','Email','trim|required|valid_email|callback_mail_exist');
+            $this->form_validation->set_rules('password','Password','trim|required|min_length[5]|max_length[12]');
+
+            //form gönderilmiş ise çalıştır.
+            if ($this->form_validation->run($this)){
+                $email = trim($this->input->post('email'));
+                $password = trim($this->input->post('password'));
+                if ($this->auths->login($email,$password)){
+                    redirect('/index');
+                }
+                else{
+                    echo 'login error';
+                }
+            }else{
+                $this->template->title('PfNews - Login');
+                $this->template->build('login',array());
+            }
+        }
     }
 
     public function logout()
@@ -58,4 +74,13 @@ class Home extends BE_Controller {
         echo 'User: '.$user_id;
     }
 
+    public function mail_exist($email){
+        //bu email in sistemde olup olmadığını denetler.
+        if ($this->auths->username_exist($email)){
+            return TRUE;
+        }else{
+            $this->form_validation->set_message('mail_exist', 'Deneme');
+            return FALSE;
+        }
+    }
 }

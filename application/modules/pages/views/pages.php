@@ -5,13 +5,13 @@
     </h1>
     <ol class="breadcrumb">
         <li><i class="fa fa-dashboard"></i> Ana Panel</li>
-        <li><i class="fa fa-dashboard active"></i> Aboneler</li>
+        <li><i class="fa fa-dashboard active"></i> Pages</li>
     </ol>
 </section>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <div class="box">
+            <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title">All Pages</h3>
                     <div class="box-toolbox">
@@ -23,7 +23,7 @@
                                 </div>
                             </div>
                         </form>
-                        <a href="index.php?controller=module&action=&do=add" class="btn btn-success pull-right">
+                        <a href="pages/add" class="btn btn-success pull-right">
                             <i class="fa fa-plus"></i>New Page
                         </a>
                     </div>
@@ -33,14 +33,29 @@
                         <thead >
                             <tr>
                                 <th style="width:60px;">#</th>
-                                <th>Author</th>
                                 <th>Title</th>
+                                <th>Summary</th>
                                 <th>Status</th>
-                                <th>Post Date</th>
+                                <th>Created At</th>
+                                <th>Allow Comments</th>
                                 <th>Comments</th>
                                 <th>ID</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            <?php foreach ($pages as $page){?>
+                                <tr>
+                                    <td>#</td>
+                                    <td><?php echo $page->title;?></td>
+                                    <td><?php echo $page->summary;?></td>
+                                    <td><?php echo $page->state;?></td>
+                                    <td><?php echo $page->created_at;?></td>
+                                    <td><?php echo $page->allow_comments;?></td>
+                                    <td><?php echo $page->comments;?></td>
+                                    <td><?php echo $page->pkpage;?></td>
+                                </tr>
+                            <?php }?>
+                        </tbody>
                     </table>
                 </div>
                 <div class="box-footer">

@@ -21,17 +21,14 @@ class Comments extends BE_Controller
         $status = $this->input->get('status');
         $status = strtolower($status);
 
-        if (!in_array($status,array('all','approved','moderated','trash')))
-            $status = 'all';
+        if (!in_array($status,array('approved','moderated','trash')))
+            $status = 'moderated';
 
-        $data['all_count'] = $this->mcomments->get_total();
         $data['approved_count'] = $this->mcomments->get_total(array('status' => comments_model::$APPROVED));
         $data['moderated_count'] = $this->mcomments->get_total(array('status' => comments_model::$MODERATED));
         $data['trash_count'] = $this->mcomments->get_total(array('status' => comments_model::$TRASH));
 
-        if ($status == 'all')
-            $data['comments'] = $this->mcomments->get_all();
-        else if ($status == 'approved')
+        if ($status == 'approved')
             $data['comments'] = $this->mcomments->get_all(array('status' => comments_model::$APPROVED));
         else if ($status == 'moderated')
             $data['comments'] = $this->mcomments->get_all(array('status' => comments_model::$MODERATED));
