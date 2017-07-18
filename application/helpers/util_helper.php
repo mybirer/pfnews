@@ -1,20 +1,53 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-/**
- * File to hold utility functions used in the application
- * @author: Mohboob Chowdhury
- * @url: http://mosrur.com
- **/
-if(!function_exists('assets_url')) {
-    /**
-     * @param string $path
-     * @return string
-     */
-    function assets_url($path = '') {
-        $return_url = base_url() . 'assets/';
-        if(strlen($path) > 0) {
-            $return_url .= $path;
-        }
-        return $return_url;
+
+if ( ! function_exists('has_error'))
+{
+    function has_error($field_name){
+        $error = form_error($field_name,'<p class="text-danger">','</p>');
+        if ($error)
+            return TRUE;
+        else
+            return FALSE;
+    }
+}
+
+if ( ! function_exists('print_error'))
+{
+    function ger_error($field_name){
+        return form_error($field_name,'<p class="text-danger">','</p>');
+    }
+}
+
+if ( ! function_exists('send_message'))
+{
+    function send_message($message_id,$message = array()){
+        $ci = &get_instance();
+        $ci->session->set_flashdata($message_id,$message);
+    }
+}
+
+if ( ! function_exists('get_message'))
+{
+    function get_message($message_id){
+        $ci = &get_instance();
+        return $ci->session->flashdata($message_id);
+    }
+}
+
+if ( ! function_exists('has_message'))
+{
+    function has_message($message_id){
+        $ci = &get_instance();
+        return !empty($ci->session->flashdata($message_id));
+    }
+}
+
+if ( ! function_exists('is_post_request'))
+{
+    function is_post_request(){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST')
+            return true;
+        return false;
     }
 }

@@ -14,6 +14,7 @@
         <code>application/controllers/Welcome.php</code>
 
         <p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
+        <p><?php echo $this->auth->is_logged('fe') ? 'You are logged in at front end':'Not logged in';?></p>
     </div>
 
 </div>

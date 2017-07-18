@@ -3,10 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2017 at 01:20 PM
+-- Generation Time: Jul 18, 2017 at 02:40 PM
 -- Server version: 5.7.14
 -- PHP Version: 7.0.10
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -405,24 +406,28 @@ CREATE TABLE IF NOT EXISTS `pf_pages` (
   `summary` text,
   `content` longtext NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `created_by` int(11) NOT NULL,
   `updated_by` int(11) DEFAULT NULL,
   `publish_date` timestamp NULL DEFAULT NULL,
   `allow_comments` tinyint(1) NOT NULL DEFAULT '0',
   `comments` int(11) NOT NULL DEFAULT '0',
-  `state` varchar(30) DEFAULT NULL,
+  `status` varchar(30) NOT NULL DEFAULT 'draft',
   PRIMARY KEY (`pkpage`),
   KEY `created_by` (`created_by`),
   KEY `updated_by` (`updated_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `pf_pages`
 --
 
-INSERT INTO `pf_pages` (`pkpage`, `title`, `summary`, `content`, `created_at`, `updated_at`, `created_by`, `updated_by`, `publish_date`, `allow_comments`, `comments`, `state`) VALUES
-(2, 'İletişim', NULL, 'İletişim bilgilerimize aşağıdaki adresten ulaşabilirsiniz.', '2017-07-17 09:37:20', '2017-07-17 09:37:20', 1, NULL, NULL, 0, 0, 'published');
+INSERT INTO `pf_pages` (`pkpage`, `title`, `summary`, `content`, `created_at`, `updated_at`, `created_by`, `updated_by`, `publish_date`, `allow_comments`, `comments`, `status`) VALUES
+(2, 'Sayfa Başlık Sayfa Başlık Sayfa Başlık Sayfa Başlık Sayfa Başlık', NULL, 'İletişim bilgilerimize aşağıdaki adresten ulaşabilirsiniz.s sad asd asd&nbsp;', '2017-07-17 09:37:20', '2017-07-18 14:20:47', 1, 1, NULL, 0, 0, 'published'),
+(5, 'Son dakika! Meteoroloji\'den İstanbul için yeni uyarı', NULL, '<p>\r\n\r\n</p><p><a target="_blank" rel="nofollow" href="http://www.sabah.com.tr/haberleri/istanbul">İstanbul</a>\'da gece saatlerinden itibaren etkili olan gök gürültü kuvvetli sağanak, başta trafik olmak üzere yaşamı olumsuz etkiledi.</p><p>İstanbul Valiliği, sosyal medya hesabında, "Bugün ilimiz yoğun yağış aldığından ulaşımda sıkıntı yaşanmaması için zorunlu olmadıkça özel araçlarla trafiğe çıkılmaması rica olunur." uyarısında bulundu.</p><p><strong>YAĞIŞ, 15.00\'DEN SONRA AZALACAK</strong></p><p>Öte yandan gelen <a target="_blank" rel="nofollow" href="http://www.sabah.com.tr/haberleri/son-dakika">son dakika</a>&nbsp;bilgisine göre, <a target="_blank" rel="nofollow" href="http://www.sabah.com.tr/haberleri/meteoroloji-genel-mudurlugu">Meteoroloji Genel Müdürlüğü</a>, İstanbul\'da yağışın saat 15.00\'dan itibaren etkisini azaltacağını açıkladı.</p><p>Meteoroloji Genel Müdürlüğü, Trakya ve İstanbul\'daki sağanağın saat 15.00\'ten sonra etkisinin azalmasının beklendiğini duyurdu.</p><p>Meteoroloji Genel Müdürlüğü, sosyal medya hesabından, "Meteorolojik Değerlendirme 1" başlığıyla duyuru yaptı.</p>\r\n\r\n\r\n\r\n<p>Marmara Bölgesi\'nde devam eden kuvvetli ve gök gürültülü sağanak yağışın saat 15.00\'ten sonra Trakya ve İstanbul\'da etkisini azaltmasının beklendiği vurgulanan açıklamada, şöyle denildi:</p><p>"Ancak yağışlı sistemin Marmara\'nın doğusuna hareket ederek Kocaeli, Sakarya, Düzce, Zonguldak ve Bartın\'ın özellikle kıyı kesimlerinde yarın öğle saatlerine kadar şiddetli (75-100 kg/m2) sağanak ve gök gürültülü sağanak yağışlara sebep olması beklenmektedir. Saat 11.00 itibarıyla son 6 saatte, Silivri\'de 128, Üsküdar\'da 108, Beykoz\'da 85, Sarıyer\'de 78, Çatalca\'da 55, Kırklareli/Vize\'de 45, Eyüp\'te 44, Güngören\'de 44, Çekmeköy\' de 39 ve Kadıköy\'de 35 kg yağış kaydedilmiştir."</p><p><strong>SON 32 YILIN EN BÜYÜĞÜ</strong></p><p>Temmuz ayının tamamında ortalama 32,5 kg yağış alan İstanbul\'da sadece bugün, hem de günün ilk yarısında rekor miktarda yağmur yağdı.</p>\r\n\r\n\r\n\r\n<p><strong>1 GÜNDE, TEMMUZ AYI ORTALAMASININ ÇOK ÜSTÜNDE</strong></p><p>Neredeyse İstanbul\'un tamamına düşen yağış, Temmuz ayı ortalamasını çok geride bıraktı.</p><p><strong>32 YILIN EN YAĞMURLU GÜNÜ</strong></p><p>İstanbul\'da 1985 yılı Ekim ayının 16\'ncı günü, 125.5 kg\'lık yağışla, tüm zamanların "en yağışlı" günüydü. Ancak bugün yağan yağmur, üstelik bir yaz ayında yağan yağmur bu miktarı geride bıraktı. DHA\'nin meteorolojik ölçüm istasyonlarından derlediği bilgilere göre günün ilk yarısında Silivri\'de metrekareye tam 128 kg. yağış düştü.</p><p><strong>TÜM İLÇELERDE REKOR YAĞIŞ</strong></p><p>İstanbul\'un diğer semtlerine de rekor yağışlar düştü, aylık ortalamayı kat be kat geride bıraktı. İşte haberin yayınlandığı sırada bazı ilçelerde metrekareye düşen yağış miktarları. Üsküdar 108 kg, Beykoz 85 kg, Sarıyer 80 kg</p>\r\n\r\n<br><p></p>', '2017-07-18 12:04:05', '2017-07-18 12:04:05', 1, NULL, NULL, 0, 0, 'draft'),
+(6, 'Son dakika! Meteoroloji\'den İstanbul için yeni uyarı', NULL, '<p>\r\n\r\n</p><p><a target="_blank" rel="nofollow" href="http://www.sabah.com.tr/haberleri/istanbul">İstanbul</a>\'da gece saatlerinden itibaren etkili olan gök gürültü kuvvetli sağanak, başta trafik olmak üzere yaşamı olumsuz etkiledi.</p><p>İstanbul Valiliği, sosyal medya hesabında, "Bugün ilimiz yoğun yağış aldığından ulaşımda sıkıntı yaşanmaması için zorunlu olmadıkça özel araçlarla trafiğe çıkılmaması rica olunur." uyarısında bulundu.</p><p><strong>YAĞIŞ, 15.00\'DEN SONRA AZALACAK</strong></p><p>Öte yandan gelen <a target="_blank" rel="nofollow" href="http://www.sabah.com.tr/haberleri/son-dakika">son dakika</a>&nbsp;bilgisine göre, <a target="_blank" rel="nofollow" href="http://www.sabah.com.tr/haberleri/meteoroloji-genel-mudurlugu">Meteoroloji Genel Müdürlüğü</a>, İstanbul\'da yağışın saat 15.00\'dan itibaren etkisini azaltacağını açıkladı.</p><p>Meteoroloji Genel Müdürlüğü, Trakya ve İstanbul\'daki sağanağın saat 15.00\'ten sonra etkisinin azalmasının beklendiğini duyurdu.</p><p>Meteoroloji Genel Müdürlüğü, sosyal medya hesabından, "Meteorolojik Değerlendirme 1" başlığıyla duyuru yaptı.</p>\r\n\r\n\r\n\r\n<p>Marmara Bölgesi\'nde devam eden kuvvetli ve gök gürültülü sağanak yağışın saat 15.00\'ten sonra Trakya ve İstanbul\'da etkisini azaltmasının beklendiği vurgulanan açıklamada, şöyle denildi:</p><p>"Ancak yağışlı sistemin Marmara\'nın doğusuna hareket ederek Kocaeli, Sakarya, Düzce, Zonguldak ve Bartın\'ın özellikle kıyı kesimlerinde yarın öğle saatlerine kadar şiddetli (75-100 kg/m2) sağanak ve gök gürültülü sağanak yağışlara sebep olması beklenmektedir. Saat 11.00 itibarıyla son 6 saatte, Silivri\'de 128, Üsküdar\'da 108, Beykoz\'da 85, Sarıyer\'de 78, Çatalca\'da 55, Kırklareli/Vize\'de 45, Eyüp\'te 44, Güngören\'de 44, Çekmeköy\' de 39 ve Kadıköy\'de 35 kg yağış kaydedilmiştir."</p><p><strong>SON 32 YILIN EN BÜYÜĞÜ</strong></p><p>Temmuz ayının tamamında ortalama 32,5 kg yağış alan İstanbul\'da sadece bugün, hem de günün ilk yarısında rekor miktarda yağmur yağdı.</p>\r\n\r\n\r\n\r\n<p><strong>1 GÜNDE, TEMMUZ AYI ORTALAMASININ ÇOK ÜSTÜNDE</strong></p><p>Neredeyse İstanbul\'un tamamına düşen yağış, Temmuz ayı ortalamasını çok geride bıraktı.</p><p><strong>32 YILIN EN YAĞMURLU GÜNÜ</strong></p><p>İstanbul\'da 1985 yılı Ekim ayının 16\'ncı günü, 125.5 kg\'lık yağışla, tüm zamanların "en yağışlı" günüydü. Ancak bugün yağan yağmur, üstelik bir yaz ayında yağan yağmur bu miktarı geride bıraktı. DHA\'nin meteorolojik ölçüm istasyonlarından derlediği bilgilere göre günün ilk yarısında Silivri\'de metrekareye tam 128 kg. yağış düştü.</p><p><strong>TÜM İLÇELERDE REKOR YAĞIŞ</strong></p><p>İstanbul\'un diğer semtlerine de rekor yağışlar düştü, aylık ortalamayı kat be kat geride bıraktı. İşte haberin yayınlandığı sırada bazı ilçelerde metrekareye düşen yağış miktarları. Üsküdar 108 kg, Beykoz 85 kg, Sarıyer 80 kg</p>\r\n\r\n<br><p></p>', '2017-07-18 12:04:55', '2017-07-18 12:04:55', 1, NULL, NULL, 0, 0, 'draft'),
+(8, 'İstanbul Boğazı\'nda şoke eden görüntü!', NULL, '<p>\r\n\r\nİstanbul dün gece başlayan ve sabah saatlerinde şiddetini arttıran yağmur, İstanbullulara zor anlar yaşattı. Yollarda biriken sular trafiğin sıkışmasına neden olurken, toplu taşımada da aksamalar meydana geldi. Şiddetli yağış nedeniyle İstanbul Boğazı\'nda denize karışan sel suyu şaşırtan görüntülere sahne oldu. Yaşanan olay nedeniyle denizin iki renk haline geldiği görülürken, köprüden geçen vatandaşlar, o anları cep telefonları ile kaydedip sosyal medya hesaplarından paylaştı. \r\n\r\n<br></p>', '2017-07-18 12:12:11', '2017-07-18 12:12:11', 1, NULL, NULL, 0, 0, 'draft'),
+(9, 'Whatsapp\'ta yeni dönem başlıyor!', NULL, '<p>\r\n\r\n</p><h2>Whatsapp\'a gelmesi sabırsızlıkla beklenen özellik sonunda kullanıcılara sunuluyor. Bakın bu kez Whatsapp\'ın kullanıcılara son sürprizi ne?</h2>\r\n\r\n<br><p></p>', '2017-07-18 12:13:40', '2017-07-18 12:13:40', 1, NULL, NULL, 0, 0, 'draft');
 
 -- --------------------------------------------------------
 
@@ -457,7 +462,7 @@ CREATE TABLE IF NOT EXISTS `pf_subscribers` (
 
 INSERT INTO `pf_subscribers` (`pksubscriber`, `name`, `city`, `country`, `email`, `username`, `password`, `last_visit`, `created_at`, `ip`, `banned`, `ban_message`, `banned_by`) VALUES
 (2, NULL, NULL, NULL, 'nane', NULL, '$2a$16$m6F3.jE3SvhOSWWdqsfp0uvW0.XuHD6bKjLyfHOAKYXRPQxSLoTZS', '2017-07-16 21:11:25', '2017-07-16 21:11:25', NULL, 0, NULL, NULL),
-(3, NULL, NULL, NULL, 'cwyusef@gmail.com', NULL, '$2a$16$rpGoyabsh94opz0iFY05ZOKIXc9daq6Mza7o7TkVh7mNWeQm.Zsp.', '2017-07-17 07:33:17', '2017-07-17 07:33:17', NULL, 0, NULL, NULL);
+(3, NULL, NULL, NULL, 'cwyusef@gmail.com', NULL, 'e10adc3949ba59abbe56e057f20f883e', '0000-00-00 00:00:00', '2017-07-17 07:33:17', NULL, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -534,6 +539,7 @@ CREATE TABLE IF NOT EXISTS `pf_users` (
   `hidden` tinyint(1) NOT NULL DEFAULT '0',
   `user_type` int(11) DEFAULT NULL,
   `params` text,
+  `last_visit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`pkuser`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`username`),
@@ -545,8 +551,8 @@ CREATE TABLE IF NOT EXISTS `pf_users` (
 -- Dumping data for table `pf_users`
 --
 
-INSERT INTO `pf_users` (`pkuser`, `username`, `fullname`, `password`, `email`, `image`, `thumbnail`, `created_at`, `updated_at`, `created_by`, `order_number`, `state`, `hidden`, `user_type`, `params`) VALUES
-(1, 'yusuf', NULL, '123', 'cwyusef@gmail.com', NULL, NULL, '2017-07-13 15:09:31', '2017-07-13 15:09:31', NULL, NULL, NULL, 0, 1, NULL);
+INSERT INTO `pf_users` (`pkuser`, `username`, `fullname`, `password`, `email`, `image`, `thumbnail`, `created_at`, `updated_at`, `created_by`, `order_number`, `state`, `hidden`, `user_type`, `params`, `last_visit`) VALUES
+(1, 'yusuf', NULL, 'e10adc3949ba59abbe56e057f20f883e', 'cwyusef@gmail.com', NULL, NULL, '2017-07-13 15:09:31', '2017-07-13 15:09:31', NULL, NULL, NULL, 0, 1, NULL, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -735,6 +741,7 @@ ALTER TABLE `pf_videos`
   ADD CONSTRAINT `videos_fk_gallery` FOREIGN KEY (`gallery_id`) REFERENCES `pf_galleries` (`pkgallery`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `videos_fk_news` FOREIGN KEY (`news_id`) REFERENCES `pf_news` (`pknews`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `videos_updated_by` FOREIGN KEY (`updated_by`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

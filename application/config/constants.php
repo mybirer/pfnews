@@ -92,9 +92,8 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 | These errors are used when working with some io operations or etc..
 |
 */
-defined('ERR_NONE')                           OR define('ERR_NONE', 0);
-defined('ERR_INVALID_EMAIL')                  OR define('ERR_INVALID_EMAIL', 1);
-defined('ERR_INVALID_PASSWORD')               OR define('ERR_INVALID_PASSWORD', 2);
+defined('SCC_LOGIN_SUCCESS')                  OR define('SCC_LOGIN_SUCCESS', 1);
+defined('ERR_LOGIN_FAILED')                  OR define('ERR_LOGIN_FAILED', 2);
 /*
 |--------------------------------------------------------------------------
 | Custom Responses
@@ -103,7 +102,7 @@ defined('ERR_INVALID_PASSWORD')               OR define('ERR_INVALID_PASSWORD', 
 | These responses are used when working with some methods and operations
 |
 */
-defined('EMAIL_AVAILABLE')                    OR define('EMAIL_AVAILABLE', 3);
-defined('EMAIL_NOT_AVAILABLE')                OR define('EMAIL_NOT_AVAILABLE', 4);
+defined('EMAIL_EXIST')                    OR define('EMAIL_EXIST', 3);
+defined('EMAIL_NOT_EXIST')                OR define('EMAIL_NOT_EXIST', 4);
 
 defined('SESSION_TIMEOUT')                    OR define('SESSION_TIMEOUT', 3600);

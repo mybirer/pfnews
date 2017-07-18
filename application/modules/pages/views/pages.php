@@ -11,6 +11,15 @@
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
+            <?php
+            $form_response = $this->session->flashdata('form_response');
+            if (!empty($form_response)){ ?>
+                <div class="alert alert-<?php echo $form_response[0]=='success'?'success':'danger';?> alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-<?php echo $form_response[0]=='success'?'fa-check':'fa-ban';?>"></i> <?php echo $form_response[0]=='success'?'Başarılı!':'Hata!';?></h4>
+                    <?php echo $form_response[1];?>
+                </div>
+            <?php } ?>
             <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title">All Pages</h3>
@@ -37,20 +46,23 @@
                                 <th>Summary</th>
                                 <th>Status</th>
                                 <th>Created At</th>
-                                <th>Allow Comments</th>
-                                <th>Comments</th>
+                                <th>Yorumlar</th>
+                                <th>Yorum Sayısı</th>
                                 <th>ID</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($pages as $page){?>
                                 <tr>
-                                    <td>#</td>
+                                    <td>
+                                        <a data-toggle="tooltip" title="" class="text-red" href="/pages/edit/<?php echo $page->pkpage;?>" data-original-title="Edit"><i class="fa fa-edit"></i></a>
+                                        <a data-toggle="tooltip" title="" class="text-blue pull-right" data-original-title="Go to Link"><i class="fa fa-external-link"></i></a>
+                                    </td>
                                     <td><?php echo $page->title;?></td>
                                     <td><?php echo $page->summary;?></td>
-                                    <td><?php echo $page->state;?></td>
+                                    <td><label class="label bg-<?php echo $page->status=='published'?'green':'yellow';?>"><?php echo $page->status == 'published'?'Yayında':'Taslak';?></label></td>
                                     <td><?php echo $page->created_at;?></td>
-                                    <td><?php echo $page->allow_comments;?></td>
+                                    <td><label class="label bg-<?php echo $page->allow_comments==0?'red':'green';?>"><?php echo $page->allow_comments==0?'Kapalı':'Açık';?></label></td>
                                     <td><?php echo $page->comments;?></td>
                                     <td><?php echo $page->pkpage;?></td>
                                 </tr>

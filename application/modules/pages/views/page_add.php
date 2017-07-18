@@ -10,18 +10,32 @@
 </section>
 <section class="content">
     <div class="row">
+        <?php echo form_open(current_url());?>
         <div class="col-xs-9">
+            <?php
+            $form_response = $this->session->flashdata('form_response');
+            if (!empty($form_response)){ ?>
+                <div class="alert alert-<?php echo $form_response[0]=='success'?'success':'danger';?> alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4><i class="icon fa fa-<?php echo $form_response[0]=='success'?'fa-check':'fa-ban';?>"></i> <?php echo $form_response[0]=='success'?'Başarılı!':'Hata!';?></h4>
+                    <?php echo $form_response[1];?>
+                </div>
+            <?php } ?>
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">New Page</h3>
                 </div>
                 <div class="box-body table-responsive">
-                    <div class="box-body pad form-group">
-                        <input id="title" name="title" class="form-control" type="text" placeholder="Title">
+                    <div class="box-body has-feedback <?php echo has_error('title')?'has-error':'';?>">
+                        <input id="title" name="title" class="form-control" type="text" placeholder="Title" value="<?php echo set_value('title');?>">
                         <p class="help-block"><b>Permalink: </b>  http://minyy.com/example-title-alias-link-here.php</p>
-                        <textarea class="text-area" id="content" name="content" placeholder="Place some text here" style="width: 100%; height: 200px; font-size: 16px; line-height: 12px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                        <?php if (has_error('title')) echo ger_error('title');?>
                     </div>
-                    <div class="box-body pad form-group">
+                    <div class="box-body has-feedback <?php echo has_error('content')?'has-error':'';?>">
+                        <textarea class="text-area" id="content" name="content" placeholder="Place some text here" style="width: 100%; height: 200px; font-size: 16px; line-height: 12px; border: 1px solid #dddddd; padding: 10px;"><?php echo set_value('content');?></textarea>
+                        <?php if (has_error('content')) echo ger_error('content');?>
+                    </div>
+                    <div class="box-body form-group">
                         <a href="index.php?controller=module&action=" class="btn btn-danger pull-right">Delete</a>
                     </div>
                 </div>
@@ -54,9 +68,11 @@
                 </div>
             </div>
         </div>
+        <?php echo form_close();?>
     </div>
 </section>
-<script src="plugins/iCheck/icheck.min.js"></script>
+<script src="<?php echo base_url('plugins/iCheck/icheck.min.js');?>"></script>
+<script src="<?php echo base_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js');?>"></script>
 <script type="text/javascript">
     $(function () {
         $("#content").wysihtml5();
