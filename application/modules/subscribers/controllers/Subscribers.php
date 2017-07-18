@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Subscribers extends BE_Controller {
+class Subscribers extends MY_Controller {
 
     public function __construct()
     {

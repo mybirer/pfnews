@@ -1,13 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends FE_Controller {
+class Home extends MY_Controller {
 
     public function __construct()
     {
         parent::__construct();
     }
-
 
     public function index()
     {
@@ -19,13 +18,5 @@ class Home extends FE_Controller {
         $this->template->set_partial('footer', 'partials/footer');
         $this->template->build('home', $data);
     }
-
-
-    public function logout()
-    {
-        $this->load->library('Auths');
-        $this->auths->logout();
-    }
-
 
 }

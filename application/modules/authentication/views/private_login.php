@@ -6,7 +6,7 @@
     <div class="login-box-body">
         <p class="login-box-msg">Sign in to start your session</p>
         
-        <?php echo form_open(base_url('/login/admin'));?>
+        <?php echo form_open(base_url('authentication/dashboard_login'));?>
             <?php $error = form_error('email','<p class="text-danger">','</p>')?>
             <div class="form-group has-feedback <?php echo $error ? 'has-error':'';?>">
                 <input type="email" class="form-control" placeholder="Email" name="email" value="<?php echo set_value('email')?>">

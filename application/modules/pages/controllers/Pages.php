@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Pages extends BE_Controller
+class Pages extends MY_Controller
 {
     public function __construct()
     {

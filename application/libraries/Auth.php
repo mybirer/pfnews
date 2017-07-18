@@ -6,11 +6,14 @@ class Auth {
 
     private $user_table;
     private $primary_key;
+    private $side;
 
     function __construct($params = array())
     {
         $this->user_table  = $params[0];
         $this->primary_key = $params[1];
+
+        $this->side = $this->user_table=='pf_users' ? 'backend_session' : 'frontend_session';
 
         $this->ci =& get_instance();
         $this->ci->load->database();
@@ -58,22 +61,21 @@ class Auth {
             return FALSE;
         }
         $user_details = $user->row_array();
-        $ses_data = array(
+        $ses_data = array($this->side => array(
             'user_id' => $user_details['user_id'],
-            'user_side' => $this->user_table=="pf_users" ? 'be' : 'fe',
             'logged_in' => time(),
             'last_visit' => time()
-        );
+        ));
         $this->ci->session->set_userdata($ses_data);
 
         //başarıyla giriş yapıldı
         return TRUE;
     }
 
-    public function is_logged($user_side)
+    public function is_logged()
     {
         $current = time();
-        if (isset($_SESSION['user_side']) && $_SESSION['user_side'] == $user_side){
+        if(array_key_exists($this->side,$_SESSION)){
             if($current-$this->read('logged_in')>SESSION_TIMEOUT){
                 $this->logout();
                 return FALSE;
@@ -87,22 +89,18 @@ class Auth {
     private function update_session()
     {
         $current = time();
-        $this->ci->session->set_userdata('last_visit',$current);
+        $_SESSION[$this->side]['last_visit']=$current;
         $this->ci->db->where(array($this->primary_key => $this->read('user_id')))->update($this->user_table,array('last_visit'=>$current));
 
     }
     public function read($key)
     {
-        return $this->ci->session->userdata($key);
+        return array_key_exists($key,$_SESSION[$this->side]) ? $_SESSION[$this->side][$key] : '';
     }
 
     public function logout()
     {
-        $this->ci->session->unset_userdata('user_id');
-        $this->ci->session->unset_userdata('logged_in');
-        $this->ci->session->unset_userdata('last_visit');
-        $this->ci->session->unset_userdata('user_side');
-        $this->ci->session->sess_destroy();
+        $this->ci->session->unset_userdata($this->side);
         return TRUE;
     }
 

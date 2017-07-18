@@ -56,15 +56,14 @@ class Modules
 	public static function run($module) 
 	{	
 		$method = 'index';
-		
 		if(($pos = strrpos($module, '/')) != FALSE) 
 		{
 			$method = substr($module, $pos + 1);		
 			$module = substr($module, 0, $pos);
 		}
 
-		if($class = self::load($module)) 
-		{	
+		if($class = self::load($module))
+		{
 			if (method_exists($class, $method))	{
 				ob_start();
 				$args = func_get_args();
@@ -74,7 +73,14 @@ class Modules
 			}
 		}
 		
-		log_message('error', "Module controller failed to run: {$module}/{$method}");
+//		log_message('error', "Module controller failed to run: {$module}/{$method}");
+        $error_message = "Module controller failed to run: {$module}/{$method}";
+
+        if (defined('ENVIRONMENT') && ENVIRONMENT == 'development') {
+            return ($error_message);
+		} else {
+            log_message('error', $error_message);
+        }
 	}
 	
 	/** Load a module controller **/

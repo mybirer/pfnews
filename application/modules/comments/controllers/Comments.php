@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Date: 15.07.2017
  * Time: 23:06
  */
-class Comments extends BE_Controller
+class Comments extends MY_Controller
 {
     public function __construct()
     {
