@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
+
 class Auth {
 
     private $ci;
@@ -7,6 +8,7 @@ class Auth {
     private $user_table;
     private $primary_key;
     private $side;
+    private $log;
 
     function __construct($params = array())
     {
@@ -18,6 +20,7 @@ class Auth {
         $this->ci =& get_instance();
         $this->ci->load->database();
         $this->ci->load->library('session');
+        $this->log = $this->ci->logs_model;
     }
 
     public function email_check($email)
@@ -31,23 +34,6 @@ class Auth {
         return EMAIL_NOT_EXIST;
     }
 
-    public function create_user($params = array())
-    {
-        if ( $this->email_check($params['email']) == EMAIL_EXIST)
-        {
-            return FALSE;
-        }
-        
-        $params['password'] = md5($params['password']);
-
-        if ( ! $this->ci->db->insert($this->user_table, $params))
-        {
-            return FALSE;
-        }
-        
-        return (int) $this->ci->db->insert_id();
-    }
-
     public function login($email, $password)
     {
         $user = $this->ci->db
@@ -58,8 +44,12 @@ class Auth {
         if ($user->num_rows() == 0)
         {
             //login başarılı değil
+
+            if ($this->side == 'backend_session')
+                $this->log->log('warning','auth','Login failed '.$email);
             return FALSE;
         }
+
         $user_details = $user->row_array();
         $ses_data = array($this->side => array(
             'user_id' => $user_details['user_id'],
@@ -69,6 +59,8 @@ class Auth {
         $this->ci->session->set_userdata($ses_data);
 
         //başarıyla giriş yapıldı
+        if ($this->side == 'backend_session')
+            $this->log->log('info','auth','Login success '.$email);
         return TRUE;
     }
 
@@ -77,6 +69,7 @@ class Auth {
         $current = time();
         if(array_key_exists($this->side,$_SESSION)){
             if($current-$this->read('logged_in')>SESSION_TIMEOUT){
+                //timeout -- autologout
                 $this->logout();
                 return FALSE;
             }

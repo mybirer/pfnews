@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ERDEN
- * Date: 14.07.2017
- * Time: 15:39
- */
     class BS_Model extends CI_Model{
         protected $table_name;
 
