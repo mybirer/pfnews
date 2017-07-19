@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2017 at 02:40 PM
+-- Generation Time: Jul 19, 2017 at 11:16 AM
 -- Server version: 5.7.14
 -- PHP Version: 7.0.10
 
@@ -278,18 +278,31 @@ CREATE TABLE IF NOT EXISTS `pf_likes` (
 DROP TABLE IF EXISTS `pf_logs`;
 CREATE TABLE IF NOT EXISTS `pf_logs` (
   `pklog` int(11) NOT NULL AUTO_INCREMENT,
-  `module_name` varchar(255) NOT NULL,
-  `action` varchar(255) NOT NULL,
-  `description` varchar(5000) DEFAULT NULL,
+  `kind` varchar(20) NOT NULL COMMENT 'error,warning,information,important',
+  `module` varchar(255) NOT NULL COMMENT 'system module names',
+  `description` varchar(500) DEFAULT NULL COMMENT 'example: user not found',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` int(11) DEFAULT NULL,
-  `subscriber_id` int(11) DEFAULT NULL,
   `session_id` varchar(40) DEFAULT NULL,
   `ip` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`pklog`),
   KEY `user_id` (`user_id`),
-  KEY `subscriber_id` (`subscriber_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `ip` (`ip`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `pf_logs`
+--
+
+INSERT INTO `pf_logs` (`pklog`, `kind`, `module`, `description`, `created_at`, `user_id`, `session_id`, `ip`) VALUES
+(1, 'info', 'auth', '', '2017-07-19 09:55:51', 1, 'hiklav0rck6m344om10ukhcj86gn1p93', ''),
+(4, 'warning', 'auth', '', '2017-07-19 09:58:54', NULL, 'asokp3mujerqaeodg4tijd8rh1q6385a', ''),
+(5, 'info', 'auth', '', '2017-07-19 09:59:19', 1, 'asokp3mujerqaeodg4tijd8rh1q6385a', ''),
+(6, 'info', 'auth', 'Logout User: 1', '2017-07-19 10:00:02', 1, 'asokp3mujerqaeodg4tijd8rh1q6385a', ''),
+(7, 'info', 'auth', 'Login success cwyusef@gmail.com', '2017-07-19 10:05:23', 1, 'bdleae1dl6hc1eg2e7ep94cfm902rd86', ''),
+(8, 'error', 'auth', 'Login failed cwyusef@gmail.com', '2017-07-19 10:28:49', NULL, 'u370rb74sfl7dlq2taibmjs7c5r160ek', ''),
+(9, 'info', 'auth', 'Login success cwyusef@gmail.com', '2017-07-19 10:29:00', 1, 'u370rb74sfl7dlq2taibmjs7c5r160ek', ''),
+(10, 'info', 'auth', 'Login success cwyusef@gmail.com', '2017-07-19 10:30:55', 1, 'u370rb74sfl7dlq2taibmjs7c5r160ek', '127.0.0.1');
 
 -- --------------------------------------------------------
 
@@ -678,7 +691,6 @@ ALTER TABLE `pf_gallery_images`
 -- Constraints for table `pf_logs`
 --
 ALTER TABLE `pf_logs`
-  ADD CONSTRAINT `log_subscriber_ibfk` FOREIGN KEY (`subscriber_id`) REFERENCES `pf_subscribers` (`pksubscriber`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `log_user_ibfk` FOREIGN KEY (`user_id`) REFERENCES `pf_users` (`pkuser`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
