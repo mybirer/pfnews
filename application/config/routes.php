@@ -53,5 +53,14 @@ $route['default_controller'] = 'home';
 $route['login'] = 'authentication/panel_login';
 $route['logout'] = 'authentication/panel_logout';
 $route['panel'] = 'dashboard/panel';
+$route['dashboard/users'] = 'users';
 $route['404_override'] = '';
+//
+//// you specific routes
+//$route['admin/(:any)'] = "admin/$1";
+//$route['search/(:any)'] = "search/$1";
+//// the catch all route
+//$route['(:any)'] = "some/default/controller/$1";
+//$route['(:any)'] = "some/default/controller/$1";
+
 $route['translate_uri_dashes'] = FALSE;

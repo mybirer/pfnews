@@ -56,6 +56,7 @@ class Auth {
             'logged_in' => time(),
             'last_visit' => time()
         ));
+
         $this->ci->session->set_userdata($ses_data);
 
         //başarıyla giriş yapıldı

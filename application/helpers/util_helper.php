@@ -52,6 +52,7 @@ if ( ! function_exists('is_post_request'))
     }
 }
 
+<<<<<<< HEAD
 if ( ! function_exists('t'))
 {
     function t($text){
@@ -61,3 +62,13 @@ if ( ! function_exists('t'))
         return $translation;
     }
 }
+=======
+if ( ! function_exists('is_route_active'))
+{
+    function is_route_active($route,$uri){
+
+        var_dump($uri);
+        die();
+    }
+}
+>>>>>>> origin/master
