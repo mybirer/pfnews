@@ -75,3 +75,31 @@ ul.sub-list-vertical .checkbox {
 .cursor-pointer{
     cursor: pointer;
 }
+
+
+#filters div.form-group {
+    margin-right: 5px;
+}
+
+.clr {
+    clear: both;
+    display: block;
+}
+
+.live-label {
+    display: block;
+}
+
+.live-label.asc::after {
+    content: " ";
+    font-family: fontAwesome;
+}
+
+.live-label.desc::after {
+    content: " ";
+    font-family: fontAwesome;
+}
+
+.table .img-circle {
+    margin-right: 5px;
+}

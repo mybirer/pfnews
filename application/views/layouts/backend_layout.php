@@ -15,7 +15,6 @@
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/packages/adminlte/css/skins/_all-skins.min.css');?>">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/backend_styles.css');?>">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/css/style.css');?>">
-        <link rel="stylesheet" href="<?php echo base_url('plugins/iCheck/flat/green.css');?>" />
         <link rel="stylesheet" href="<?php echo base_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css');?>" />
         <script type="text/javascript" src="<?php echo base_url('assets/js/jquery-3.2.1.min.js');?>"></script>
 
