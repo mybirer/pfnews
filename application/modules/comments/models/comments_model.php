@@ -12,7 +12,7 @@ class comments_model extends BS_Model
      * @var int
      * beklemede
      */
-    public static $MODERATED = 1;
+    public static $PENDING = 1;
     /**
      * @var int
      * onaylanmış
@@ -22,7 +22,7 @@ class comments_model extends BS_Model
      * @var int
      * çöp
      */
-    public static $TRASH = 3;
+    public static $REMOVED = 3;
 
     public function __construct()
     {

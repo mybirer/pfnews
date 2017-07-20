@@ -1,12 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content-header">
     <h1>
-        Abone Bilgileri
+        <?php echo t('Comments');?>
     </h1>
     <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> Ana Panel</li>
-        <li><i class="fa fa-dashboard"></i> Aboneler</li>
-        <li><i class="fa fa-dashboard active"></i> Abone Bilgileri</li>
+        <li><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></li>
+        <li><i class="fa fa-dashboard active"></i> <?php echo t('Comments');?></li>
     </ol>
 </section>
 <section class="content">
@@ -14,30 +13,30 @@
         <div class="col-md-12">
             <div class="box box-<?php if (!$result) echo 'danger'; else if ($affected_rows == 0) echo 'warning'; else echo 'success';?>">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><?php if (!$result) echo 'Hata'; else if ($affected_rows == 0) echo 'Uyarı'; else echo 'Başarılı';?></h3>
+                    <h3 class="box-title"><?php if (!$result) echo t('Error'); else if ($affected_rows == 0) echo t('Warning'); else echo t('Success');?></h3>
                 </div>
                 <div class="box-body">
                     <?php
                         if (!$result){
-                            echo 'Birşeyler yanlış gidiyor!';
+                            echo t('Something went wrong').'!';
                         }else{
                             if ($affected_rows == 0)
-                                echo 'Eylem gerçekleştirilemiyor!';
+                                echo t('This action can not be performed').'!';
                             else if ($action == 'delete' ){
-                                echo 'Yorum başarıyla silindi!';
+                                echo sprintf(t('%s deleted successfully'),t('Comment')).'!';
                             }else if ($action == 'approved'){
-                                echo 'Yorum onaylandı!';
-                            }else if ($action == 'moderated'){
-                                echo 'Yorum beklemeye alındı!';
-                            }else if ($action == 'trash'){
-                                echo 'Yorum çöp\'e alındı!';
+                                echo t('Comment has been approved').'!';
+                            }else if ($action == 'pending'){
+                                echo t('Comment status has changed as pending').'!';
+                            }else if ($action == 'removed'){
+                                echo t('Comment has been removed').'!';
                             }
                         }
                     ?>
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                    <button type="button" class="btn btn-default">Geri</button>
+                    <a type="button" href="<?php echo base_url('/comments');?>" class="btn btn-default"><?php echo t('Back');?></a>
                 </div>
                 <!-- /.box-footer-->
             </div>

@@ -4,8 +4,8 @@
         Aboneler
     </h1>
     <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> Ana Panel</li>
-        <li><i class="fa fa-dashboard active"></i> Pages</li>
+        <li><i class="fa fa-dashboard"></i><?php echo t('Dashboard');?></li>
+        <li><i class="fa fa-dashboard active"></i> <?php echo t('Pages')?></li>
     </ol>
 </section>
 <section class="content">
@@ -16,24 +16,24 @@
             if (!empty($form_response)){ ?>
                 <div class="alert alert-<?php echo $form_response[0]=='success'?'success':'danger';?> alert-dismissible">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-<?php echo $form_response[0]=='success'?'fa-check':'fa-ban';?>"></i> <?php echo $form_response[0]=='success'?'Başarılı!':'Hata!';?></h4>
+                    <h4><i class="icon fa fa-<?php echo $form_response[0]=='success'?'fa-check':'fa-ban';?>"></i> <?php echo $form_response[0]=='success'?t('Success').'!':t('Eror').'!';?></h4>
                     <?php echo $form_response[1];?>
                 </div>
             <?php } ?>
             <div class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title">All Pages</h3>
+                    <h3 class="box-title"><?php echo t('All Pages');?></h3>
                     <div class="box-toolbox">
                         <form id="search-form">
                             <div class="input-group input-group-sm pull-left search-form">
-                                <input type="text" name="table_search" class="form-control pull-right" placeholder="Search.."/>
+                                <input type="text" name="table_search" class="form-control pull-right" placeholder="<?php echo t('Search');?>.."/>
                                 <div class="input-group-btn">
                                     <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                                 </div>
                             </div>
                         </form>
                         <a href="pages/add" class="btn btn-success pull-right">
-                            <i class="fa fa-plus"></i>New Page
+                            <i class="fa fa-plus"></i><?php echo t('New Page');?>
                         </a>
                     </div>
                 </div>
@@ -42,12 +42,11 @@
                         <thead >
                             <tr>
                                 <th style="width:60px;">#</th>
-                                <th>Title</th>
-                                <th>Summary</th>
-                                <th>Status</th>
-                                <th>Created At</th>
-                                <th>Yorumlar</th>
-                                <th>Yorum Sayısı</th>
+                                <th><?php echo t('Title');?></th>
+                                <th><?php echo t('Status');?></th>
+                                <th><?php echo t('Created At');?></th>
+                                <th><?php echo t('Comments');?></th>
+                                <th><?php echo t('Comment Count');?></th>
                                 <th>ID</th>
                             </tr>
                         </thead>
@@ -55,14 +54,13 @@
                             <?php foreach ($pages as $page){?>
                                 <tr>
                                     <td>
-                                        <a data-toggle="tooltip" title="" class="text-red" href="/pages/edit/<?php echo $page->pkpage;?>" data-original-title="Edit"><i class="fa fa-edit"></i></a>
-                                        <a data-toggle="tooltip" title="" class="text-blue pull-right" data-original-title="Go to Link"><i class="fa fa-external-link"></i></a>
+                                        <a data-toggle="tooltip" title="" class="text-red" href="/pages/edit/<?php echo $page->pkpage;?>" data-original-title="<?php echo t('Edit');?>"><i class="fa fa-edit"></i></a>
+                                        <a data-toggle="tooltip" title="" class="text-blue pull-right" data-original-title="<?php echo t('Go to Link');?>"><i class="fa fa-external-link"></i></a>
                                     </td>
                                     <td><?php echo $page->title;?></td>
-                                    <td><?php echo $page->summary;?></td>
-                                    <td><label class="label bg-<?php echo $page->status=='published'?'green':'yellow';?>"><?php echo $page->status == 'published'?'Yayında':'Taslak';?></label></td>
+                                    <td><label class="label bg-<?php echo $page->status=='published'?'green':'yellow';?>"><?php echo $page->status == 'published'?t('Published'):t('Draft');?></label></td>
                                     <td><?php echo $page->created_at;?></td>
-                                    <td><label class="label bg-<?php echo $page->allow_comments==0?'red':'green';?>"><?php echo $page->allow_comments==0?'Kapalı':'Açık';?></label></td>
+                                    <td><label class="label bg-<?php echo $page->allow_comments==0?'red':'green';?>"><?php echo $page->allow_comments==0?t('Closed'):t('Opened');?></label></td>
                                     <td><?php echo $page->comments;?></td>
                                     <td><?php echo $page->pkpage;?></td>
                                 </tr>
@@ -72,7 +70,7 @@
                 </div>
                 <div class="box-footer">
                     <div class="table-length dataTables_length pull-left">
-                        <label>Show
+                        <label><?php echo t('Show');?>
                             <select name="limit" class="form-control input-sm">
                                 <option value="10">10</option>
                                 <option value="25">25</option>

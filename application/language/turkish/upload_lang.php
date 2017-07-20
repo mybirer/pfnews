@@ -9,8 +9,6 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$lang['upload_userfile_not_set']        = 'Post verileri içinde "userfile" adlı değişken bulunamadı.';
-$lang['upload_file_exceeds_limit']      = 'Yüklenen dosya boyutu, PHP ayar dosyasında belirtilen izin verilen en büyük dosya boyutunu aşıyor.';
 $lang['upload_file_exceeds_form_limit'] = 'Yüklenen dosya boyutu, gönderilen formda izin verilen boyutu aşıyor.';
 $lang['upload_file_partial']            = 'Dosyanın yalnızca bir bölümü yüklenebildi.';
 $lang['upload_no_temp_directory']       = 'Geçici klasör eksik.';
