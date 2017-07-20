@@ -15,6 +15,7 @@ class Dashboard extends MY_Controller
         }
         else{
             $data = array();
+            Globals::setActiveModule('dashboard');
             $this->template->title('Printf News - Pages');
             $this->template->build('dashboard',$data);
         }

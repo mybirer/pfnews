@@ -51,3 +51,12 @@ if ( ! function_exists('is_post_request'))
         return false;
     }
 }
+
+if ( ! function_exists('is_route_active'))
+{
+    function is_route_active($route,$uri){
+
+        var_dump($uri);
+        die();
+    }
+}

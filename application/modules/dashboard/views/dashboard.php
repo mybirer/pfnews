@@ -10,8 +10,8 @@
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <h1 class="dashboard-title">Minyy'e<br>Hoşgeldiniz</h1>
-            <div class="dashboard-slogan">Minyy Online Çeviri yapmanızı sağlar...</div>
+            <h1 class="dashboard-title">Welcome to<br>Wiki News</h1>
+            <div class="dashboard-slogan">This is your digital news agency...</div>
         </div>
     </div>
 </section>
