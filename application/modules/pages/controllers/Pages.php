@@ -29,10 +29,10 @@ class Pages extends MY_Controller
 
             if ($this->pages_model->insert(array('title'=>$title,'content'=>$content,'created_by'=>$this->session->user_id))){
                 //başarılı
-                send_message('form_response',array('success','Page created successfully.'));
+                send_message('form_response',array('success',sprintf(t('%s created successfully'),t('Page'))));
                 redirect('/pages/edit/'.$this->pages_model->get_last_id());
             }else{
-                send_message('form_response',array('failed','Page cannot be created.'));
+                send_message('form_response',array('failed',sprintf(t('%s cannot be created'),t('Page'))));
                 $this->template->title('Printf News - Pages');
                 $this->template->build('Page_add', $data);
             }
@@ -63,14 +63,14 @@ class Pages extends MY_Controller
                     //db de auto_update olarak ayarlandığından 'updated_at' field ında bir güncelleme yapmadık.
                     if ($this->pages_model->update(array('title'=>$title,'content'=>$content,'updated_by'=>$this->session->user_id),array('pkpage'=>$pageid))){
                         //başarılı
-                        send_message('form_response',array('success','Page updated successfully.'));
+                        send_message('form_response',array('success',sprintf(t('%s updated successfully'),t('Page'))));
                         redirect('/pages/edit/'.$pageid);
                     }
                     else
                     {
                         //başarısız
                         //form doğrulamadan geçti fakat başka bir hata meydana geldi
-                        send_message('form_response',array('failed','Page cannot be updated.'));
+                        send_message('form_response',array('failed',sprintf(t('%s cannot be updated'),t('Page'))));
                         $this->template->title('Printf News - Pages');
                         $this->template->build('Page_add', $data);
                     }
@@ -78,7 +78,7 @@ class Pages extends MY_Controller
                 else
                 {
                     // güncellenen form formata uygun değil
-                    send_message('form_response',array('failed','Sayfa güncellenemedi. Sayfayı formata uygun güncelleyin.'));
+                    send_message('form_response',array('failed',t('Page can not be updated. Please update the form as suitable format')));
                     $data['pages'] = $this->pages_model->get_all(array('pkpage' => $pageid));
                 }
             }
@@ -94,7 +94,7 @@ class Pages extends MY_Controller
         else
         {
             //sayfa sistemde yok
-            send_message('form_response',array('failed','Düzenlemeye çalıştığınız sayfa sistemde mevcut değil.'));
+            send_message('form_response',array('failed',t('The page you have tried to edit is not exist')));
             redirect('/pages');
         }
 
@@ -104,16 +104,16 @@ class Pages extends MY_Controller
     {
         //sayfa sistemde mevcut mu
         if (!$this->page_exist($pageid)){
-            $this->session->set_flashdata('form_response',array('failed','Sayfa sistemde bulunamadı!'));
+            $this->session->set_flashdata('form_response',array('failed',t('The page you have tried to delete is not exist')));
         }else{
             //mevcutsa sil
             $this->pages_model->delete(array('pkpage'=>$pageid));
             if (!$this->page_exist($pageid)){
                 //database den silinen satır sayısı çekilemiyor.
                 //Bu yüzden silinen obje tekrar çağrılıyor var ise hata ver yok ise silinmiştir.
-                $this->session->set_flashdata('form_response',array('success','Sayfa başarılı bir şekilde silindi!'));
+                $this->session->set_flashdata('form_response',array('success',sprintf(t('%s deleted successfully',t('Page'))).'!'));
             }else{
-                $this->session->set_flashdata('form_response',array('failed','Sayfa silinirken hata oluştu!'));
+                $this->session->set_flashdata('form_response',array('failed',sprintf(t('An error occurred while deletion the %s'),strtolower(t('Page'))).'!'));
             }
         }
         redirect('/pages');

@@ -2,12 +2,11 @@
 <?php $subscriber=$subscribers[0];?>
 <section class="content-header">
     <h1>
-        Abone Bilgileri
+        <?php echo t('Edit Subscriber');?>
     </h1>
     <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> Ana Panel</li>
-        <li><i class="fa fa-dashboard"></i> Aboneler</li>
-        <li><i class="fa fa-dashboard active"></i> Abone Bilgileri</li>
+        <li><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></li>
+        <li><i class="fa fa-dashboard active""></i> <?php echo t('Edit Subscriber');?></li>
     </ol>
 </section>
 <section class="content">
@@ -24,19 +23,19 @@
 
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
-                            <b>Email</b> <a class="pull-right"><?php echo $subscriber->email;?></a>
+                            <b><?php echo t('Email');?></b> <a class="pull-right"><?php echo $subscriber->email;?></a>
                         </li>
                         <li class="list-group-item">
-                            <b>Username</b> <a class="pull-right"><?php echo $subscriber->username;?></a>
+                            <b><?php echo t('Username');?></b> <a class="pull-right"><?php echo $subscriber->username;?></a>
                         </li>
                         <li class="list-group-item">
-                            <b>Last Visit</b> <a class="pull-right"><?php echo $subscriber->last_visit;?></a>
+                            <b><?php echo t('Last Visit');?></b> <a class="pull-right"><?php echo $subscriber->last_visit;?></a>
                         </li>
                         <li class="list-group-item">
-                            <b>Member Date</b> <a class="pull-right"><?php echo $subscriber->created_at;?></a>
+                            <b><?php echo t('Member Date');?></b> <a class="pull-right"><?php echo $subscriber->created_at;?></a>
                         </li>
                         <li class="list-group-item">
-                            <b>IP</b> <a class="pull-right"><?php echo $subscriber->ip;?></a>
+                            <b><?php echo t('IP');?></b> <a class="pull-right"><?php echo $subscriber->ip;?></a>
                         </li>
                     </ul>
 
@@ -50,60 +49,60 @@
         <div class="col-md-9">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Düzenle</h3>
+                    <h3 class="box-title"><?php echo t('Edit');?></h3>
                 </div>
                 <form class="form-horizontal">
                     <div class="box-body">
                         <div class="col-md-3">
                             <img class="profile-user-img img-responsive img-circle" src="../../assets/img/user4-128x128.jpg" alt="User profile picture">
                             <div class="form-group">
-                                <p class="text-muted text-center">Change profile image</p>
+                                <p class="text-muted text-center"><?php echo t('Change profile image');?></p>
                                 <input type="file" id="exampleInputFile">
                                 <p class="help-block">Example block-level help text here.</p>
                             </div>
                         </div>
                         <div class="col-md-9">
                             <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+                                <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Name');?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputEmail3" placeholder="Name" value="<?php echo $subscriber->name;?>">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Name');?>" value="<?php echo $subscriber->name;?>">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+                                <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Email');?></label>
                                 <div class="col-sm-10">
-                                    <input type="email" class="form-control" id="inputEmail3" placeholder="Email" value="<?php echo $subscriber->email;?>">
+                                    <input type="email" class="form-control" id="inputEmail3" placeholder="<?php echo t('Email');?>" value="<?php echo $subscriber->email;?>">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">Username</label>
+                                <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Username');?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputEmail3" placeholder="Username" value="<?php echo $subscriber->username;?>">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Username');?>" value="<?php echo $subscriber->username;?>">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">Password</label>
+                                <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Password');?></label>
                                 <div class="col-sm-10">
-                                    <input type="password" class="form-control" id="inputEmail3" placeholder="Password">
+                                    <input type="password" class="form-control" id="inputEmail3" placeholder="<?php echo t('Password');?>">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">City</label>
+                                <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('City');?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputEmail3" placeholder="City" value="<?php echo $subscriber->city;?>">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('City');?>" value="<?php echo $subscriber->city;?>">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-2 control-label">Country</label>
+                                <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Country');?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputEmail3" placeholder="Country" value="<?php echo $subscriber->country;?>">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Country');?>" value="<?php echo $subscriber->country;?>">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-default">İptal</button>
-                        <button type="submit" class="btn btn-info pull-right">Kaydet</button>
+                        <button type="submit" class="btn btn-default"><?php echo t('Cancel');?></button>
+                        <button type="submit" class="btn btn-info pull-right"><?php echo t('Save');?></button>
                     </div>
                 </form>
             </div>
@@ -111,10 +110,10 @@
         <div class="col-md-12">
             <div class="box box-success">
                 <div class="box-header">
-                    <h3 class="box-title">Yorumlar</h3>
+                    <h3 class="box-title"><?php echo t('Comments');?></h3>
                     <div class="box-tools">
                         <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                            <input type="text" name="table_search" class="form-control pull-right" placeholder="<?php echo t('Search');?>">
 
                             <div class="input-group-btn">
                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -125,11 +124,11 @@
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover">
                         <tbody><tr>
-                            <th>ID</th>
-                            <th>Konum</th>
-                            <th>Tarih</th>
-                            <th>Durum</th>
-                            <th>Yorum</th>
+                            <th><?php echo t('ID');?></th>
+                            <th><?php echo t('Location');?></th>
+                            <th><?php echo t('Date');?></th>
+                            <th><?php echo t('Status');?></th>
+                            <th><?php echo t('Comment');?></th>
                         </tr>
                         <tr>
                             <td>183</td>
@@ -170,14 +169,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Engelle</h4>
+                <h4 class="modal-title"><?php echo t('Suspend this subscriber');?></h4>
             </div>
             <div class="modal-body">
-                <p>Bu kullanıcıyı engellemek istediğinizden emin misiniz?</p>
+                <p><?php echo t('Are you sure that do you want to suspend this subscriber');?>?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">İptal</button>
-                <button type="button" class="btn btn-danger">Engelle</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo t('Cancel');?></button>
+                <button type="button" class="btn btn-danger"><?php echo t('Suspend');?></button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

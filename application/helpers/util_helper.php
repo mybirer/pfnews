@@ -52,14 +52,19 @@ if ( ! function_exists('is_post_request'))
     }
 }
 
-if ( ! function_exists('is_route_active'))
-{
-    function is_route_active($route,$uri){
 
-        var_dump($uri);
-        die();
+if ( ! function_exists('t'))
+{
+    function t($text){
+        $translation = lang($text);
+        if (empty($translation))
+            return $text;
+        return $translation;
     }
 }
+
+
+
 
 if ( ! function_exists('get_url_variable_value'))
 {

@@ -25,7 +25,7 @@ class Authentication extends MY_Controller
                     return;
                 }
                 else{
-                    $data['login_error'] = 'Username or Password is invalid.';
+                    $data['login_error'] = t('Username or Password is invalid');
                 }
             }
             $this->template->set_layout('frontend_layout');
@@ -59,7 +59,7 @@ class Authentication extends MY_Controller
                     return;
                 }
                 else{
-                    $data['login_error'] = 'Username or Password is invalid.';
+                    $data['login_error'] = t('Username or Password is invalid');
                 }
             }
             $this->template->set_layout('frontend_layout');

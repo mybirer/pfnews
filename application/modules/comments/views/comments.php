@@ -1,11 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content-header">
     <h1>
-        Aboneler
+        <?php echo t('Comments');?>
     </h1>
     <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> Ana Panel</li>
-        <li><i class="fa fa-dashboard active"></i> Aboneler</li>
+        <li><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></li>
+        <li><i class="fa fa-dashboard active"></i> <?php echo t('Comments');?></li>
     </ol>
 </section>
 <section class="content">
@@ -13,23 +13,23 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Yorumlar</h3>
+                    <h3 class="box-title"><?php echo t('Comments');?></h3>
                 </div>
                 <div class="box-body">
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
-                            <li <?php if ($status == 'moderated') echo 'class="active" style="border-top-color: #f39c12" ';?>><a href="<?php if ($status != 'moderated') echo '/comments/?status=moderated';?>">Onay Bekleyenler (<?php echo $moderated_count;?>)</a></li>
-                            <li <?php if ($status == 'approved') echo 'class="active" style="border-top-color: #00a65a" ';?>><a href="<?php if ($status != 'approved') echo '/comments/?status=approved';?>">Onaylananlar (<?php echo $approved_count;?>)</a></li>
-                            <li <?php if ($status == 'trash') echo 'class="active" style="border-top-color: #dd4b39" ';?>><a href="<?php if ($status != 'trash') echo '/comments/?status=trash';?>">Çöp (<?php echo $trash_count;?>)</a></li>
+                            <li <?php if ($status == 'pending') echo 'class="active" style="border-top-color: #f39c12" ';?>><a href="<?php if ($status != 'pending') echo '/comments/?status=pending';?>"><?php echo t('Pending Comments').' ('.$pending_count.')';?></a></li>
+                            <li <?php if ($status == 'approved') echo 'class="active" style="border-top-color: #00a65a" ';?>><a href="<?php if ($status != 'approved') echo '/comments/?status=approved';?>"><?php echo t('Approved Comments').' ('.$approved_count.')';?></a></li>
+                            <li <?php if ($status == 'removed') echo 'class="active" style="border-top-color: #dd4b39" ';?>><a href="<?php if ($status != 'removed') echo '/comments/?status=removed';?>"><?php echo t('Removed Comments').' ('.$removed_count.')';?></a></li>
                         </ul>
                         <div id="comments" class="margin">
                             <?php foreach ($comments as $comment){?>
                                 <?php
                                     $cstatus = $comment->status;
                                     $clr = '';
-                                    if ($cstatus == comments_model::$TRASH)
+                                    if ($cstatus == comments_model::$REMOVED)
                                         $clr = '#dd4b39';
-                                    elseif ($cstatus == comments_model::$MODERATED)
+                                    elseif ($cstatus == comments_model::$PENDING)
                                         $clr = '#f39c12';
                                     elseif ($cstatus == comments_model::$APPROVED)
                                         $clr = '#00a65a';
@@ -41,21 +41,20 @@
                                             <span class="username">
                                             <a href="#"><?php echo $comment->fullname;?></a>
                                             <div class="pull-right btn-box-tool" style="position: relative;">
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">İşlem
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><?php echo t('Action');?>
                                                     <span class="fa fa-caret-down"></span></button>
                                                 <ul class="dropdown-menu">
-                                                    <li><a href="edit/<?php echo $comment->pkcomment;?>" style="text-decoration: none;">Düzenle</a></li>
-                                                    <li><a href="action/approved/<?php echo $comment->pkcomment;?>" style="text-decoration: none;">Onayla</a></li>
-                                                    <li><a href="action/moderated/<?php echo $comment->pkcomment;?>" style="text-decoration: none;">Beklet</a></li>
-                                                    <li><a href="action/trash/<?php echo $comment->pkcomment;?>" style="text-decoration: none;">Çöp</a></li>
+                                                    <li><a href="edit/<?php echo $comment->pkcomment;?>" style="text-decoration: none;"><?php echo t('Edit');?></a></li>
+                                                    <li><a href="action/approved/<?php echo $comment->pkcomment;?>" style="text-decoration: none;"><?php echo t('Approve');?></a></li>
+                                                    <li><a href="action/pending/<?php echo $comment->pkcomment;?>" style="text-decoration: none;"><?php echo t('Set Pending');?></a></li>
+                                                    <li><a href="action/removed/<?php echo $comment->pkcomment;?>" style="text-decoration: none;"><?php echo t('Send Trash');?></a></li>
                                                     <li class="divider"></li>
-                                                    <li><a href="action/delete/<?php echo $comment->pkcomment;?>" style="text-decoration: none;">Sil</a></li>
+                                                    <li><a href="action/delete/<?php echo $comment->pkcomment;?>" style="text-decoration: none;"><?php echo t('Delete');?></a></li>
                                                 </ul>
                                             </div>
                                         </span>
                                             <span class="description"><?php echo $comment->created_at;?></span>
                                         </div>
-                                        <!-- /.user-block -->
                                         <p>
                                             <?php echo $comment->content;?>
                                         </p>

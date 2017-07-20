@@ -4,35 +4,43 @@
         <a href="../../index2.html"><b>Public</b>Login</a>
     </div>
     <div class="login-box-body">
-        <p class="login-box-msg">Sign in to start your session</p>
-        
+        <?php
+        if (!empty($login_error)){
+            ?>
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-ban"></i> <?php echo t('Error');?>!</h4>
+                <?php echo $login_error;?>
+            </div>
+            <?php
+        }
+        ?>
+        <p class="login-box-msg"><?php echo t('Please fill the form to login');?></p>
+
         <?php echo form_open(base_url('/login'));?>
             <?php $error = form_error('email','<p class="text-danger">','</p>')?>
             <div class="form-group has-feedback <?php echo $error ? 'has-error':'';?>">
-                <input type="email" class="form-control" placeholder="Email" name="email" value="<?php echo set_value('email')?>">
+                <input type="email" class="form-control" placeholder="<?php echo t('Email');?>" name="email" value="<?php echo set_value('email')?>">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 <?php echo $error;?>
             </div>
             <?php $error = form_error('password','<p class="text-danger">','</p>')?>
             <div class="form-group has-feedback <?php echo $error ? 'has-error':'';?>">
-                <input type="password" class="form-control" name="password" placeholder="Password">
+                <input type="password" class="form-control" name="password" placeholder="<?php echo t('Password');?>">
                 <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 <?php echo $error;?>
             </div>
-            <?php
-            if (!empty($login_error)){
-                echo "<p>$login_error</p>";
-            }
-            ?>
             <div class="row">
                 <div class="col-xs-12">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-flat"><?php echo t('Sign In');?></button>
                 </div>
             </div>
         <?php echo form_close();?>
 
-        <a href="#">I forgot my password</a><br>
-        <a href="register.html" class="text-center">Register a new membership</a>
+        <div class="col-md-xs-12 margin text-center"><br>
+            <a href="#"><?php echo t('I forgot my password');?></a><br>
+            <a href="register.html" class="text-center"><?php echo t('Register a new membership');?></a>
+        </div>
 
     </div>
 </div>
