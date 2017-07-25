@@ -12,46 +12,12 @@ if ( ! function_exists('has_error'))
     }
 }
 
-if ( ! function_exists('print_error'))
+if ( ! function_exists('get_error'))
 {
-    function ger_error($field_name){
+    function get_error($field_name){
         return form_error($field_name,'<p class="text-danger">','</p>');
     }
 }
-
-if ( ! function_exists('send_message'))
-{
-    function send_message($message_id,$message = array()){
-        $ci = &get_instance();
-        $ci->session->set_flashdata($message_id,$message);
-    }
-}
-
-if ( ! function_exists('get_message'))
-{
-    function get_message($message_id){
-        $ci = &get_instance();
-        return $ci->session->flashdata($message_id);
-    }
-}
-
-if ( ! function_exists('has_message'))
-{
-    function has_message($message_id){
-        $ci = &get_instance();
-        return !empty($ci->session->flashdata($message_id));
-    }
-}
-
-if ( ! function_exists('is_post_request'))
-{
-    function is_post_request(){
-        if ($_SERVER['REQUEST_METHOD'] == 'POST')
-            return true;
-        return false;
-    }
-}
-
 
 if ( ! function_exists('t'))
 {
@@ -63,8 +29,50 @@ if ( ! function_exists('t'))
     }
 }
 
+if ( ! function_exists('send_alert'))
+{
+    function send_alert($message = array()){
+        $ci = &get_instance();
+        $ci->session->set_flashdata('message_helper',$message);
+    }
+}
 
-
+if ( ! function_exists('get_message_helper'))
+{
+    //controller dan send_alert() metodu kullanılarak gönderilen mesajları view ekranında bastırmaya yarar.
+    function get_message_helper(){
+        $ci = &get_instance();
+        //session a 'message_helper' adı ile mesaj kaydediliyor.
+        //bir defa kullanılınca otomatik siliniyor
+        $form_response = $ci->session->flashdata('message_helper');
+        if (!empty($form_response)):
+            $kind = 'info';
+            $icon = 'fa-info';
+            $title = t('Information');
+            if ($form_response[0] == 'success'){
+                $kind='success';
+                $icon='fa-check';
+                $title=t('Success');
+            }
+            elseif ($form_response[0] == 'error'){
+                $kind='danger';
+                $icon='fa-danger';
+                $title=t('Error');
+            }
+            elseif ($form_response[0] == 'warning'){
+                $kind='warning';
+                $icon='fa-warning';
+                $title=t('Warning');
+            }
+            ?>
+            <div class="alert alert-<?php echo $kind;?> alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa <?php echo $icon;?>"></i> <?php echo $title;?>!</h4>
+                <?php echo $form_response[1];?>
+            </div>
+        <?php endif;
+    }
+}
 
 if ( ! function_exists('get_url_variable_value'))
 {
@@ -124,5 +132,72 @@ if ( ! function_exists('is_ordered'))
         else{
             echo $field=="date" ? "desc" : "";
         }
+    }
+}
+
+if ( ! function_exists('backend_login_check'))
+{
+    /**
+     * Parametre olarak gönderilen modül ve action a ait kullanıcının yetkisinin olup olmadığını kontrol eder
+     * Eğer kullanıcı login olmamış ise login sayfasına yönlendirir
+     * Kullanıcı login olmuş fakat action için yetkisi yok ise default olarak Dashboard a yönlendirir.
+     * @param $module
+     * erişilmeye çalışılan modül
+     * @param $action
+     * o modüle ait action
+     */
+    function backend_login_check($module,$action){
+        $ci = &get_instance();
+        if ($ci->user_auth->is_logged())
+        {
+            //kullanıcı login olmuşşsa
+            //o modüle erişimi var mo kontrol edilmeli
+            if ($ci->user_auth->has_access($module,$action))
+            {
+                //erişime izin ver
+                Globals::setActiveModule($module);
+            }
+            else
+            {
+                //kullanıcı giriş yapmış fakat yetkisi yok ise
+                //todo 403 ekran hatası ver
+                redirect('/dashboard');
+                die();
+            }
+        }
+        else
+        {
+            //login olmamışsa logine yönlendir
+            redirect('/dashboard');
+            die();
+        }
+    }
+}
+
+if ( ! function_exists('get_filter_params'))
+{
+    /**
+     * @param $default_order_by
+     * primary_key olmalı
+     * @return array
+     */
+    function get_filter_params($default_order_by){
+        //get filter params
+        $params = array();
+        $params['search_term']  =   isset($_GET['search_term']) ? clear_string($_GET['search_term']) : '';
+        $params['order_by']     =   isset($_GET['order_by']) && !empty($_GET['order_by']) ? strtolower(clear_string($_GET['order_by'])) : $default_order_by;
+        $params['order_dir']    =   isset($_GET['order_dir']) && !empty($_GET['order_dir']) ? strtolower(clear_string($_GET['order_dir'])) : 'desc';
+        $params['limit']        =   isset($_GET['limit']) && !empty($_GET['limit']) ? (int) clear_string($_GET['limit']) : 10;
+        $params['page']         =   isset($_GET['page']) && !empty($_GET['page']) ? (int) clear_string($_GET['page']) : 1;
+        $params['offset']       =   ($params['page']-1)*$params['limit'];
+        $filters                =   isset($_GET['f_key']) ? $_GET['f_key'] : [];
+        $filter=[];
+        foreach($filters as $f_key=>$f_val){
+            if($f_val!=''){
+                $filter[clear_string($f_key)]= clear_string($f_val);
+            }
+        }
+        $params['filter']       =   $filter;
+        return $params;
     }
 }

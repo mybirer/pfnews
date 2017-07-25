@@ -11,15 +11,7 @@
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <?php
-            $form_response = $this->session->flashdata('form_response');
-            if (!empty($form_response)){ ?>
-                <div class="alert alert-<?php echo $form_response[0]=='success'?'success':'danger';?> alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-<?php echo $form_response[0]=='success'?'fa-check':'fa-ban';?>"></i> <?php echo $form_response[0]=='success'?t('Success').'!':t('Eror').'!';?></h4>
-                    <?php echo $form_response[1];?>
-                </div>
-            <?php } ?>
+            <?php get_message_helper() ?>
             <div class="box box-primary">
                 <div class="box-header">
                     <h3 class="box-title"><?php echo t('All Pages');?></h3>

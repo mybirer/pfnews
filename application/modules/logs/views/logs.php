@@ -4,93 +4,112 @@
         <?php echo t('Logs');?>
     </h1>
     <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></li>
-        <li><i class="fa fa-dashboard active"></i> <?php echo t('Logs');?></li>
+        <li><a href="<?php echo base_url('dashboard')?>"><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></a></li>
+        <li><i class="fa fa-eye active"></i> <?php echo t('Logs');?></li>
     </ol>
 </section>
 <section class="content">
     <div class="row">
         <div class="col-md-12">
-            <div class="box">
+            <div class="box box-primary">
                 <div class="box-header">
-                    <h3 class="box-title"><?php echo t('System Logs');?></h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-                        <div class="row"><div class="col-sm-6"><div class="dataTables_length" id="example1_length">
-                                    <label><?php echo t('Show');?> <select name="example1_length" aria-controls="example1" class="form-control input-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label>
+                    <div class="box-toolbox">
+                        <form id="filters" method="get" action="">
+                            <div class="form-group pull-left">
+                                <div style="position: relative;">
+                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><?php echo t('Action');?><span class="fa fa-caret-down"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" data-toggle="action-checkboxes" data-target=".obj-checkbox" data-action="/logs/delete" style="text-decoration: none;"><?php echo t('Delete');?></a></li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="box-tools">
-                                    <div class="input-group input-group-sm" style="width: 100%;">
-                                        <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-
-                                        <div class="input-group-btn" style="width: 1%">
-                                            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                        </div>
+                            <div class="form-group pull-left">
+                                <div class="input-group input-group-sm search-form">
+                                    <input type="text" name="search_term" class="form-control pull-right" placeholder="<?php echo t('Search');?>..." <?php echo !empty(get_url_variable_value("search_term")) ? "value='".htmlspecialchars(urldecode(get_url_variable_value("search_term")))."'" : ""; ?> />
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <div class="col-sm-12">
-                                    <table id="example1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Rendering engine: activate to sort column descending" style="width: 176px;"><?php echo t('Level');?></th>
-                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Browser: activate to sort column ascending" style="width: 224px;"><?php echo t('Module');?></th>
-                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Platform(s): activate to sort column ascending" style="width: 205px;"><?php echo t('Description');?></th>
-                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="Engine version: activate to sort column ascending" style="width: 152px;"><?php echo t('Time');?></th>
-                                        <th class="sorting" tabindex="0" aria-controls="example1" rowspan="1" colspan="1" aria-label="CSS grade: activate to sort column ascending" style="width: 111px;"><?php echo t('IP Address');?></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-
-                                        //warning #FFE495  error: #ce8483  information: #a3d0ef
-                                        foreach ($objects as $object){
-                                    ?>
-                                            <tr role="row" style="background-color: <?php if ($object->kind == 'error') echo '#ce8483'; if ($object->kind == 'warning') echo '#FFE495'; if ($object->kind == 'important') echo '#ce8483';?>">
-                                                <td><?php echo $object->kind;?></td>
-                                                <td><?php echo $object->module?></td>
-                                                <td><?php echo $object->description?></td>
-                                                <td><?php echo $object->created_at?></td>
-                                                <td><?php echo $object->ip?></td>
-                                            </tr>
-                                    <?php
-                                        }
-                                    ?>
-
-                                    </tbody>
-                                </table>
-                                </div>
+                            <div class="form-group pull-left">
+                                <input type="hidden" name="is_detailed" value="<?php echo isset($_GET['is_detailed']) && $_GET['is_detailed']==1 ? 1 : 0 ?>" />
+                                <a href="#" id="detailed-filter-btn" class="btn btn-sm btn-info"><?php echo t('Detailed Filter');?></a>
                             </div>
-                            <div>
-                                <div class="col-sm-5">
-                                    <div class="dataTables_info" id="example1_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div>
+                            <div class="form-group pull-left">
+                                <a href="<?php echo base_url('dashboard/logs') ?>" class="btn btn-sm btn-warning"><?php echo t('Reset');?></a>
+                            </div>
+                            <div class="filter-panel" style="<?php echo isset($_GET['is_detailed']) && $_GET['is_detailed']==1 ? "display:block" : "display:none" ?>">
+                                <hr style="display:block;clear:both;" />
+                                <div class="form-group pull-left">
+                                    <label><?php echo t('Error Level');?>:</label>
+                                    <select class="form-control" name="f_key[kind]"  style="max-width:200px">
+                                        <option value="">-<?php echo t('Filter by error level');?>-</option>
+                                        <option value="error" <?php echo is_filter_opt_selected('kind', 'error')?>><?php echo t('Error');?></option>
+                                        <option value="warning" <?php echo is_filter_opt_selected('kind', 'warning')?>><?php echo t('Warning');?></option>
+                                        <option value="info" <?php echo is_filter_opt_selected('kind', 'info')?>><?php echo t('Information');?></option>
+                                    </select>
                                 </div>
-                                <div class="col-sm-7">
-                                    <div class="dataTables_paginate paging_simple_numbers pull-right" id="example1_paginate">
-                                        <ul class="pagination">
-                                            <li class="paginate_button previous disabled" id="example1_previous">
-                                                <a href="#" aria-controls="example1" data-dt-idx="0" tabindex="0"><?php echo t('Previous');?></a>
-                                            </li>
-                                            <li class="paginate_button active">
-                                                <a href="#" aria-controls="example1" data-dt-idx="1" tabindex="0">1</a>
-                                            </li>
-                                            <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="2" tabindex="0">2</a></li>
-                                            <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="3" tabindex="0">3</a></li>
-                                            <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="4" tabindex="0">4</a></li>
-                                            <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="5" tabindex="0">5</a></li>
-                                            <li class="paginate_button "><a href="#" aria-controls="example1" data-dt-idx="6" tabindex="0">6</a></li>
-                                            <li class="paginate_button next" id="example1_next"><a href="#" aria-controls="example1" data-dt-idx="7" tabindex="0"><?php echo t('Next');?></a></li>
-                                        </ul>
-                                    </div>
+                                <div class="form-group pull-left">
+                                    <label><?php echo t('module');?>:</label>
+                                    <select class="form-control" name="f_key[module]"  style="max-width:200px">
+                                        <option value="">-<?php echo t('Filter by module');?>-</option>
+                                        <?php foreach ($modules as $module):?>
+                                            <option value="<?php echo $module['module'];?>" <?php echo is_filter_opt_selected('module',$module['module']) ?>><?php echo $module['module'];?></option>
+                                        <?php endforeach;?>
+                                    </select>
                                 </div>
-                            </div></div>
+                                <div class="form-group pull-left">
+                                    <label class="clr">&nbsp;</label>
+                                    <button type="submit" class="btn btn-sm btn-primary"><?php echo t('Filter');?></button>
+                                </div>
+                                <hr style="display:block;clear:both;" />
+                            </div>
+                        </form>
                     </div>
-                <!-- /.box-body -->
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover table-bordered table-striped dataTable" role="grid" >
+                        <thead>
+                        <tr role="row">
+                            <th class="text-center"><a href="#" data-toggle="toggle-checkboxs" data-target=".obj-checkbox">#</a></th>
+                            <th><a href="#" class="live-label <?php is_ordered('kind'); ?>" data-toggle="change-order" data-order-by="kind"><?php echo t('Level');?></a></th>
+                            <th><a href="#" class="live-label <?php is_ordered('module'); ?>" data-toggle="change-order" data-order-by="module"><?php echo t('Module');?></a></th>
+                            <th><a href="#" class="live-label <?php is_ordered('description'); ?>" data-toggle="change-order" data-order-by="description"><?php echo t('Description');?></a></th>
+                            <th><a href="#" class="live-label <?php is_ordered('created_at'); ?>" data-toggle="change-order" data-order-by="created_at"><?php echo t('Time');?></a></th>
+                            <th><a href="#" class="live-label <?php is_ordered('ip'); ?>" data-toggle="change-order" data-order-by="ip"><?php echo t('IP Address');?></a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    //warning #FFE495  error: #ffa8a7  information: #a3d0ef
+                    foreach ($objects as $object):?>
+                        <tr role="row" <?php if ($object->kind == 'error') echo 'style="background-color: #ffa8a7"'; if ($object->kind == 'warning') echo 'style="background-color: #FFE495"'; if ($object->kind == 'important') echo 'style="background-color: #ce8483"';?>>
+                            <td class="text-center"><label><input type="checkbox" class="minimal obj-checkbox" name="check_list[]" id="<?php echo $object->pklog;?>"/></label></td>
+                            <td><?php echo $object->kind;?></td>
+                            <td><?php echo $object->module?></td>
+                            <td><?php echo $object->description?></td>
+                            <td><?php echo $object->created_at?></td>
+                            <td><?php echo $object->ip?></td>
+                        </tr>
+                <?php endforeach;?>
+                    </tbody>
+                </table>
+            </div>
+                <div class="box-footer">
+                    <div class="table-length dataTables_length pull-left">
+                        <label><?php echo t('Show');?>
+                            <select name="limit" class="input-sm">
+                                <option value="10" <?php echo get_url_variable_value("limit")=="10" ? "selected" : ""; ?>>10</option>
+                                <option value="25" <?php echo get_url_variable_value("limit")=="25" ? "selected" : ""; ?>>25</option>
+                                <option value="50" <?php echo get_url_variable_value("limit")=="50" ? "selected" : ""; ?>>50</option>
+                                <option value="100" <?php echo get_url_variable_value("limit")=="100" ? "selected" : ""; ?>>100</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="pagination_container">
+                        <?php echo $pagination;?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

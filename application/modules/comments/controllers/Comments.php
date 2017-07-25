@@ -8,79 +8,134 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Comments extends MY_Controller
 {
+    //todo actionlar için alert hazırla.
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('comments_model','comments_model');
+        $this->load->model('comments_model');
     }
     //status -> all, approved, pending, removed
     //durum  -> tümü, onaylanmış, beklemede, çöp
     public function index()
     {
+        backend_login_check('comments','list');
         $data = array();
-        $status = $this->input->get('status');
-        $status = strtolower($status);
+        $filter_params = get_filter_params('pkcomments');
 
-        if (!in_array($status,array('approved','pending','removed')))
-            $status = 'pending';
+        $data['objects'] = $this->comments_model
+            ->get_all_filter($filter_params['search_term'],
+                $filter_params['order_by'],
+                $filter_params['order_dir'],
+                $filter_params['limit'],
+                $filter_params['offset'],
+                $filter_params['filter']);
 
-        $data['approved_count'] = $this->comments_model->get_total(array('status' => comments_model::$APPROVED));
-        $data['pending_count'] = $this->comments_model->get_total(array('status' => comments_model::$PENDING));
-        $data['removed_count'] = $this->comments_model->get_total(array('status' => comments_model::$REMOVED));
+        //build pagination
+        $this->load->library('pagination');
+        $config['base_url'] = base_url('dashboard/comments');
+        $config['total_rows'] = $this->comments_model->get_all_filter_total($filter_params['search_term'],$filter_params['filter']);
+        $config['per_page'] = $filter_params['limit'];
+        $this->pagination->initialize($config);
+        $data['pagination'] = $this->pagination->create_links();
 
-        if ($status == 'approved')
-            $data['comments'] = $this->comments_model->get_all(array('status' => comments_model::$APPROVED));
-        else if ($status == 'pending')
-            $data['comments'] = $this->comments_model->get_all(array('status' => comments_model::$PENDING));
-        else if ($status == 'removed')
-            $data['comments'] = $this->comments_model->get_all(array('status' => comments_model::$REMOVED));
-
-        $data['status'] = $status;
         $this->template->title('Printf News - Comments');
         $this->template->build('Comments', $data);
     }
 
     public function show($id = 0){
+        backend_login_check('comments','list');
         //go to comment's news(or whatever)
         //@todo id'si girilen yorumun yapıldığı sayfaya yönlendir.
     }
 
     public function edit($id = 0){
+        backend_login_check('comments','edit');
         $data = array();
-        $comment = $this->comments_model->get(array('pkcomment'=>$id));
-
-        if (empty($comment)){
-            $this->template->build('Comment_edit_blank');
+        if (isset($_POST['content']))
+        {
+            //güncelle
+            $this->comments_model
+                ->update(array(
+                    'content'=>$_POST['content'],
+                    'status'=>in_array($_POST['status'],array('approved','pending','spam'))?$_POST['status']:'pending'),array('pkcomment'=>$id));
+            send_alert(array('success','Comment updated successfully'));
+            redirect(current_url());
         }
-        else{
-            $data['comments'] = array($comment);
-            $this->template->build('Comment_edit',$data);
+        else
+        {
+            $comment = $this->comments_model->get(array('pkcomment'=>$id));
+
+            if (empty($comment)){
+                send_alert(array('warning','The comment doesn\'t exist in the system'));
+                redirect('dashboards/comments');
+            }
+            else{
+                $data['comment'] = (array)$comment;
+                $this->template->build('Comment_edit',$data);
+            }
         }
     }
 
-    public function action($status = '',$id = 0){
-        $status = strtolower($status);
-        $data = array('action'=>$status);
-        $result = false;
-        if (!in_array($status,array('approved','pending','removed','delete')) || intval($id) <= 0){
-            //@todo geçersiz eylem
-            $data['result'] = $result;
-            redirect('/comments');
-        }else{
-            //do action
-            if ($status == 'delete')
-                $result = $this->comments_model->delete(array('pkcomment'=>intval($id)));
-            else if ($status == 'approved')
-                $result = $this->comments_model->update(array('status' => comments_model::$APPROVED),array('pkcomment'=>intval($id)));
-            else if ($status == 'pending')
-                $result = $this->comments_model->update(array('status' => comments_model::$PENDING),array('pkcomment'=>intval($id)));
-            else if ($status == 'removed')
-                $result = $this->comments_model->update(array('status' => comments_model::$REMOVED),array('pkcomment'=>intval($id)));
+    /**
+     * @param int $id
+     * tek bir yorum /dashboard/comments/approve/14 şeklinde onaylanabilir
+     * veya listeden seçilen yorumlar post ile gönderilerek de onaylanabilir
+     */
+    public function approve($id = 0)
+    {
+        backend_login_check('comments','confirm');
+        $id_array = array();
+        //liste gönderilmiş ise
+        if (isset($_POST['id_array']))
+            $id_array = explode(',',$_POST['id_array']);
+        elseif ($id > 0)
+            array_push($id_array,$id);
+        foreach ($id_array as $id_element)
+            $this->comments_model->update(array('status'=>'approved'),array('pkcomment'=>$id_element));
 
-            $data['result'] = $result;
-            $data['affected_rows'] = $this->db->affected_rows();
-        }
-
-        $this->template->build('Comment_action',$data);
+        redirect('/dashboard/comments');
     }
+
+    public function delete($id = 0)
+    {
+        backend_login_check('comments','remove');
+        $id_array = array();
+        //liste gönderilmiş ise
+        if (isset($_POST['id_array']))
+            $id_array = explode(',',$_POST['id_array']);
+        elseif ($id > 0)
+            array_push($id_array,$id);
+        foreach ($id_array as $id_element)
+            $this->comments_model->delete(array('pkcomment'=>$id_element));
+        redirect('/dashboard/comments');
+    }
+
+    public function set_pending($id = 0)
+    {
+        backend_login_check('comments','confirm');
+        $id_array = array();
+        //liste gönderilmiş ise
+        if (isset($_POST['id_array']))
+            $id_array = explode(',',$_POST['id_array']);
+        elseif ($id > 0)
+            array_push($id_array,$id);
+        foreach ($id_array as $id_element)
+            $this->comments_model->update(array('status'=>'pending'),array('pkcomment'=>$id_element));
+        redirect('/dashboard/comments');
+    }
+
+    public function set_spam($id = 0)
+    {
+        backend_login_check('comments','confirm');
+        $id_array = array();
+        //liste gönderilmiş ise
+        if (isset($_POST['id_array']))
+            $id_array = explode(',',$_POST['id_array']);
+        elseif ($id > 0)
+            array_push($id_array,$id);
+        foreach ($id_array as $id_element)
+            $this->comments_model->update(array('status'=>'spam'),array('pkcomment'=>$id_element));
+        redirect('/dashboard/comments');
+    }
+
 }

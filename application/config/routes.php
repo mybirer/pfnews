@@ -53,7 +53,9 @@ $route['default_controller'] = 'home';
 $route['login'] = 'authentication/panel_login';
 $route['logout'] = 'authentication/panel_logout';
 $route['panel'] = 'dashboard/panel';
+$route['dashboard/(:any)'] = '$1';
 $route['dashboard/users'] = 'users';
+$route['dashboard/users/(:any)'] = 'users/$1';
 $route['404_override'] = '';
 //
 //// you specific routes

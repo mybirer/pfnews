@@ -30,6 +30,7 @@ class users_model extends BS_Model
         $user->modules=!empty($modules) ? $modules : [];
         return $user;
     }
+
     public function get_all_filter($search_term,$order_by,$order_dir,$limit,$offset,$filter=array()){
 
         $limit  = intval($limit) <= 0 || intval($offset) > PHP_INT_MAX  ? 20 : $limit;
@@ -53,7 +54,12 @@ class users_model extends BS_Model
                     $filterArr[]="{$fkey} = '{$fval}'";
                 }
             }
-            $where.=implode(' AND ',$filterArr);
+            if(!empty($filterArr)){
+                $where.=implode(' AND ',$filterArr);
+            }
+            else{
+                $where=" 3>2 ";
+            }
         }
         else{
             $where=" 3>2 ";
@@ -83,7 +89,12 @@ class users_model extends BS_Model
                     $filterArr[]="{$fkey} = '{$fval}'";
                 }
             }
-            $where.=implode(' AND ',$filterArr);
+            if(!empty($filterArr)){
+                $where.=implode(' AND ',$filterArr);
+            }
+            else{
+                $where=" 3>2 ";
+            }
         }
         else{
             $where=" 3>2 ";

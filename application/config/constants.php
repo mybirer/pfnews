@@ -102,7 +102,7 @@ defined('ERR_LOGIN_FAILED')                  OR define('ERR_LOGIN_FAILED', 2);
 | These responses are used when working with some methods and operations
 |
 */
-defined('EMAIL_EXIST')                    OR define('EMAIL_EXIST', 3);
-defined('EMAIL_NOT_EXIST')                OR define('EMAIL_NOT_EXIST', 4);
+defined('EXIST')                    OR define('EXIST', 3);
+defined('NOT_EXIST')                OR define('NOT_EXIST', 4);
 
 defined('SESSION_TIMEOUT')                    OR define('SESSION_TIMEOUT', 3600);

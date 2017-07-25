@@ -10,6 +10,7 @@ $config['use_page_numbers'] = true;
 $config['page_query_string'] = true;
 $config['query_string_segment'] = 'page';
 $config['reuse_query_string'] = true;
+$config['num_links'] = 5;
 $config['attributes'] = array('class' => 'myclass');
 $config['full_tag_open'] = '<ul class="pagination pagination-sm no-margin pull-right">';
 $config['full_tag_close'] = '</ul>';

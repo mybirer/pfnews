@@ -36,6 +36,7 @@ class Authentication extends MY_Controller
             $this->template->build('authentication/private_login',$data);
         }
     }
+
     public function dashboard_logout()
     {
         $this->user_auth->logout();
@@ -70,6 +71,7 @@ class Authentication extends MY_Controller
             $this->template->build('authentication/public_login',$data);
         }
     }
+
     public function panel_logout()
     {
         $this->subscriber_auth->logout();

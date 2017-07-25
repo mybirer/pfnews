@@ -11,6 +11,7 @@ class Subscribers extends MY_Controller {
 
     public function index()
     {
+        backend_login_check('subscribers','list');
         $data = array();
         $data['objects'] = $this->subscriber_model->get_all();
         $this->template->title('Printf News - Subscribers');
@@ -18,6 +19,7 @@ class Subscribers extends MY_Controller {
     }
 
     public function edit($id = 0){
+        backend_login_check('subscibers','edit');
         $data = array();
         $this->template->title('Printf News - Edit Subscriber');
         $result = $this->subscriber_model->get(array('pksubscriber'=>intval($id)));

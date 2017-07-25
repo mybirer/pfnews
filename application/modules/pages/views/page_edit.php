@@ -13,15 +13,7 @@
     <div class="row">
         <?php echo form_open(current_url());?>
         <div class="col-xs-9">
-            <?php
-            $form_response = $this->session->flashdata('form_response');
-            if (!empty($form_response)){ ?>
-                <div class="alert alert-<?php echo $form_response[0]=='success'?'success':'danger';?> alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4><i class="icon fa fa-<?php echo $form_response[0]=='success'?'fa-check':'fa-ban';?>"></i> <?php echo $form_response[0]=='success'?t('Success').'!':t('Error').'!';?></h4>
-                    <?php echo $form_response[1];?>
-                </div>
-            <?php } ?>
+            <?php get_message_helper() ?>
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title"><?php echo t('Edit Page');?></h3>
@@ -30,11 +22,11 @@
                     <div class="box-body has-feedback <?php echo has_error('title')?'has-error':'';?>">
                         <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo $page->title;?>">
                         <p class="help-block"><b>Permalink: </b>  http://minyy.com/example-title-alias-link-here.php</p>
-                        <?php if (has_error('title')) echo ger_error('title');?>
+                        <?php if (has_error('title')) echo get_error('title');?>
                     </div>
                     <div class="box-body has-feedback <?php echo has_error('content')?'has-error':'';?>">
                         <textarea class="text-area" id="content" name="content" placeholder="<?php echo t('Place some text here');?>" style="width: 100%; height: 200px; font-size: 16px; line-height: 12px; border: 1px solid #dddddd; padding: 10px;"><?php echo $page->content;?></textarea>
-                        <?php if (has_error('content')) echo ger_error('content');?>
+                        <?php if (has_error('content')) echo get_error('content');?>
                     </div>
                     <div class="box-body form-group">
                         <a href="/pages/delete/<?php echo $page->pkpage;?>" class="btn btn-danger pull-right"><?php echo t('Delete');?></a>

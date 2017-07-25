@@ -49,18 +49,6 @@ $(function () {
         }
         return false;
     });
-    $('[data-toggle="toggle-checkboxs"]').on('click',function(){
-        if($(this).hasClass('all-selected')){
-            $($(this).data('target')).prop('checked',false);
-            $(this).removeClass('all-selected');
-        }
-        else{
-            $($(this).data('target')).prop('checked',true);
-            $(this).addClass('all-selected');
-        }
-        return false;
-    });
-
     $('a[data-toggle="change-order"]').on('click',function(event,target){
         var newOrderDir = $(event.currentTarget).hasClass('asc') ? 'desc' : 'asc';
 
@@ -84,4 +72,53 @@ $(function () {
         var route=routeArr.join('&');
         location.href='?'+route;
     });
+
+    $('[data-toggle="toggle-checkboxs"]').on('click',function(){
+        if($(this).hasClass('all-selected')){
+            $($(this).data('target')).prop('checked',false);
+            $(this).removeClass('all-selected');
+        }
+        else{
+            $($(this).data('target')).prop('checked',true);
+            $(this).addClass('all-selected');
+        }
+        return false;
+    });
+
+    $('[data-toggle="action-checkboxes"]').on('click',function () {
+        var checkboxes = $($(this).data('target')+':checked');
+        var elements = new Array;
+        for (var i = 0;i<checkboxes.length;i++){
+            elements.push($(checkboxes[i]).attr('id'));
+        }
+        post_request($(this).data('action'),{id_array: elements});
+        return false;
+    });
+
+    $('.dropdown-menu li a[href="#"]').on('click',function () {
+        return false;
+    });
+
+    function post_request(path, params, method) {
+        method = method || 'post';
+
+        var form = document.createElement('form');
+        form.setAttribute('method', method);
+        form.setAttribute('action', path);
+
+        for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+                var hiddenField = document.createElement('input');
+                hiddenField.setAttribute('type', 'hidden');
+                hiddenField.setAttribute('name', key);
+                hiddenField.setAttribute('value', params[key]);
+
+                form.appendChild(hiddenField);
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
 });

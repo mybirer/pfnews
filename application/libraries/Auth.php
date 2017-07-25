@@ -29,9 +29,20 @@ class Auth {
         
         if ($query->num_rows() > 0)
         {
-            return EMAIL_EXIST;
+            return EXIST;
         }
-        return EMAIL_NOT_EXIST;
+        return NOT_EXIST;
+    }
+
+    public function username_check($username)
+    {
+        $query = $this->ci->db->where('username', $username)->get($this->user_table);
+
+        if ($query->num_rows() > 0)
+        {
+            return EXIST;
+        }
+        return NOT_EXIST;
     }
 
     public function login($email, $password)
@@ -69,7 +80,7 @@ class Auth {
     {
         $current = time();
         if(array_key_exists($this->side,$_SESSION)){
-            if($current-$this->read('logged_in')>SESSION_TIMEOUT){
+            if($current-$this->read('last_visit')>SESSION_TIMEOUT){
                 //timeout -- autologout
                 $this->logout();
                 return FALSE;
@@ -84,8 +95,7 @@ class Auth {
     {
         $current = time();
         $_SESSION[$this->side]['last_visit']=$current;
-        $this->ci->db->where(array($this->primary_key => $this->read('user_id')))->update($this->user_table,array('last_visit'=>$current));
-
+        $this->ci->db->where(array($this->primary_key => $this->read('user_id')))->update($this->user_table,array('last_visit'=>date('Y-m-d H:i:s',$current)));
     }
     public function read($key)
     {
@@ -100,16 +110,11 @@ class Auth {
 
     public function has_access($module, $action='')
     {
-        $user = $this->ci->users_model->get(array('pkuser'=>intval($this->read('user_id'))));
+        $user = $this->ci->users_model->get_with_modules(array('pkuser'=>intval($this->read('user_id'))));
 
-        $user_type = $user->user_type;
-        $this->ci->load->model('user_type_model');
-        $user_type_model =  $this->ci->user_type_model->get(array('pkusertype'=>$user_type));
-        $modules = json_decode($user_type_model->modules,true);
-
-        if (array_key_exists($module,$modules)){
+        if (array_key_exists($module,$user->modules)){
             if (!empty($action)){
-                if(in_array($action,$modules[$module])){
+                if(in_array($action,$user->modules[$module])){
                     return true;
                 }
                 return false;

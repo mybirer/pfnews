@@ -10,6 +10,7 @@ class Pages extends MY_Controller
     }
 
     public function index(){
+        backend_login_check('pages','list');
         $data = array();
         $data['pages'] = $this->pages_model->get_all(array());
 
@@ -20,6 +21,7 @@ class Pages extends MY_Controller
 
     public function add()
     {
+        backend_login_check('pages','add');
         $data = array();
 
         //form gönderilmiş ise çalıştır.
@@ -29,10 +31,10 @@ class Pages extends MY_Controller
 
             if ($this->pages_model->insert(array('title'=>$title,'content'=>$content,'created_by'=>$this->session->user_id))){
                 //başarılı
-                send_message('form_response',array('success',sprintf(t('%s created successfully'),t('Page'))));
+                send_alert(array('success',sprintf(t('%s created successfully'),t('Page'))));
                 redirect('/pages/edit/'.$this->pages_model->get_last_id());
             }else{
-                send_message('form_response',array('failed',sprintf(t('%s cannot be created'),t('Page'))));
+                send_alert(array('error',sprintf(t('%s cannot be created'),t('Page'))));
                 $this->template->title('Printf News - Pages');
                 $this->template->build('Page_add', $data);
             }
@@ -44,13 +46,14 @@ class Pages extends MY_Controller
 
     public function edit($pageid = 0)
     {
+        backend_login_check('pages','edit');
         $data = array();
 
         //sayfa sistemde var mı
         if ($this->page_exist($pageid))
         {
             //form gönderilmiş mi
-            if (is_post_request())
+            if (!empty($_POST))
             {
                 //form uygun formatta mı
                 if ($this->page_form_validate())
@@ -63,14 +66,14 @@ class Pages extends MY_Controller
                     //db de auto_update olarak ayarlandığından 'updated_at' field ında bir güncelleme yapmadık.
                     if ($this->pages_model->update(array('title'=>$title,'content'=>$content,'updated_by'=>$this->session->user_id),array('pkpage'=>$pageid))){
                         //başarılı
-                        send_message('form_response',array('success',sprintf(t('%s updated successfully'),t('Page'))));
+                        send_alert(array('success',sprintf(t('%s updated successfully'),t('Page'))));
                         redirect('/pages/edit/'.$pageid);
                     }
                     else
                     {
                         //başarısız
                         //form doğrulamadan geçti fakat başka bir hata meydana geldi
-                        send_message('form_response',array('failed',sprintf(t('%s cannot be updated'),t('Page'))));
+                        send_alert(array('error',sprintf(t('%s cannot be updated'),t('Page'))));
                         $this->template->title('Printf News - Pages');
                         $this->template->build('Page_add', $data);
                     }
@@ -78,7 +81,7 @@ class Pages extends MY_Controller
                 else
                 {
                     // güncellenen form formata uygun değil
-                    send_message('form_response',array('failed',t('Page can not be updated. Please update the form as suitable format')));
+                    send_alert(array('error',t('Page can not be updated. Please update the form as suitable format')));
                     $data['pages'] = $this->pages_model->get_all(array('pkpage' => $pageid));
                 }
             }
@@ -94,7 +97,7 @@ class Pages extends MY_Controller
         else
         {
             //sayfa sistemde yok
-            send_message('form_response',array('failed',t('The page you have tried to edit is not exist')));
+            send_alert(array('error',t('The page you have tried to edit is not exist')));
             redirect('/pages');
         }
 
@@ -102,18 +105,19 @@ class Pages extends MY_Controller
 
     public function delete($pageid = 0)
     {
+        backend_login_check('pages','remove');
         //sayfa sistemde mevcut mu
         if (!$this->page_exist($pageid)){
-            $this->session->set_flashdata('form_response',array('failed',t('The page you have tried to delete is not exist')));
+            send_alert(array('error',t('The page you have tried to delete is not exist')));
         }else{
             //mevcutsa sil
             $this->pages_model->delete(array('pkpage'=>$pageid));
             if (!$this->page_exist($pageid)){
                 //database den silinen satır sayısı çekilemiyor.
                 //Bu yüzden silinen obje tekrar çağrılıyor var ise hata ver yok ise silinmiştir.
-                $this->session->set_flashdata('form_response',array('success',sprintf(t('%s deleted successfully',t('Page'))).'!'));
+                send_alert(array('success',sprintf(t('%s deleted successfully',t('Page'))).'!'));
             }else{
-                $this->session->set_flashdata('form_response',array('failed',sprintf(t('An error occurred while deletion the %s'),strtolower(t('Page'))).'!'));
+                send_alert(array('error',sprintf(t('An error occurred while deletion the %s'),strtolower(t('Page'))).'!'));
             }
         }
         redirect('/pages');
