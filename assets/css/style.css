@@ -103,3 +103,12 @@ ul.sub-list-vertical .checkbox {
 .table .img-circle {
     margin-right: 5px;
 }
+
+.hidden-file-input{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}

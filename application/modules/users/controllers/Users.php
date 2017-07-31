@@ -61,24 +61,32 @@ class Users extends MY_Controller {
                     //username var mı
                     if ($this->user_auth->username_check(trim($_POST['username'])) == NOT_EXIST)
                     {
+                        $result = $this->upload_profile_picture();
                         //trim atılıyor.
-                        $username = trim($_POST['username']);
-                        $fullname = trim($_POST['fullname']);
-                        $password = trim($_POST['password']);
-                        $email = trim($_POST['email']);
-                        $enabled = trim($_POST['enabled']) == 'on' ? 1 : 0;
-                        $user_type = trim($_POST['user_type']);
-                        $this->users_model->insert(
-                            array('username'=>$username,
-                                'fullname'=>$fullname,
-                                'password'=>$password,
-                                'email'=>$email,
-                                'enabled'=>$enabled,
-                                'user_type'=>$user_type));
+                        $data_set = array();
+                        $data_set['username'] = trim($_POST['username']);
+                        $data_set['fullname'] = trim($_POST['fullname']);
+                        $data_set['password'] = md5($_POST['password']);
+                        $data_set['email'] = trim($_POST['email']);
+                        $data_set['enabled'] = trim($_POST['enabled']) == 'on' ? 1 : 0;
+                        $data_set['user_type'] = trim($_POST['user_type']);
+                        if ($result['success'])
+                            $data_set['profile_picture'] = $result['response']['full_path'];
+
+                        $this->users_model->insert($data_set);
+
                         if ($this->db->affected_rows() == 1)
-                            send_alert(array('success','User created successfully!'));
+                        {
+                            if ($result['success'])
+                                send_alert(array('success','User created successfully!'));
+                            else
+                                send_alert(array('warning','User created successfully!<br>But profile picture can not be saved.<br>-- Reaseon: '.$result['response']));
+                            redirect('/users/edit/'.$this->users_model->get_last_id());
+                        }
                         else
+                        {
                             send_alert(array('error','An error occurred.<br>User can not be created!'));
+                        }
                     }
                     else
                     {
@@ -152,6 +160,86 @@ class Users extends MY_Controller {
         }
     }
 
+    public function enable($id = 0)
+    {
+        backend_login_check('users','edit');
+        $id_array = array();
+        //liste gönderilmiş ise
+        if (isset($_POST['id_array']))
+            $id_array = explode(',',$_POST['id_array']);
+        elseif ($id > 0)
+            array_push($id_array,$id);
+        foreach ($id_array as $id_element)
+            $this->users_model->update(array('enabled'=>1),array('pkuser'=>$id_element));
+        $this->log->log('info','users','');
+        $this->log->log('info','users','Users has been enabled: '.implode(',',$id_array));
+        send_alert(array('success','Seçilen kullanıcılar başarılı bir şekilde aktif hale getirilmiştir.'));
+        redirect('/dashboard/users');
+    }
+
+    public function disable($id = 0)
+    {
+        backend_login_check('users','edit');
+        $id_array = array();
+        //liste gönderilmiş ise
+        if (isset($_POST['id_array']))
+            $id_array = explode(',',$_POST['id_array']);
+        elseif ($id > 0)
+            array_push($id_array,$id);
+        foreach ($id_array as $id_element)
+            $this->users_model->update(array('enabled'=>0),array('pkuser'=>$id_element));
+        $this->log->log('info','users','Users has been disabled: '.implode(',',$id_array));
+        send_alert(array('success','Seçilen kullanıcılar başarılı bir şekilde deaktif hale getirilmiştir.'));
+        redirect('/dashboard/users');
+    }
+
+    public function delete($id = 0)
+    {
+        backend_login_check('users','remove');
+        $id_array = array();
+        //liste gönderilmiş ise
+        if (isset($_POST['id_array']))
+            $id_array = explode(',',$_POST['id_array']);
+        elseif ($id > 0)
+            array_push($id_array,$id);
+        foreach ($id_array as $id_element)
+            $this->users_model->delete(array('pkuser'=>$id_element));
+        $this->log->log('info','users','Users has been deleted: '.implode(',',$id_array));
+        send_alert(array('success','Seçilen kullanıcılar başarılı bir şekilde silinmiştir.'));
+        redirect('/dashboard/users');
+    }
+
+    private function upload_profile_picture()
+    {
+        $result = array();
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['remove_spaces'] = true;
+        $config['detect_mime'] = true;//önemli. shell injection a karşı güvenlik önlemi alıyor
+        $this->load->library('upload', $config);
+//                        max_size
+//                        max_width
+//                        max_height
+//                        min_width
+//                        min_height
+//                        max_filename
+//                        max_filename_increment
+//                        encrypt_name
+
+        if ($this->upload->do_upload('profile_picture'))
+        {
+            $result['success'] = true;
+            $result['response'] = $this->upload->data();
+        }
+        else
+        {
+            $result['success'] = false;
+            $result['response'] = $this->upload->display_errors('','');
+        }
+
+        return $result;
+    }
+
     //post ile gönderilen veri kayıt edilir
     private function edit_user($user)
     {
@@ -198,9 +286,15 @@ class Users extends MY_Controller {
                         'enabled'=>$enabled,
                         'user_type'=>$user_type),array('pkuser'=>$user['pkuser']));
                 if ($this->db->affected_rows() == 1)
+                {
+                    $this->log->log('info','users','User edited successfully: '.$username);
                     send_alert(array('success','User updated successfully!'));
+                }
                 else
+                {
+                    $this->log->log('info','users','An error occurred while updating user: '.$username);
                     send_alert(array('error','An error occurred.<br>User can not be updated!'));
+                }
             }
             else
             {
@@ -222,6 +316,7 @@ class Users extends MY_Controller {
         if ($this->change_user_password_validate())
         {
             $this->users_model->update(array('password'=>md5($_POST['password'])),array('pkuser'=>$user['pkuser']));
+            $this->log->log('info','users','Change password: '.$user['username']);
             send_alert(array('success','Password changed successfully'));
         }
         else
@@ -231,56 +326,19 @@ class Users extends MY_Controller {
         }
     }
 
-    //toplu olarak seçilen kullanıcılar ile işlem yapmaya yarar
-    public function action($type = ''){
-        backend_login_check('users','edit');
-        //@todo güvenlik açıklarını kapat.
-
-        if (($type=='enable' || $type=='disable' || $type=='delete') && !empty($_POST['id_array']))
-        {
-            $id_array = explode(',',$_POST['id_array']);
-            if (count($id_array)==0)
-                send_alert(array('error','Invalid argument type.'));
-            else
-            {
-                switch ($type):
-                    case 'enable':
-                        foreach ($id_array as $id)
-                            $this->users_model->update(array('enabled'=>1),array('pkuser'=>$id));
-                        send_alert(array('success','Seçilen kullanıcılar başarılı bir şekilde aktif hale getirilmiştir.'));
-                        break;
-                    case 'disable':
-                        foreach ($id_array as $id)
-                            $this->users_model->update(array('enabled'=>0),array('pkuser'=>$id));
-                        send_alert(array('success','Seçilen kullanıcılar başarılı bir şekilde deaktif hale getirilmiştir.'));
-                        break;
-                    case 'delete':
-                        foreach ($id_array as $id)
-                            $this->users_model->delete(array('pkuser'=>$id));
-                        send_alert(array('success','Seçilen kullanıcılar başarılı bir şekilde silinmiştir.'));
-                        break;
-                endswitch;
-            }
-        }
-        else
-        {
-            send_alert(array('error','Parameter is missing.'));
-        }
-        redirect('/dashboard/users');
-    }
-
     //post olarak gönderilen yeni kullanıcı ekle formunu check eder
     private function add_user_form_validate(){
-        $this->form_validation->set_rules('email','Email','trim|required|min_length[6]|max_length[255]');
+        $this->form_validation->set_rules('email','Email','trim|required|valid_email|min_length[6]|max_length[255]');
         $this->form_validation->set_rules('username','Username','trim|required|min_length[4]|max_length[32]');
-        $this->form_validation->set_rules('password','Password','trim|required|min_length[4]|max_length[32]|matches[confirm_password]');
+        $this->form_validation->set_rules('password','Password','required|min_length[4]|max_length[32]|matches[confirm_password]');
+        $this->form_validation->set_rules('confirm_password','Password','required|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('user_type','User Type','trim|required');
         return $this->form_validation->run();//belirtilen formatta ise tue değilse false döner
     }
 
     //post olarak gönderilen kullanıcı düzenleme formunu check eder
     private function edit_user_form_validate(){
-        $this->form_validation->set_rules('email','Email','trim|required|min_length[6]|max_length[255]');
+        $this->form_validation->set_rules('email','Email','trim|required|valid_email|min_length[6]|max_length[255]');
         $this->form_validation->set_rules('username','Username','trim|required|min_length[4]|max_length[32]');
         $this->form_validation->set_rules('user_type','User Type','trim|required');
         return $this->form_validation->run();//belirtilen formatta ise tue değilse false döner
@@ -288,8 +346,8 @@ class Users extends MY_Controller {
 
     //post olarak gönderilen kullanıcı şifre değiştirme formunu check eder
     private function change_user_password_validate(){
-        $this->form_validation->set_rules('password','Password','trim|required|min_length[4]|max_length[32]|matches[confirm_password]');
-        $this->form_validation->set_rules('confirm_password','Password','trim|required|min_length[4]|max_length[32]');
+        $this->form_validation->set_rules('password','Password','required|min_length[4]|max_length[32]|matches[confirm_password]');
+        $this->form_validation->set_rules('confirm_password','Password','required|min_length[4]|max_length[32]');
         return $this->form_validation->run();//belirtilen formatta ise tue değilse false döner
     }
 }

@@ -88,6 +88,48 @@ class comments_model extends BS_Model
             ->count_all_results();
         return $result;
     }
+
+    //get_all_filter ile where kullanamıyoruz
+    //get_all metodundan farkı ise limit ekliyoruz
+    //genel olarak where 3 parametre alır
+    // 1-object_id
+    // 2-module_name
+    // 3-status
+    public function get_module_comments($where,$limit,$offset)
+    {
+        $result = $this->db
+            ->where($where)
+            ->order_by('created_at','desc')
+            ->limit($limit,$offset)
+            ->get($this->table_name)
+            ->result();
+        return $result;
+    }
+
+    public function get_module_comments_count($where,$limit,$offset)
+    {
+        $count = $this->db
+            ->where($where)
+            ->limit($limit,$offset)
+            ->count_all_results($this->table_name);
+        return $count;
+    }
+
+    public function add_comment($object_id, $module_name, $content,$email = '', $status = 'pending')
+    {
+        if (empty(trim($object_id)) || empty(trim($module_name)) || empty(trim($content)) || empty($status)){
+            //todo please fill all required contents
+            return false;
+        }
+        //todo clear security issues
+        $data = array('object_id'=>$object_id,'module_name'=>$module_name,'content'=>$content,'email'=>$email);
+        if ($this->subscriber_auth->is_logged())
+            $data['subscriber_id'] = $this->subscriber_auth->read('user_id');
+        if ($this->user_auth->is_logged())
+            $data['user_id'] = $this->user_auth->read('user_id');
+        $this->insert($data);
+        return $this->get_last_id();
+    }
 }
 
 ?>

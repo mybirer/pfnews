@@ -52,10 +52,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'home';
 $route['login'] = 'authentication/panel_login';
 $route['logout'] = 'authentication/panel_logout';
+$route['register'] = 'authentication/panel_register';
 $route['panel'] = 'dashboard/panel';
-$route['dashboard/(:any)'] = '$1';
+$route['panel/(:any)'] = 'dashboard/panel/$1';
+$route['dashboard'] = 'dashboard/index';
+$route['dashboard/logout'] = 'authentication/dashboard_logout';
+
+//eğer base_url den sonra yukarıdakilerden farklı bir veri gelirse
+//sayfa olarak değerlendir. (Örn: http://example.com/iletisim => http://example.com/pages/show/iletisim)
+$route['(:any)'] = 'pages/show/$1';
+
+$route['haber/(:any)'] = 'news/show/$1';
+$route['video/(:any)'] = 'videos/show/$1';
+$route['galeri/(:any)'] = 'galleries/show/$1';
+
+$route['dashboard/comments'] = 'comments';
+$route['dashboard/comments/(:any)'] = 'comments/$1';
+$route['dashboard/comments/(:any)/(:any)'] = 'comments/$1/$2';
+
+$route['dashboard/logs'] = 'logs';
+$route['dashboard/logs/(:any)'] = 'logs/$1';
+$route['dashboard/logs/(:any)/(:any)'] = 'logs/$1/$2';
+
+$route['dashboard/pages'] = 'pages';
+$route['dashboard/pages/(:any)'] = 'pages/$1';
+$route['dashboard/pages/(:any)/(:any)'] = 'pages/$1/$2';
+
+$route['dashboard/subscribers'] = 'subscribers';
+$route['dashboard/subscribers/(:any)'] = 'subscribers/$1';
+$route['dashboard/subscribers/(:any)/(:any)'] = 'subscribers/$1/$2';
+
 $route['dashboard/users'] = 'users';
 $route['dashboard/users/(:any)'] = 'users/$1';
+$route['dashboard/users/(:any)/(:any)'] = 'users/$1/$2';
+
+$route['dashboard/(:any)'] = 'dashboard/dashboard/$1';
+
 $route['404_override'] = '';
 //
 //// you specific routes

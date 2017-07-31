@@ -68,10 +68,10 @@
                     </li>
                     <li class="user-footer">
                         <div class="pull-left">
-                            <a href="<?php echo base_url('/dashboard/profile') ?>" class="btn btn-default btn-flat">Profile</a>
+                            <a href="<?php echo base_url('/dashboard/profile') ?>" class="btn btn-default btn-flat"><?php echo t('Profile');?></a>
                         </div>
                         <div class="pull-right">
-                            <a href="<?php echo base_url('/authentication/dashboard_logout') ?>" class="btn btn-default btn-flat">Sign out</a>
+                            <a class="btn btn-default btn-flat" href="<?php echo base_url('/authentication/dashboard_logout');?>"><?php echo t('Sign out');?></a>
                         </div>
                     </li>
                 </ul>

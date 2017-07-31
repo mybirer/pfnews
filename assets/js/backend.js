@@ -121,4 +121,21 @@ $(function () {
         form.submit();
     }
 
+    //todo preview ayarla
+    // $('.hidden-file-input').on('change',function () {
+    //     var img_element = $(this).data('target');
+    //     var file_path = $(this).val();
+    //     if(file_path)
+    //     {
+    //         var reader = new FileReader();
+    //         reader.onload = function (e) {
+    //             $('#' + img_element).attr('src', e.target.result);
+    //         }
+    //         reader.readAsDataURL(file_path);
+    //     }
+    //
+    //     else
+    //         $('#' + img_element).attr('src','');
+    // });
+
 });

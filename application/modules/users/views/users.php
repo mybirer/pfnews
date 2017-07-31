@@ -23,10 +23,10 @@
                                 <div style="position: relative;">
                                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><?php echo t('Action');?><span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
-                                        <li><a data-toggle="action-checkboxes" href="#" data-target=".obj-checkbox" data-action="/users/action/enable" style="text-decoration: none;"><?php echo t('Set Enabled');?></a></li>
-                                        <li ><a data-toggle="action-checkboxes" href="#" data-target=".obj-checkbox" data-action="/users/action/disable" style="text-decoration: none;"><?php echo t('Set Disabled');?></a></li>
+                                        <li><a data-toggle="action-checkboxes" href="#" data-target=".obj-checkbox" data-action="/users/enable" style="text-decoration: none;"><?php echo t('Set Enabled');?></a></li>
+                                        <li ><a data-toggle="action-checkboxes" href="#" data-target=".obj-checkbox" data-action="/users/disable" style="text-decoration: none;"><?php echo t('Set Disabled');?></a></li>
                                         <li class="divider"></li>
-                                        <li><a data-toggle="action-checkboxes" href="#" data-target=".obj-checkbox" data-action="/users/action/delete" style="text-decoration: none;"><?php echo t('Delete');?></a></li>
+                                        <li><a data-toggle="action-checkboxes" href="#" data-target=".obj-checkbox" data-action="/users/delete" style="text-decoration: none;"><?php echo t('Delete');?></a></li>
                                     </ul>
                                 </div>
                             </div>

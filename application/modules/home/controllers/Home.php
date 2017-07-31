@@ -14,8 +14,6 @@ class Home extends MY_Controller {
         # Set Layout
 //        $this->template->set_layout('frontend_layout');
         $this->template->title('Welcome to CodeIgniter');
-        $this->template->set_partial('header', 'partials/header');
-        $this->template->set_partial('footer', 'partials/footer');
         $this->template->build('home', $data);
     }
 

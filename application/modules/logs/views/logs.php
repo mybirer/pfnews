@@ -70,31 +70,31 @@
                 <div class="box-body table-responsive no-padding">
                     <table class="table table-hover table-bordered table-striped dataTable" role="grid" >
                         <thead>
-                        <tr role="row">
-                            <th class="text-center"><a href="#" data-toggle="toggle-checkboxs" data-target=".obj-checkbox">#</a></th>
-                            <th><a href="#" class="live-label <?php is_ordered('kind'); ?>" data-toggle="change-order" data-order-by="kind"><?php echo t('Level');?></a></th>
-                            <th><a href="#" class="live-label <?php is_ordered('module'); ?>" data-toggle="change-order" data-order-by="module"><?php echo t('Module');?></a></th>
-                            <th><a href="#" class="live-label <?php is_ordered('description'); ?>" data-toggle="change-order" data-order-by="description"><?php echo t('Description');?></a></th>
-                            <th><a href="#" class="live-label <?php is_ordered('created_at'); ?>" data-toggle="change-order" data-order-by="created_at"><?php echo t('Time');?></a></th>
-                            <th><a href="#" class="live-label <?php is_ordered('ip'); ?>" data-toggle="change-order" data-order-by="ip"><?php echo t('IP Address');?></a></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    //warning #FFE495  error: #ffa8a7  information: #a3d0ef
-                    foreach ($objects as $object):?>
-                        <tr role="row" <?php if ($object->kind == 'error') echo 'style="background-color: #ffa8a7"'; if ($object->kind == 'warning') echo 'style="background-color: #FFE495"'; if ($object->kind == 'important') echo 'style="background-color: #ce8483"';?>>
-                            <td class="text-center"><label><input type="checkbox" class="minimal obj-checkbox" name="check_list[]" id="<?php echo $object->pklog;?>"/></label></td>
-                            <td><?php echo $object->kind;?></td>
-                            <td><?php echo $object->module?></td>
-                            <td><?php echo $object->description?></td>
-                            <td><?php echo $object->created_at?></td>
-                            <td><?php echo $object->ip?></td>
-                        </tr>
-                <?php endforeach;?>
-                    </tbody>
-                </table>
-            </div>
+                            <tr role="row">
+                                <th class="text-center"><a href="#" data-toggle="toggle-checkboxs" data-target=".obj-checkbox">#</a></th>
+                                <th><a href="#" class="live-label <?php is_ordered('kind'); ?>" data-toggle="change-order" data-order-by="kind"><?php echo t('Level');?></a></th>
+                                <th><a href="#" class="live-label <?php is_ordered('module'); ?>" data-toggle="change-order" data-order-by="module"><?php echo t('Module');?></a></th>
+                                <th><a href="#" class="live-label <?php is_ordered('description'); ?>" data-toggle="change-order" data-order-by="description"><?php echo t('Description');?></a></th>
+                                <th><a href="#" class="live-label <?php is_ordered('created_at'); ?>" data-toggle="change-order" data-order-by="created_at"><?php echo t('Time');?></a></th>
+                                <th><a href="#" class="live-label <?php is_ordered('ip'); ?>" data-toggle="change-order" data-order-by="ip"><?php echo t('IP Address');?></a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        //warning #FFE495  error: #ffa8a7  information: #a3d0ef
+                        foreach ($objects as $object):?>
+                            <tr role="row" <?php if ($object->kind == 'error') echo 'style="background-color: #ffa8a7"'; if ($object->kind == 'warning') echo 'style="background-color: #FFE495"'; if ($object->kind == 'important') echo 'style="background-color: #ce8483"';?>>
+                                <td class="text-center"><label><input type="checkbox" class="minimal obj-checkbox" name="check_list[]" id="<?php echo $object->pklog;?>"/></label></td>
+                                <td><?php echo $object->kind;?></td>
+                                <td><?php echo $object->module?></td>
+                                <td><?php echo $object->description?></td>
+                                <td><?php echo $object->created_at?></td>
+                                <td><?php echo $object->ip?></td>
+                            </tr>
+                    <?php endforeach;?>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="box-footer">
                     <div class="table-length dataTables_length pull-left">
                         <label><?php echo t('Show');?>

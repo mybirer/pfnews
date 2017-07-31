@@ -14,17 +14,22 @@
         <div class="col-xs-9">
             <?php get_message_helper()?>
             <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title"><?php echo t('New Page');?></h3>
-                </div>
                 <div class="box-body table-responsive">
                     <div class="box-body has-feedback <?php echo has_error('title')?'has-error':'';?>">
+                        <label for="title"><?php echo t('Page Title');?></label>
                         <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo set_value('title');?>">
-                        <p class="help-block"><b>Permalink: </b>  http://minyy.com/example-title-alias-link-here.php</p>
                         <?php if (has_error('title')) echo get_error('title');?>
                     </div>
+                    <div class="box-body has-feedback <?php echo has_error('alias')?'has-error':'';?>">
+                        <label for="alias"><?php echo t('Page link');?></label>
+                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique page name" value="<?php echo set_value('title');?>">
+                        <p class="help-block"><b>Pagelink: </b>  <?php echo base_url('pagelink');?></p>
+                        <?php if (has_error('alias')) echo get_error('alias');?>
+                    </div>
                     <div class="box-body has-feedback <?php echo has_error('content')?'has-error':'';?>">
-                        <textarea class="text-area" id="content" name="content" placeholder="<?php echo t('Place some text here');?>" style="width: 100%; height: 200px; font-size: 16px; line-height: 12px; border: 1px solid #dddddd; padding: 10px;"><?php echo set_value('content');?></textarea>
+                        <textarea id="content" name="content" rows="10" cols="80">
+                            <?php echo set_value('content');?>
+                        </textarea>
                         <?php if (has_error('content')) echo get_error('content');?>
                     </div>
                     <div class="box-body form-group">
@@ -51,7 +56,7 @@
                 </div>
                 <div class="box-body table-responsive">
                     <label class="help-block pull-left">
-                        <input type="checkbox" name="comment_status" id="comment_status" class="flat-red">
+                        <input type="checkbox" name="allow_comments" id="allow_comments" class="flat-red">
                         &nbsp;<?php echo t('Allow Comments');?>
                     </label>
                     <button type="submit" name="addPostForm" data-toggle="save" class="btn btn-success pull-right">
@@ -65,8 +70,12 @@
 </section>
 <script src="<?php echo base_url('plugins/iCheck/icheck.min.js');?>"></script>
 <script src="<?php echo base_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js');?>"></script>
-<script type="text/javascript">
+<script>
     $(function () {
-        $("#content").wysihtml5();
+        // Replace the <textarea id="editor1"> with a CKEditor
+        // instance, using default configuration.
+        CKEDITOR.replace('content');
+        //bootstrap WYSIHTML5 - text editor
+        $(".textarea").wysihtml5();
     });
 </script>

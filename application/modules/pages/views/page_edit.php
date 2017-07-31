@@ -20,9 +20,15 @@
                 </div>
                 <div class="box-body table-responsive">
                     <div class="box-body has-feedback <?php echo has_error('title')?'has-error':'';?>">
+                        <label for="title"><?php echo t('Page Title');?></label>
                         <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo $page->title;?>">
-                        <p class="help-block"><b>Permalink: </b>  http://minyy.com/example-title-alias-link-here.php</p>
                         <?php if (has_error('title')) echo get_error('title');?>
+                    </div>
+                    <div class="box-body has-feedback <?php echo has_error('alias')?'has-error':'';?>">
+                        <label for="alias"><?php echo t('Page link');?></label>
+                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique page name" value="<?php echo $page->alias;?>">
+                        <p class="help-block"><b>Pagelink: </b>  <?php echo base_url('pagelink');?></p>
+                        <?php if (has_error('alias')) echo get_error('alias');?>
                     </div>
                     <div class="box-body has-feedback <?php echo has_error('content')?'has-error':'';?>">
                         <textarea class="text-area" id="content" name="content" placeholder="<?php echo t('Place some text here');?>" style="width: 100%; height: 200px; font-size: 16px; line-height: 12px; border: 1px solid #dddddd; padding: 10px;"><?php echo $page->content;?></textarea>
@@ -46,13 +52,13 @@
                 <div class="box-body table-responsive">
                     <label><?php echo t('Status');?></label>
                     <select id="status" name="status" class="form-control select2" style="width: 100%;">
-                        <option value="publish" selected="selected"><?php echo t('Publish');?></option>
-                        <option value="draft"><?php echo t('Draft');?></option>
+                        <option value="publish" <?php echo $page->status=='published'?'selected="selected"':'';?>><?php echo t('Publish');?></option>
+                        <option value="draft" <?php echo $page->status=='draft'?'selected="selected"':'';?>><?php echo t('Draft');?></option>
                     </select>
                 </div>
                 <div class="box-body table-responsive">
                     <label class="help-block pull-left">
-                        <input type="checkbox" name="comment_status" id="comment_status" class="flat-red">
+                        <input type="checkbox" name="allow_comments" id="allow_comments" <?php echo $page->allow_comments?'checked':'';?>>
                         &nbsp;<?php echo t('Allow Comments');?>
                     </label>
                     <button type="submit" name="addPostForm" data-toggle="save" class="btn btn-success pull-right">

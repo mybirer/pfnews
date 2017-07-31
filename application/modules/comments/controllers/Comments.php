@@ -20,7 +20,7 @@ class Comments extends MY_Controller
     {
         backend_login_check('comments','list');
         $data = array();
-        $filter_params = get_filter_params('pkcomments');
+        $filter_params = get_filter_params('pkcomment');
 
         $data['objects'] = $this->comments_model
             ->get_all_filter($filter_params['search_term'],
@@ -54,10 +54,9 @@ class Comments extends MY_Controller
         if (isset($_POST['content']))
         {
             //güncelle
-            $this->comments_model
-                ->update(array(
-                    'content'=>$_POST['content'],
-                    'status'=>in_array($_POST['status'],array('approved','pending','spam'))?$_POST['status']:'pending'),array('pkcomment'=>$id));
+            $content = trim($_POST['content']);
+            $status = $_POST['status'];
+            $this->comments_model->update(array('content'=>$content,'status'=>$status),array('pkcomment'=>$id));
             send_alert(array('success','Comment updated successfully'));
             redirect(current_url());
         }

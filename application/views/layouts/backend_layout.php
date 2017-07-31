@@ -1,5 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
 <!DOCTYPE html>
 <html lang="tr">
     <head>
@@ -7,6 +6,7 @@
         <title><?php echo $template['title'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
 
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/packages/bootstrap/css/bootstrap.min.css');?>">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/packages/fontawesome/css/font-awesome.min.css');?>">

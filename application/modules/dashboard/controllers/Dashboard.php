@@ -8,19 +8,28 @@ class Dashboard extends MY_Controller
         parent::__construct();
     }
 
-    public function index(){
+    public function index()
+    {
         if (!$this->user_auth->is_logged()){
             $auth_module = modules::load('authentication/Authentication/');
             $auth_module->dashboard_login();
         }
         else{
+            //dashboard a erişimi var mı?
+            backend_login_check('dashboard');
             $data = array();
-            Globals::setActiveModule('dashboard');
             $this->template->title('Printf News - Pages');
             $this->template->build('dashboard',$data);
         }
     }
 
+    public function no_access()
+    {
+        backend_login_check('dashboard');
+
+        $this->template->title('Printf News - Access Denied');
+        $this->template->build('no_access');
+    }
 }
 
 ?>

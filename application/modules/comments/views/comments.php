@@ -19,11 +19,11 @@
                                 <div style="position: relative;">
                                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><?php echo t('Action');?><span class="fa fa-caret-down"></span></button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="#" data-toggle="action-checkboxes" class="text-green" data-target=".obj-checkbox" data-action="/comments/approve" style="text-decoration: none;"><i class="fa  fa-check-circle-o"></i><?php echo t('Approve');?></a></li>
-                                        <li><a href="#" data-toggle="action-checkboxes" class="text-yellow" data-target=".obj-checkbox" data-action="/comments/set_pending" style="text-decoration: none;"><i class="fa fa-hourglass-o"></i><?php echo t('Set Pending');?></a></li>
-                                        <li><a href="#" data-toggle="action-checkboxes" class="text-red" data-target=".obj-checkbox" data-action="/comments/set_spam" style="text-decoration: none;"><i class="fa fa-minus-circle"></i><?php echo t('Spam');?></a></li>
+                                        <li><a href="#" data-toggle="action-checkboxes" class="text-green" data-target=".obj-checkbox" data-action="comments/approve" style="text-decoration: none;"><i class="fa  fa-check-circle-o"></i><?php echo t('Approve');?></a></li>
+                                        <li><a href="#" data-toggle="action-checkboxes" class="text-yellow" data-target=".obj-checkbox" data-action="comments/set_pending" style="text-decoration: none;"><i class="fa fa-hourglass-o"></i><?php echo t('Set Pending');?></a></li>
+                                        <li><a href="#" data-toggle="action-checkboxes" class="text-red" data-target=".obj-checkbox" data-action="comments/set_spam" style="text-decoration: none;"><i class="fa fa-minus-circle"></i><?php echo t('Spam');?></a></li>
                                         <li class="list-seperator"></li>
-                                        <li><a href="#" data-toggle="action-checkboxes" data-target=".obj-checkbox" data-action="/comments/delete" style="text-decoration: none;"><i class="fa fa-trash-o"></i><?php echo t('Delete');?></a></li>
+                                        <li><a href="#" data-toggle="action-checkboxes" data-target=".obj-checkbox" data-action="comments/delete" style="text-decoration: none;"><i class="fa fa-trash-o"></i><?php echo t('Delete');?></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@
                                 <a href="#" id="detailed-filter-btn" class="btn btn-sm btn-info"><?php echo t('Detailed Filter');?></a>
                             </div>
                             <div class="form-group pull-left">
-                                <a href="<?php echo base_url('dashboard/logs') ?>" class="btn btn-sm btn-warning"><?php echo t('Reset');?></a>
+                                <a href="<?php echo base_url('dashboard/comments') ?>" class="btn btn-sm btn-warning"><?php echo t('Reset');?></a>
                             </div>
                             <div class="filter-panel" style="<?php echo isset($_GET['is_detailed']) && $_GET['is_detailed']==1 ? "display:block" : "display:none" ?>">
                                 <hr style="display:block;clear:both;" />
@@ -83,17 +83,32 @@
                             <td><label class="label bg-<?php if ($object->status=='approved') echo 'green';if ($object->status=='pending') echo 'yellow';if ($object->status=='spam') echo 'red';?>"><?php echo $object->status;?></label></td>
                             <td><?php echo $object->created_at;?></td>
                             <td>
-                                <a data-toggle="tooltip" title="" class="text-red" href="/comments/edit/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Edit');?>"><i class="fa fa-edit"></i></a>
+                                <a data-toggle="tooltip" title="" class="text-red" href="comments/edit/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Edit');?>"><i class="fa fa-edit"></i></a>
                                 <a data-toggle="tooltip" title="" class="text-blue pull-right" data-original-title="<?php echo t('Go to Comment');?>"><i class="fa fa-external-link"></i></a>
-                                <a data-toggle="tooltip" title="" class="text-green" href="/comments/approve/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Approve');?>"><i class="fa fa-check-circle-o"></i></a>
-                                <a data-toggle="tooltip" title="" class="text-yellow" href="/comments/set_pending/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Pending');?>"><i class="fa fa-hourglass-o"></i></a>
-                                <a data-toggle="tooltip" title="" class="text-red" href="/comments/set_spam/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Spam');?>"><i class="fa fa-minus-circle"></i></a>
-                                <a data-toggle="tooltip" title="" class="text-red" href="/comments/delete/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Delete');?>"><i class="fa fa-remove"></i></a>
+                                <a data-toggle="tooltip" title="" class="text-green" href="comments/approve/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Approve');?>"><i class="fa fa-check-circle-o"></i></a>
+                                <a data-toggle="tooltip" title="" class="text-yellow" href="comments/set_pending/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Pending');?>"><i class="fa fa-hourglass-o"></i></a>
+                                <a data-toggle="tooltip" title="" class="text-red" href="comments/set_spam/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Spam');?>"><i class="fa fa-minus-circle"></i></a>
+                                <a data-toggle="tooltip" title="" class="text-red" href="comments/delete/<?php echo $object->pkcomment;?>" data-original-title="<?php echo t('Delete');?>"><i class="fa fa-remove"></i></a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
                         </tbody>
                     </table>
+                </div>
+                <div class="box-footer">
+                    <div class="table-length dataTables_length pull-left">
+                        <label><?php echo t('Show');?>
+                            <select name="limit" class="input-sm">
+                                <option value="10" <?php echo get_url_variable_value("limit")=="10" ? "selected" : ""; ?>>10</option>
+                                <option value="25" <?php echo get_url_variable_value("limit")=="25" ? "selected" : ""; ?>>25</option>
+                                <option value="50" <?php echo get_url_variable_value("limit")=="50" ? "selected" : ""; ?>>50</option>
+                                <option value="100" <?php echo get_url_variable_value("limit")=="100" ? "selected" : ""; ?>>100</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="pagination_container">
+                        <?php echo $pagination;?>
+                    </div>
                 </div>
             </div>
         </div>

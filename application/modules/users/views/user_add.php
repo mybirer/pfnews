@@ -17,15 +17,17 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><?php echo t('Create New User');?></h3>
                 </div>
-                <?php echo form_open(current_url());?>
+                <?php echo form_open_multipart(current_url());?>
                 <div class="box-body margin">
                     <div class="col-sm-4 col-xs-12">
                         <div class="input-group">
                             <div class="col-xs-12 margin">
-                                <img class="profile-user-img img-responsive img-circle" style="width: 75%" src="../../assets/img/user4-128x128.jpg" alt="User profile picture">
+                                <img class="profile-user-img img-responsive img-circle" id="profile" style="width: 75%" src="../../assets/img/user4-128x128.jpg" alt="User profile picture">
                             </div>
-                            <div class="col-xs-12 form-group margin">
-                                <a class="btn btn-primary btn-block"><?php echo t('Upload Image');?></a>
+                            <div class="col-xs-12 form-group ">
+                                <input type="file" class="hidden-file-input" data-target="profile" id="profile_picture" name="profile_picture">
+                                <label for="profile_picture" class="btn bg-blue btn-flat btn-block margin"><i class="fa fa-upload">&nbsp;</i>  <?php echo t('Select Image');?></label>
+                                <p class="text-muted margin">Please select your image 120x120 pixel and should't exceed 2 Mb.</p>
                             </div>
                         </div>
                     </div>

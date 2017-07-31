@@ -45,6 +45,26 @@ class Auth {
         return NOT_EXIST;
     }
 
+    // gerçek login değildir.
+    // bu metod ile kullanıcı Controller tarafından giriş yapmaya çalışacak
+    // Eğer true dönerse bilgiler doğrudur ve kullanıcı engellenmiş mi onu kontrol etmeliyiz
+    // Bu kontrol, Controller tarafında yapılıyor. Engellenmemiş ise login() metodu çağırılıyor.
+    //  attempt_login() ile login() arasındaki tek fark attempt_login() sadece check eder
+    //  login() ise check ettikten sonra session a kayıt yapar.
+    public function attempt_login($email, $password)
+    {
+        $user = $this->ci->db
+            ->select($this->primary_key.' as user_id')
+            ->where(array('email'=>$email,'password'=>md5($password)))
+            ->get($this->user_table);
+
+        if ($user->num_rows() == 0)
+        {
+            return FALSE;
+        }
+        return TRUE;
+    }
+
     public function login($email, $password)
     {
         $user = $this->ci->db
@@ -79,11 +99,32 @@ class Auth {
     public function is_logged()
     {
         $current = time();
-        if(array_key_exists($this->side,$_SESSION)){
-            if($current-$this->read('last_visit')>SESSION_TIMEOUT){
+        if(array_key_exists($this->side,$_SESSION))
+        {
+            if($current-$this->read('last_visit')>SESSION_TIMEOUT)
+            {
                 //timeout -- autologout
                 $this->logout();
                 return FALSE;
+            }
+            else
+            {
+                //timeout ile logout olmaz ise kullanıcı engellenmiş mi bakılması lazım
+                //kullanıcı db den çekiliyor
+                $user = $this->ci->db->where(array($this->primary_key => $this->read('user_id')))
+                    ->get($this->user_table)->row_array();
+                if ($this->side == 'backend_session' && $user['enabled'] != '1')
+                {
+                    //kullanıcı private alanda ise (yani user ise)
+                    $this->logout();
+                    return false;
+                }
+                elseif ($this->side == 'frontend_session' && $user['banned'] == '1')
+                {
+                    //kullanıcı public alanda ise (yani subscriber ise)
+                    $this->logout();
+                    return false;
+                }
             }
             $this->update_session();
             return TRUE;
@@ -95,8 +136,10 @@ class Auth {
     {
         $current = time();
         $_SESSION[$this->side]['last_visit']=$current;
-        $this->ci->db->where(array($this->primary_key => $this->read('user_id')))->update($this->user_table,array('last_visit'=>date('Y-m-d H:i:s',$current)));
+        $this->ci->db->where(array($this->primary_key => $this->read('user_id')))
+            ->update($this->user_table,array('last_visit'=>date('Y-m-d H:i:s',$current)));
     }
+
     public function read($key)
     {
         return array_key_exists($key,$_SESSION[$this->side]) ? $_SESSION[$this->side][$key] : '';

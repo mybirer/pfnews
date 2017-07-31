@@ -146,22 +146,30 @@ if ( ! function_exists('backend_login_check'))
      * @param $action
      * o modüle ait action
      */
-    function backend_login_check($module,$action){
+    function backend_login_check($module,$action = ''){
         $ci = &get_instance();
         if ($ci->user_auth->is_logged())
         {
+            $ci->load->model('users/users_model');
             //kullanıcı login olmuşşsa
             //o modüle erişimi var mo kontrol edilmeli
             if ($ci->user_auth->has_access($module,$action))
             {
                 //erişime izin ver
+                Globals::setCurrentUser($ci->users_model->get_with_modules(array('pkuser'=>$_SESSION['backend_session']['user_id'])));
+                Globals::setModules($ci->db->get('pf_modules')->result_array());
                 Globals::setActiveModule($module);
+                $ci->template->set_layout('backend_layout');
+                $ci->template->set_partial('footer', 'partials/private_footer');
+                $ci->template->set_partial('header', 'partials/private_header');
+                $ci->template->set_partial('sidebar', 'partials/private_sidebar');
+
             }
             else
             {
                 //kullanıcı giriş yapmış fakat yetkisi yok ise
                 //todo 403 ekran hatası ver
-                redirect('/dashboard');
+                redirect('/dashboard/no_access');
                 die();
             }
         }

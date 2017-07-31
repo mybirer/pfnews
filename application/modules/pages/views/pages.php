@@ -35,11 +35,11 @@
                             <tr>
                                 <th style="width:60px;">#</th>
                                 <th><?php echo t('Title');?></th>
+                                <th><?php echo t('Alias');?></th>
                                 <th><?php echo t('Status');?></th>
                                 <th><?php echo t('Created At');?></th>
                                 <th><?php echo t('Comments');?></th>
                                 <th><?php echo t('Comment Count');?></th>
-                                <th>ID</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,14 +47,14 @@
                                 <tr>
                                     <td>
                                         <a data-toggle="tooltip" title="" class="text-red" href="/pages/edit/<?php echo $page->pkpage;?>" data-original-title="<?php echo t('Edit');?>"><i class="fa fa-edit"></i></a>
-                                        <a data-toggle="tooltip" title="" class="text-blue pull-right" data-original-title="<?php echo t('Go to Link');?>"><i class="fa fa-external-link"></i></a>
+                                        <a data-toggle="tooltip" title="" class="text-blue pull-right" target="_blank" href="<?php echo base_url($page->alias);?>" data-original-title="<?php echo t('Go to Link');?>"><i class="fa fa-external-link"></i></a>
                                     </td>
                                     <td><?php echo $page->title;?></td>
+                                    <td><?php echo $page->alias;?></td>
                                     <td><label class="label bg-<?php echo $page->status=='published'?'green':'yellow';?>"><?php echo $page->status == 'published'?t('Published'):t('Draft');?></label></td>
                                     <td><?php echo $page->created_at;?></td>
                                     <td><label class="label bg-<?php echo $page->allow_comments==0?'red':'green';?>"><?php echo $page->allow_comments==0?t('Closed'):t('Opened');?></label></td>
                                     <td><?php echo $page->comments;?></td>
-                                    <td><?php echo $page->pkpage;?></td>
                                 </tr>
                             <?php }?>
                         </tbody>

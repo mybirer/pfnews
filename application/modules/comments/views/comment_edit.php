@@ -4,8 +4,9 @@
         <?php echo t('Edit Comment');?>
     </h1>
     <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></li>
-        <li><i class="fa fa-dashboard active"></i> <?php echo t('Edit Comment');?></li>
+        <li><a href="<?php echo base_url('dashboard')?>"><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></a></li>
+        <li><a href="<?php echo base_url('dashboard/comments')?>"><i class="fa fa-comments-o"></i> <?php echo t('Comments');?></a></li>
+        <li><i class="fa fa-edit active"></i> <?php echo t('Edit Comment');?></li>
     </ol>
 </section>
 <section class="content">
@@ -42,10 +43,10 @@
                     <h3 class="box-title"><?php echo t('Status');?></h3>
                 </div>
                 <div class="box-body">
-                    <select class="form-control select2" name="status" style="width: 100%;">
-                        <option value="approved">Approved</option>
-                        <option value="pending">Pending</option>
-                        <option value="spam">Spam</option>
+                    <select class="form-control" name="status" style="width: 100%;">
+                        <option <?php echo $comment['status']=='approved'?'selected':'';?> value="approved">Approved</option>
+                        <option <?php echo $comment['status']=='pending'?'selected':'';?> value="pending">Pending</option>
+                        <option <?php echo $comment['status']=='spam'?'selected':'';?> value="spam">Spam</option>
                     </select>
                 </div>
                 <div class="box-footer">

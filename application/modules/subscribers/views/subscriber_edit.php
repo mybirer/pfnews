@@ -5,8 +5,9 @@
         <?php echo t('Edit Subscriber');?>
     </h1>
     <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></li>
-        <li><i class="fa fa-dashboard active""></i> <?php echo t('Edit Subscriber');?></li>
+        <li><a href="<?php echo base_url('dashboard')?>"><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></a></li>
+        <li><a href="<?php echo base_url('dashboard/subscribers')?>"><i class="fa fa-heart ""></i> <?php echo t('Subscribers');?></a></li>
+        <li><i class="fa fa-edit active""></i> <?php echo t('Edit Subscriber');?></li>
     </ol>
 </section>
 <section class="content">
@@ -38,8 +39,11 @@
                             <b><?php echo t('IP');?></b> <a class="pull-right"><?php echo $object->ip;?></a>
                         </li>
                     </ul>
-
-                    <a href="#" class="btn btn-danger btn-block" data-toggle="modal" data-target="#modal_ban"><b>Engelle</b></a>
+                    <?php if ($object->banned == '1'):?>
+                    <a href="<?php echo base_url('dashboard/subscribers/enable/'.$object->pksubscriber);?>" class="btn btn-success btn-block"><b><?php echo t('Enable');?></b></a>
+                    <?php else:?>
+                    <a href="<?php echo base_url('dashboard/subscribers/disable/'.$object->pksubscriber);?>" class="btn btn-danger btn-block"><b><?php echo t('Disable');?></b></a>
+                    <?php endif;?>
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -164,20 +168,3 @@
         </div>
     </div>
 </section>
-<div class="modal fade" id="modal_ban" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><?php echo t('Suspend this subscriber');?></h4>
-            </div>
-            <div class="modal-body">
-                <p><?php echo t('Are you sure that do you want to suspend this subscriber');?>?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal"><?php echo t('Cancel');?></button>
-                <button type="button" class="btn btn-danger"><?php echo t('Suspend');?></button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
