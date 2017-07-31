@@ -48,8 +48,27 @@ class Pages extends MY_Controller
 
     public function index(){
         backend_login_check('pages','list');
+
+//        $data['pages'] = $this->pages_model->get_all(array());
+
         $data = array();
-        $data['pages'] = $this->pages_model->get_all(array());
+        $filter_params = get_filter_params('pkpage');
+
+        $data['pages'] = $this->pages_model
+            ->get_all_filter($filter_params['search_term'],
+                $filter_params['order_by'],
+                $filter_params['order_dir'],
+                $filter_params['limit'],
+                $filter_params['offset'],
+                $filter_params['filter']);
+
+        //build pagination
+        $this->load->library('pagination');
+        $config['base_url'] = base_url('dashboard/pages');
+        $config['total_rows'] = $this->pages_model->get_all_filter_total($filter_params['search_term'],$filter_params['filter']);
+        $config['per_page'] = $filter_params['limit'];
+        $this->pagination->initialize($config);
+        $data['pagination'] = $this->pagination->create_links();
 
         $this->template->title('Printf News - Pages');
         $this->template->build('Pages', $data);
@@ -175,6 +194,16 @@ class Pages extends MY_Controller
         redirect('/pages');
     }
 
+    public function publish($pageid = 0)
+    {
+
+    }
+
+    public function unpublish($pageid = 0)
+    {
+
+    }
+
     //post olarak gönderilen formu check eder
     private function page_form_validate(){
         $this->form_validation->set_rules('title','Title','trim|required|min_length[8]|max_length[255]');
@@ -204,6 +233,7 @@ class Pages extends MY_Controller
             return false;
         return true;
     }
+
 }
 
 ?>
