@@ -78,6 +78,10 @@ $route['dashboard/pages'] = 'pages';
 $route['dashboard/pages/(:any)'] = 'pages/$1';
 $route['dashboard/pages/(:any)/(:any)'] = 'pages/$1/$2';
 
+$route['dashboard/articles'] = 'articles';
+$route['dashboard/articles/(:any)'] = 'articles/$1';
+$route['dashboard/articles/(:any)/(:any)'] = 'articles/$1/$2';
+
 $route['dashboard/subscribers'] = 'subscribers';
 $route['dashboard/subscribers/(:any)'] = 'subscribers/$1';
 $route['dashboard/subscribers/(:any)/(:any)'] = 'subscribers/$1/$2';

@@ -1,11 +1,11 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content-header">
     <h1>
-        <?php echo t('Pages');?>
+        <?php echo t('Articles');?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="<?php echo base_url('dashboard')?>"><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></a></li>
-        <li class="active"><i class="fa fa-file-o ""></i> <?php echo t('Pages');?></a></li>
+        <li class="active"><i class="fa fa-sticky-note ""></i> <?php echo t('Articles');?></a></li>
     </ol>
 </section>
 <section class="content">
@@ -40,19 +40,19 @@
                                 <a href="#" id="detailed-filter-btn" class="btn btn-sm btn-info"><?php echo t('Detailed Filter');?></a>
                             </div>
                             <div class="form-group pull-left">
-                                <a href="<?php echo base_url('dashboard/pages') ?>" class="btn btn-sm btn-warning"><?php echo t('Reset');?></a>
+                                <a href="<?php echo base_url('dashboard/articles') ?>" class="btn btn-sm btn-warning"><?php echo t('Reset');?></a>
                             </div>
                             <div class="form-group pull-right">
-                                <a href="pages/add" class="btn btn-success">
-                                    <i class="fa fa-plus"></i> <?php echo t('New Page');?>
+                                <a href="<?php echo base_url('dashboard/articles/add');?>" class="btn btn-success">
+                                    <i class="fa fa-plus"></i> <?php echo t('New Article');?>
                                 </a>
                             </div>
                             <div class="filter-panel" style="<?php echo isset($_GET['is_detailed']) && $_GET['is_detailed']==1 ? "display:block" : "display:none" ?>">
                                 <hr style="display:block;clear:both;" />
                                 <div class="form-group pull-left">
-                                    <label><?php echo t('Page Status');?>:</label>
+                                    <label><?php echo t('Article Status');?>:</label>
                                     <select class="form-control" name="f_key[status]"  style="max-width:200px">
-                                        <option value="">-<?php echo t('Filter by page status');?>-</option>
+                                        <option value="">-<?php echo t('Filter by article status');?>-</option>
                                         <option value="published" <?php echo is_filter_opt_selected('status', 'published')?>><?php echo t('Published');?></option>
                                         <option value="draft" <?php echo is_filter_opt_selected('status', 'draft')?>><?php echo t('Draft');?></option>
                                     </select>
@@ -88,18 +88,18 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($pages as $page){?>
+                        <?php foreach ($objects as $obj){?>
                             <tr>
                                 <td>
-                                    <a data-toggle="tooltip" title="" class="text-red" href="/pages/edit/<?php echo $page->pkpage;?>" data-original-title="<?php echo t('Edit');?>"><i class="fa fa-edit"></i></a>
-                                    <a data-toggle="tooltip" title="" class="text-blue pull-right" target="_blank" href="<?php echo base_url($page->alias);?>" data-original-title="<?php echo t('Go to Link');?>"><i class="fa fa-external-link"></i></a>
+                                    <a data-toggle="tooltip" title="" class="text-red" href="<?php echo base_url('dashboard/articles/edit/'.$obj->pkarticle);?>" data-original-title="<?php echo t('Edit');?>"><i class="fa fa-edit"></i></a>
+                                    <a data-toggle="tooltip" title="" class="text-blue pull-right" target="_blank" href="<?php echo base_url($obj->alias);?>" data-original-title="<?php echo t('Go to Link');?>"><i class="fa fa-external-link"></i></a>
                                 </td>
-                                <td><?php echo $page->title;?></td>
-                                <td><?php echo $page->alias;?></td>
-                                <td><label class="label bg-<?php echo $page->status=='published'?'green':'yellow';?>"><?php echo $page->status == 'published'?t('Published'):t('Draft');?></label></td>
-                                <td><?php echo $page->created_at;?></td>
-                                <td><label class="label bg-<?php echo $page->allow_comments==0?'red':'green';?>"><?php echo $page->allow_comments==0?t('Closed'):t('Opened');?></label></td>
-<!--                                <td>--><?php //echo $page->comments;?><!--</td>-->
+                                <td><?php echo $obj->title;?></td>
+                                <td><?php echo $obj->alias;?></td>
+                                <td><label class="label bg-<?php echo $obj->status=='published'?'green':'yellow';?>"><?php echo $obj->status == 'published'?t('Published'):t('Draft');?></label></td>
+                                <td><?php echo $obj->created_at;?></td>
+                                <td><label class="label bg-<?php echo $obj->allow_comments==0?'red':'green';?>"><?php echo $obj->allow_comments==0?t('Closed'):t('Opened');?></label></td>
+<!--                                <td>--><?php //echo $obj->comments;?><!--</td>-->
                             </tr>
                         <?php }?>
                         </tbody>

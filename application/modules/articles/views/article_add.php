@@ -1,12 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <section class="content-header">
     <h1>
-        <?php echo t('Add Page');?>
+        <?php echo t('Add Article');?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="<?php echo base_url('dashboard')?>"><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></a></li>
-        <li><a href="<?php echo base_url('dashboard/pages')?>"><i class="fa fa-file-o ""></i> <?php echo t('Pages');?></a></li>
-        <li><i class="fa fa-plus active""></i> <?php echo t('Add Page');?></li>
+        <li><a href="<?php echo base_url('dashboard/pages')?>"><i class="fa fa-file-o ""></i> <?php echo t('Article');?></a></li>
+        <li><i class="fa fa-plus active""></i> <?php echo t('Add Article');?></li>
     </ol>
 </section>
 <section class="content">
@@ -17,13 +17,13 @@
             <div class="box">
                 <div class="box-body table-responsive">
                     <div class="box-body has-feedback <?php echo has_error('title')?'has-error':'';?>">
-                        <label for="title"><?php echo t('Page Title');?></label>
+                        <label for="title"><?php echo t('Article Title');?></label>
                         <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo set_value('title');?>">
                         <?php if (has_error('title')) echo get_error('title');?>
                     </div>
                     <div class="box-body has-feedback <?php echo has_error('alias')?'has-error':'';?>">
-                        <label for="alias"><?php echo t('Page link');?></label>
-                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique page name" value="<?php echo set_value('title');?>">
+                        <label for="alias"><?php echo t('Article link');?></label>
+                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique article name" value="<?php echo set_value('title');?>">
                         <p class="help-block"><b>Pagelink: </b>  <?php echo base_url('pagelink');?></p>
                         <?php if (has_error('alias')) echo get_error('alias');?>
                     </div>
@@ -34,7 +34,7 @@
                         <?php if (has_error('content')) echo get_error('content');?>
                     </div>
                     <div class="box-body form-group">
-                        <a href="<?php echo base_url('/pages');?>" class="btn btn-danger pull-right"><?php echo t('Delete');?></a>
+                        <a href="<?php echo base_url('dashboard/articles');?>" class="btn btn-danger pull-right"><?php echo t('Delete');?></a>
                     </div>
                 </div>
             </div>

@@ -5,8 +5,9 @@
         <?php echo t('Edit Page');?>
     </h1>
     <ol class="breadcrumb">
-        <li><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></li>
-        <li><i class="fa fa-dashboard active"></i><?php echo t('Edit Page');?></li>
+        <li><a href="<?php echo base_url('dashboard')?>"><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></a></li>
+        <li><a href="<?php echo base_url('dashboard/pages')?>"><i class="fa fa-file-o ""></i> <?php echo t('Pages');?></a></li>
+        <li><i class="fa fa-edit active""></i> <?php echo t('Edit Page');?></li>
     </ol>
 </section>
 <section class="content">
@@ -27,11 +28,13 @@
                     <div class="box-body has-feedback <?php echo has_error('alias')?'has-error':'';?>">
                         <label for="alias"><?php echo t('Page link');?></label>
                         <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique page name" value="<?php echo $page->alias;?>">
-                        <p class="help-block"><b>Pagelink: </b>  <?php echo base_url('pagelink');?></p>
+                        <p class="help-block"><b><?php echo t('Pagelink');?>: </b>  <?php echo base_url('pagelink');?></p>
                         <?php if (has_error('alias')) echo get_error('alias');?>
                     </div>
                     <div class="box-body has-feedback <?php echo has_error('content')?'has-error':'';?>">
-                        <textarea class="text-area" id="content" name="content" placeholder="<?php echo t('Place some text here');?>" style="width: 100%; height: 200px; font-size: 16px; line-height: 12px; border: 1px solid #dddddd; padding: 10px;"><?php echo $page->content;?></textarea>
+                        <textarea id="content" name="content" rows="10" cols="80">
+                            <?php echo $page->content;?>
+                        </textarea>
                         <?php if (has_error('content')) echo get_error('content');?>
                     </div>
                     <div class="box-body form-group">
@@ -71,28 +74,12 @@
 </section>
 <script src="<?php echo base_url('plugins/iCheck/icheck.min.js');?>"></script>
 <script src="<?php echo base_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js');?>"></script>
-<script type="text/javascript">
-    var $con = $('.wysihtml5-toolbar');
-    var btnResize = $('<li>');
-    btnResize.append('<a class="btn" title="Resize editor" tabindex="-1" href="#"><i class="icon-resize-full"></i></a>')
-        .on('click', function(e){
-            e.preventDefault();
-            var $this = $(this);
-            // if large make small:
-            if( $this.hasClass('resized') ){
-                $('#content').removeClass('full-editor');
-                $this.removeClass('resized').find('i').removeClass('icon-resize-small');
-            } else {
-                // make large
-                $('#content').addClass('full-editor');
-                $this.addClass('resized').find('i').addClass('icon-resize-small');
-            }
-        });
-
-    // append resize button to toolbar
-    $con.find('.wysihtml5-toolbar').append(btnResize);
+<script>
     $(function () {
-        $("#content").wysihtml5();
+        // Replace the <textarea id="editor1"> with a CKEditor
+        // instance, using default configuration.
+        CKEDITOR.replace('content');
+        //bootstrap WYSIHTML5 - text editor
+        $(".textarea").wysihtml5();
     });
-
 </script>

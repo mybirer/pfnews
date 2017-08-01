@@ -1,40 +1,44 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php $obj=$articles[0]?>
 <section class="content-header">
     <h1>
-        <?php echo t('Add Page');?>
+        <?php echo t('Edit Article');?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="<?php echo base_url('dashboard')?>"><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></a></li>
-        <li><a href="<?php echo base_url('dashboard/pages')?>"><i class="fa fa-file-o ""></i> <?php echo t('Pages');?></a></li>
-        <li><i class="fa fa-plus active""></i> <?php echo t('Add Page');?></li>
+        <li><a href="<?php echo base_url('dashboard/articles')?>"><i class="fa fa-sticky-note ""></i> <?php echo t('Articles');?></a></li>
+        <li><i class="fa fa-edit active""></i> <?php echo t('Edit Article');?></li>
     </ol>
 </section>
 <section class="content">
     <div class="row">
         <?php echo form_open(current_url());?>
         <div class="col-xs-9">
-            <?php get_message_helper()?>
+            <?php get_message_helper() ?>
             <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title"><?php echo t('Edit Article');?></h3>
+                </div>
                 <div class="box-body table-responsive">
                     <div class="box-body has-feedback <?php echo has_error('title')?'has-error':'';?>">
-                        <label for="title"><?php echo t('Page Title');?></label>
-                        <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo set_value('title');?>">
+                        <label for="title"><?php echo t('Article Title');?></label>
+                        <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo $obj->title;?>">
                         <?php if (has_error('title')) echo get_error('title');?>
                     </div>
                     <div class="box-body has-feedback <?php echo has_error('alias')?'has-error':'';?>">
                         <label for="alias"><?php echo t('Page link');?></label>
-                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique page name" value="<?php echo set_value('title');?>">
-                        <p class="help-block"><b>Pagelink: </b>  <?php echo base_url('pagelink');?></p>
+                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique page name" value="<?php echo $obj->alias;?>">
+                        <p class="help-block"><b><?php echo t('Pagelink');?>: </b>  <?php echo base_url('pagelink');?></p>
                         <?php if (has_error('alias')) echo get_error('alias');?>
                     </div>
                     <div class="box-body has-feedback <?php echo has_error('content')?'has-error':'';?>">
                         <textarea id="content" name="content" rows="10" cols="80">
-                            <?php echo set_value('content');?>
+                            <?php echo $obj->content;?>
                         </textarea>
                         <?php if (has_error('content')) echo get_error('content');?>
                     </div>
                     <div class="box-body form-group">
-                        <a href="<?php echo base_url('/pages');?>" class="btn btn-danger pull-right"><?php echo t('Delete');?></a>
+                        <a href="dashboard/articles/delete/<?php echo $obj->pkarticle;?>" class="btn btn-danger pull-right"><?php echo t('Delete');?></a>
                     </div>
                 </div>
             </div>
@@ -51,13 +55,13 @@
                 <div class="box-body table-responsive">
                     <label><?php echo t('Status');?></label>
                     <select id="status" name="status" class="form-control select2" style="width: 100%;">
-                        <option value="publish" selected="selected"><?php echo t('Publish');?></option>
-                        <option value="draft"><?php echo t('Draft');?></option>
+                        <option value="publish" <?php echo $obj->status=='published'?'selected="selected"':'';?>><?php echo t('Publish');?></option>
+                        <option value="draft" <?php echo $obj->status=='draft'?'selected="selected"':'';?>><?php echo t('Draft');?></option>
                     </select>
                 </div>
                 <div class="box-body table-responsive">
                     <label class="help-block pull-left">
-                        <input type="checkbox" name="allow_comments" id="allow_comments" class="flat-red">
+                        <input type="checkbox" name="allow_comments" id="allow_comments" <?php echo $obj->allow_comments?'checked':'';?>>
                         &nbsp;<?php echo t('Allow Comments');?>
                     </label>
                     <button type="submit" name="addPostForm" data-toggle="save" class="btn btn-success pull-right">
@@ -66,7 +70,6 @@
                 </div>
             </div>
         </div>
-        <?php echo form_close();?>
     </div>
 </section>
 <script src="<?php echo base_url('plugins/iCheck/icheck.min.js');?>"></script>

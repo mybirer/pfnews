@@ -11,7 +11,6 @@ reserved.
 <script>
     $.widget.bridge('uibutton', $.ui.button);
 </script>
-<script src="https://cdn.ckeditor.com/4.5.7/standard/ckeditor.js"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/packages/bootstrap/js/tether.min.js');?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/packages/bootstrap/js/bootstrap.min.js');?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/packages/adminlte/js/app.min.js');?>"></script>
