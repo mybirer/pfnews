@@ -12,7 +12,7 @@
 <section class="content">
     <div class="row">
         <?php echo form_open(current_url());?>
-        <div class="col-xs-9">
+        <div class="col-sm-9 col-xs-12">
             <?php get_message_helper()?>
             <div class="box">
                 <div class="box-body table-responsive">
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-3">
+        <div class="col-sm-3 col-xs-12">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title"><?php echo t('Publish');?></h3>
@@ -49,17 +49,21 @@
                     </div>
                 </div>
                 <div class="box-body table-responsive">
-                    <label><?php echo t('Status');?></label>
-                    <select id="status" name="status" class="form-control select2" style="width: 100%;">
-                        <option value="publish" selected="selected"><?php echo t('Publish');?></option>
-                        <option value="draft"><?php echo t('Draft');?></option>
-                    </select>
+                    <div class="form-group">
+                        <label><?php echo t('Status');?></label>
+                        <select id="status" name="status" class="form-control select2" style="width: 100%;">
+                            <option value="publish" selected="selected"><?php echo t('Publish');?></option>
+                            <option value="draft"><?php echo t('Draft');?></option>
+                        </select>
+                    </div>
+                    <div class="form-group margin">
+                        <label class="help-block pull-left">
+                            <input type="checkbox" name="allow_comments" id="allow_comments" class="flat-red">
+                            &nbsp;<?php echo t('Allow Comments');?>
+                        </label>
+                    </div>
                 </div>
-                <div class="box-body table-responsive">
-                    <label class="help-block pull-left">
-                        <input type="checkbox" name="allow_comments" id="allow_comments" class="flat-red">
-                        &nbsp;<?php echo t('Allow Comments');?>
-                    </label>
+                <div class="box-footer">
                     <button type="submit" name="addPostForm" data-toggle="save" class="btn btn-success pull-right">
                         <?php echo t('Save');?>
                     </button>

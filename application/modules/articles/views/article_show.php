@@ -2,19 +2,19 @@
 <section class="content-header">
     <ol class="breadcrumb">
         <li><i class="fa fa-dashboard"></i> <?php echo t('Dashboard');?></li>
-        <li><i class="fa fa-dashboard active"></i> <?php echo t('Page')?></li>
+        <li><i class="fa fa-dashboard active"></i> <?php echo t('Article')?></li>
     </ol>
 </section>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <h1><?php echo $page['title'];?></h1>
-            <p><?php echo $page['summary'];?></p>
+            <h1><?php echo $object['title'];?></h1>
+            <p><?php echo $object['summary'];?></p>
             <div class="page">
-                <?php echo $page['content'];?>
+                <?php echo $object['content'];?>
             </div>
         </div>
-        <?php if ($page['allow_comments']):?>
+        <?php if ($object['allow_comments']):?>
         <div class="col-xs-12">
             <?php get_message_helper()?>
             <div class="box box-primary">

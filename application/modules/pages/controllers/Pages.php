@@ -17,12 +17,13 @@ class Pages extends MY_Controller
         {
             //sayfa mevcut ise yükle
             $this->load->model('comments/comments_model');
-            if ($page['allow_comments'] && $this->add_comment_form_validate())
+            if ($page['allow_comments'] && add_comment_form_validate())
             {
                 $object_id = $page['pkpage'];
+                $fullname = trim($_POST['fullname']);
                 $content = trim($_POST['content']);
                 $email = trim($_POST['email']);
-                if ($this->comments_model->add_comment($object_id,'pages',$content,$email) == false)
+                if ($this->comments_model->add_comment($object_id,'pages',$fullname,$email,$content) == false)
                     send_alert(array('error',t('Your comment can not be send at this time. Please try again later.')));
                 else
                     send_alert(array('success',t('Your comment sent successfully. After approved it will display here.')));
@@ -48,13 +49,10 @@ class Pages extends MY_Controller
 
     public function index(){
         backend_login_check('pages','list');
-
-//        $data['pages'] = $this->pages_model->get_all(array());
-
         $data = array();
         $filter_params = get_filter_params('pkpage');
 
-        $data['pages'] = $this->pages_model
+        $data['objects'] = $this->pages_model
             ->get_all_filter($filter_params['search_term'],
                 $filter_params['order_by'],
                 $filter_params['order_dir'],
@@ -82,13 +80,14 @@ class Pages extends MY_Controller
         //form gönderilmiş ise çalıştır.
         if ($this->page_form_validate()){
             $title = trim($this->input->post('title'));
-            $alias = trim($this->input->post('alias'));
+            $alias = title_to_url($title);//todo sayfa için oluşacak alias ı kullanıcı kendisi mi girecek otomatik mi oluşturulacak?
             $content = trim($this->input->post('content'));
             $allow_comments = isset($_POST['allow_comments'])?true:false;
             $status = trim($this->input->post('status'))=='publish'?'published':'draft';
 
             if ($this->pages_model->insert(
                 array('title'=>$title,
+                    'alias'=>$alias,
                     'content'=>$content,
                     'created_by'=>$this->user_auth->read('user_id'),
                     'status'=>$status,
@@ -116,50 +115,42 @@ class Pages extends MY_Controller
         //sayfa sistemde var mı
         if ($this->page_id_exist($pageid))
         {
-            //form gönderilmiş mi
-            if (!empty($_POST))
+            //form gönderilmiş mi ve form uygun formatta mı
+            if ($this->page_form_validate())
             {
-                //form uygun formatta mı
-                if ($this->page_form_validate())
-                {
-                    //update
-                    $title = trim($this->input->post('title'));
-                    $content = trim($this->input->post('content'));
-                    $allow_comments = isset($_POST['allow_comments'])?true:false;
-                    $status = trim($this->input->post('status'))=='publish'?'published':'draft';
+                //update
+                $title = trim($this->input->post('title'));
+                $content = trim($this->input->post('content'));
+                $allow_comments = isset($_POST['allow_comments'])?true:false;
+                $status = trim($this->input->post('status'))=='publish'?'published':'draft';
 
-                    //update başarılı mı
-                    //db de auto_update olarak ayarlandığından 'updated_at' field ında bir güncelleme yapmadık.
-                    if ($this->pages_model->update(
-                        array('title'=>$title,
-                            'content'=>$content,
-                            'updated_by'=>$this->user_auth->read('user_id'),
-                            'allow_comments'=>$allow_comments,
-                            'status'=>$status),array('pkpage'=>$pageid))){
-                        //başarılı
-                        send_alert(array('success',sprintf(t('%s updated successfully'),t('Page'))));
-                        redirect(base_url('dashboard/pages/edit/').$pageid);
-                    }
-                    else
-                    {
-                        //başarısız
-                        //form doğrulamadan geçti fakat başka bir hata meydana geldi
-                        send_alert(array('error',sprintf(t('%s cannot be updated'),t('Page'))));
-                        $this->template->title('Printf News - Pages');
-                        $this->template->build('Page_add', $data);
-                    }
+                //update başarılı mı
+                //db de auto_update olarak ayarlandığından 'updated_at' field ında bir güncelleme yapmadık.
+                if ($this->pages_model->update(
+                    array('title'=>$title,
+                        'content'=>$content,
+                        'updated_by'=>$this->user_auth->read('user_id'),
+                        'allow_comments'=>$allow_comments,
+                        'status'=>$status),array('pkpage'=>$pageid))){
+                    //başarılı
+                    send_alert(array('success',sprintf(t('%s updated successfully'),t('Page'))));
+                    redirect(base_url('dashboard/pages/edit/').$pageid);
                 }
                 else
                 {
-                    // güncellenen form formata uygun değil
-                    send_alert(array('error',t('Page can not be updated. Please update the form as appropriate format')));
-                    $data['pages'] = $this->pages_model->get_all(array('pkpage' => $pageid));
+                    //başarısız
+                    //form doğrulamadan geçti fakat başka bir hata meydana geldi
+                    send_alert(array('error',sprintf(t('%s cannot be updated'),t('Page'))));
                 }
             }
             else
             {
+                // güncellenen form formata uygun değil
+                if (!empty($_POST))
+                    send_alert(array('error',t('Page can not be updated. Please update the form as appropriate format')));
+
                 //form gönderilmemiş. Sayfa db den çekiliyor.
-                $data['pages'] = $this->pages_model->get_all(array('pkpage' => $pageid));
+                $data['object'] = $this->pages_model->get(array('pkpage' => $pageid));
             }
 
             $this->template->title('Printf News - Pages');
@@ -207,7 +198,7 @@ class Pages extends MY_Controller
     //post olarak gönderilen formu check eder
     private function page_form_validate(){
         $this->form_validation->set_rules('title','Title','trim|required|min_length[8]|max_length[255]');
-        $this->form_validation->set_rules('alias','Alias','trim|required|min_length[8]|max_length[255]');
+        $this->form_validation->set_rules('alias','Alias','trim|required|min_length[5]|max_length[255]');
         $this->form_validation->set_rules('content','Content','trim|required|min_length[50]');
         $this->form_validation->set_rules('status','Status','trim|required');
         return $this->form_validation->run();//belirtilen formatta ise tue değilse false döner
@@ -220,12 +211,6 @@ class Pages extends MY_Controller
         return true;
     }
 
-    private function add_comment_form_validate()
-    {
-        $this->form_validation->set_rules('email','Email','trim|required|valid_email|min_length[6]|max_length[255]');
-        $this->form_validation->set_rules('content','Content','trim|required|min_length[5]|max_length[5000]');
-        return $this->form_validation->run();
-    }
     //db de bu alias ile kayıtlı bir sayfa var mı kontrol eder.
     //page add ve edit ekranında lazım olabilir
     private function page_alias_exist($alias){

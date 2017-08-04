@@ -18,7 +18,7 @@ class articles_model extends BS_Model
         $key=array_search($order_dir,$order_dirs);
         $order_dir=$order_dirs[($key) ? $key : 0];
 
-        $order_columns=array('pkarticle','title','alias','allow_comments','created_at','status');
+        $order_columns=array('pkarticle','title','alias','allow_comments','created_at','publish_date','view','status');
 
         $key=array_search($order_by,$order_columns);
         $order_by=$order_columns[($key) ? $key : 0];
@@ -42,10 +42,18 @@ class articles_model extends BS_Model
         else{
             $where=" 3>2 ";
         }
+
+        //eğer yazar ise kendi oluşturduğu makaleler listelenmeli başkalarınınkini görememeli
+        //ayrıca yazar olmayanlar o modüle erişemeyeceği için diğer
+        //durumlar için if atmaya gerek yok.
+        //erişenler de yöneticiler olacak. Onlar da zaten herşeyi görebilmeliler.
+        if (Globals::currentUser()->user_type == 4){
+            $where.= ' AND created_by='.Globals::currentUser()->pkuser;
+        }
         $result=$this->db
             ->select('*')
             ->from($this->table_name)
-            ->like("lower(concat(title, '', alias, '', summary, '', content))",$search_term)
+            ->like("lower(concat(title, '', alias, '', content))",$search_term)
             ->where($where)
             ->order_by($order_by,$order_dir)
             ->limit($limit,$offset)
@@ -76,10 +84,17 @@ class articles_model extends BS_Model
         else{
             $where=" 3>2 ";
         }
+        //eğer yazar ise kendi oluşturduğu makaleler listelenmeli
+        //ayrıca yazar olmayanlar o modüle erişemeyeceği için diğer
+        //durumlar için if atmaya gerek yok.
+        //erişenler de yöneticiler olacak. Onlar da zaten herşeyi görebilmeliler.
+        if (Globals::currentUser()->user_type == 4){
+            $where.= ' AND created_by='.Globals::currentUser()->pkuser;
+        }
         $result=$this->db
             ->select('*')
             ->from($this->table_name)
-            ->like("lower(concat(title, '', alias, '', summary, '', content))",$search_term)
+            ->like("lower(concat(title, '', alias, '', content))",$search_term)
             ->where($where)
             ->count_all_results();
         return $result;

@@ -22,7 +22,7 @@
                     <div class="col-sm-4 col-xs-12">
                         <div class="input-group">
                             <div class="col-xs-12 margin">
-                                <img class="profile-user-img img-responsive img-circle" id="profile" style="width: 75%" src="../../assets/img/user4-128x128.jpg" alt="User profile picture">
+                                <img class="profile-user-img img-responsive img-circle" id="profile" style="width: 75%" src="<?php echo base_url('assets/img/user4-128x128.jpg');?>" alt="User profile picture">
                             </div>
                             <div class="col-xs-12 form-group ">
                                 <input type="file" class="hidden-file-input" data-target="profile" id="profile_picture" name="profile_picture">
@@ -32,42 +32,47 @@
                         </div>
                     </div>
                     <div class="col-sm-8 col-xs-12">
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('fullname')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('Fullname');?></label>
                             <div class="input-group col-xs-12">
                                 <span class="input-group-addon" style="width: 40px;"><i class="fa fa-user"></i></span>
-                                <input type="text" name="fullname" class="form-control" placeholder="<?php echo t('Name and Surname');?>">
+                                <input type="text" name="fullname" class="form-control" placeholder="<?php echo t('Name and Surname');?>" value="<?php echo set_value('fullname');?>">
                             </div>
+                            <?php echo get_error('fullname');?>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('email')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('Email');?><span class="text-red"> *</span></label>
                             <div class="input-group col-xs-12">
                                 <span class="input-group-addon" style="width: 40px;"><i class="fa fa-envelope"></i></span>
-                                <input type="email" name="email" class="form-control" placeholder="<?php echo t('User Email');?>">
+                                <input type="email" name="email" class="form-control" placeholder="<?php echo t('User Email');?>" value="<?php echo set_value('email');?>">
                             </div>
+                            <?php echo get_error('email');?>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('username')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('Username');?><span class="text-red"> *</span></label>
                             <div class="input-group col-xs-12" >
                                 <span class="input-group-addon" style="width: 40px;">@</span>
-                                <input type="text" name="username" class="form-control" placeholder="<?php echo t('Username');?>">
+                                <input type="text" name="username" class="form-control" placeholder="<?php echo t('Username');?>" value="<?php echo set_value('username');?>">
                             </div>
+                            <?php echo get_error('username');?>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('password')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('Password');?><span class="text-red"> *</span></label>
                             <div class="input-group col-xs-12" >
                                 <span class="input-group-addon" style="width: 40px;"><i class="fa fa-lock"></i></span>
                                 <input type="password" name="password" class="form-control" placeholder="<?php echo t('Password');?>">
                             </div>
+                            <?php echo get_error('password');?>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('confirm_password')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('Password');?><span class="text-red"> *</span></label>
                             <div class="input-group col-xs-12" >
                                 <span class="input-group-addon" style="width: 40px;"><i class="fa fa-lock"></i></span>
                                 <input type="password" name="confirm_password" class="form-control" placeholder="<?php echo t('Password');?>">
                             </div>
+                            <?php echo get_error('confirm_password');?>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('user_type')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('User Type');?><span class="text-red"> *</span></label>
                             <div class="input-group col-xs-12">
                                 <span class="input-group-addon"><i class="fa fa-group"></i></span>
@@ -78,6 +83,7 @@
                                     <?php endforeach;?>
                                 </select>
                             </div>
+                            <?php echo get_error('user_type');?>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-12">

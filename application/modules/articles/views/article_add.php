@@ -12,7 +12,7 @@
 <section class="content">
     <div class="row">
         <?php echo form_open(current_url());?>
-        <div class="col-xs-9">
+        <div class="col-sm-9 col-xs-12">
             <?php get_message_helper()?>
             <div class="box">
                 <div class="box-body table-responsive">
@@ -21,14 +21,8 @@
                         <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo set_value('title');?>">
                         <?php if (has_error('title')) echo get_error('title');?>
                     </div>
-                    <div class="box-body has-feedback <?php echo has_error('alias')?'has-error':'';?>">
-                        <label for="alias"><?php echo t('Article link');?></label>
-                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique article name" value="<?php echo set_value('title');?>">
-                        <p class="help-block"><b>Pagelink: </b>  <?php echo base_url('pagelink');?></p>
-                        <?php if (has_error('alias')) echo get_error('alias');?>
-                    </div>
                     <div class="box-body has-feedback <?php echo has_error('content')?'has-error':'';?>">
-                        <textarea id="content" name="content" rows="10" cols="80">
+                        <textarea id="content" name="content" rows="10" cols="180">
                             <?php echo set_value('content');?>
                         </textarea>
                         <?php if (has_error('content')) echo get_error('content');?>
@@ -39,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-3">
+        <div class="col-sm-3 col-xs-12">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title"><?php echo t('Publish');?></h3>
@@ -49,17 +43,30 @@
                     </div>
                 </div>
                 <div class="box-body table-responsive">
-                    <label><?php echo t('Status');?></label>
-                    <select id="status" name="status" class="form-control select2" style="width: 100%;">
-                        <option value="publish" selected="selected"><?php echo t('Publish');?></option>
-                        <option value="draft"><?php echo t('Draft');?></option>
-                    </select>
+                    <div class="form-group">
+                        <label><?php echo t('Status');?>:</label>
+                        <select id="status" name="status" class="form-control select2" style="width: 100%;">
+                            <option value="publish" selected="selected"><?php echo t('Publish');?></option>
+                            <option value="draft"><?php echo t('Draft');?></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><?php echo t('Publish Date');?>:</label>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <input type="text" class="form-control pull-right" id="datepicker">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="help-block pull-left">
+                            <input type="checkbox" name="allow_comments" id="allow_comments" class="flat-red">
+                            &nbsp;<?php echo t('Allow Comments');?>
+                        </label>
+                    </div>
                 </div>
-                <div class="box-body table-responsive">
-                    <label class="help-block pull-left">
-                        <input type="checkbox" name="allow_comments" id="allow_comments" class="flat-red">
-                        &nbsp;<?php echo t('Allow Comments');?>
-                    </label>
+                <div class="box-footer">
                     <button type="submit" name="addPostForm" data-toggle="save" class="btn btn-success pull-right">
                         <?php echo t('Save');?>
                     </button>
@@ -71,6 +78,7 @@
 </section>
 <script src="<?php echo base_url('plugins/iCheck/icheck.min.js');?>"></script>
 <script src="<?php echo base_url('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js');?>"></script>
+<script type="text/javascript" src="<?php echo base_url('plugins/datepicker/bootstrap-datepicker.js');?>"></script>
 <script>
     $(function () {
         // Replace the <textarea id="editor1"> with a CKEditor
@@ -78,5 +86,12 @@
         CKEDITOR.replace('content');
         //bootstrap WYSIHTML5 - text editor
         $(".textarea").wysihtml5();
+    });
+    //Date picker
+    $('#datepicker').datepicker({
+        timePicker: true,
+        timePickerIncrement: 30,
+        format: 'MM/DD/YYYY h:mm A',
+        autoclose: true
     });
 </script>

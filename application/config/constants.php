@@ -106,3 +106,11 @@ defined('EXIST')                    OR define('EXIST', 3);
 defined('NOT_EXIST')                OR define('NOT_EXIST', 4);
 
 defined('SESSION_TIMEOUT')                    OR define('SESSION_TIMEOUT', 3600);
+
+// article modülünde düzenleme action ı içerisinde kullanılmıştır.
+// bir kullanıcının yazar olup olmadığını ceya yönetici olup olmadığını anlamamıza yarıyor (User type bilgisi ile karşılaştırıyoruz)
+// eğer yazar ise makaleleri get_list yapacağı zaman sadece kendi makalelerini görecek. ve edit yapacağı zaman da bu kontrol
+// gerçekleşecek.
+// eğer yönetici ise get_list yaptığı zaman büyün makaleleri görecek.
+defined('USER_TYPE_YONETICI')                   OR define('USER_TYPE_YONETICI', 3);
+defined('USER_TYPE_YAZAR')                      OR define('USER_TYPE_YAZAR', 4);

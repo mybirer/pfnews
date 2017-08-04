@@ -49,48 +49,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
+
+//dikkat sırası önemli
+//istisnalar önce , regex url sonra yazılmalı
 $route['default_controller'] = 'home';
 $route['login'] = 'authentication/panel_login';
 $route['logout'] = 'authentication/panel_logout';
 $route['register'] = 'authentication/panel_register';
 $route['panel'] = 'dashboard/panel';
-$route['panel/(:any)'] = 'dashboard/panel/$1';
+$route['panel/(.+)'] = 'dashboard/panel/$1';
 $route['dashboard'] = 'dashboard/index';
 $route['dashboard/logout'] = 'authentication/dashboard_logout';
+$route['dashboard/no_access'] = 'dashboard/dashboard/no_access';
 
 //eğer base_url den sonra yukarıdakilerden farklı bir veri gelirse
 //sayfa olarak değerlendir. (Örn: http://example.com/iletisim => http://example.com/pages/show/iletisim)
 $route['(:any)'] = 'pages/show/$1';
 
-$route['haber/(:any)'] = 'news/show/$1';
-$route['video/(:any)'] = 'videos/show/$1';
-$route['galeri/(:any)'] = 'galleries/show/$1';
+$route['haber/(.+)'] = 'news/show/$1';
+$route['video/(.+)'] = 'videos/show/$1';
+$route['galeri/(.+)'] = 'galleries/show/$1';
+$route['yazarlar/(:any)/(:any)/(:num)'] = 'articles/show/$2/$3';
+//   base_url() / yazar_adi / article_slug / id
 
-$route['dashboard/comments'] = 'comments';
-$route['dashboard/comments/(:any)'] = 'comments/$1';
-$route['dashboard/comments/(:any)/(:any)'] = 'comments/$1/$2';
-
-$route['dashboard/logs'] = 'logs';
-$route['dashboard/logs/(:any)'] = 'logs/$1';
-$route['dashboard/logs/(:any)/(:any)'] = 'logs/$1/$2';
-
-$route['dashboard/pages'] = 'pages';
-$route['dashboard/pages/(:any)'] = 'pages/$1';
-$route['dashboard/pages/(:any)/(:any)'] = 'pages/$1/$2';
-
-$route['dashboard/articles'] = 'articles';
-$route['dashboard/articles/(:any)'] = 'articles/$1';
-$route['dashboard/articles/(:any)/(:any)'] = 'articles/$1/$2';
-
-$route['dashboard/subscribers'] = 'subscribers';
-$route['dashboard/subscribers/(:any)'] = 'subscribers/$1';
-$route['dashboard/subscribers/(:any)/(:any)'] = 'subscribers/$1/$2';
-
-$route['dashboard/users'] = 'users';
-$route['dashboard/users/(:any)'] = 'users/$1';
-$route['dashboard/users/(:any)/(:any)'] = 'users/$1/$2';
-
-$route['dashboard/(:any)'] = 'dashboard/dashboard/$1';
+$route['dashboard/(.+)'] = '$1';
 
 $route['404_override'] = '';
 

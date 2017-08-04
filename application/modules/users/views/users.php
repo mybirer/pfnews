@@ -81,8 +81,8 @@
                                 <th><a href="#" class="live-label <?php is_ordered('fullname'); ?>" data-toggle="change-order" data-order-by="fullname"><?php echo t('Fullname');?></a></th>
                                 <th><a href="#" class="live-label <?php is_ordered('username'); ?>" data-toggle="change-order" data-order-by="username"><?php echo t('Username');?></a></th>
                                 <th><a href="#" class="live-label <?php is_ordered('email'); ?>" data-toggle="change-order" data-order-by="email"><?php echo t('Email');?></a></th>
-                                <th><?php echo t('Enabled');?></th>
-                                <th><?php echo t('User Type');?></th>
+                                <th><a href="#" class="live-label <?php is_ordered('enabled'); ?>" data-toggle="change-order" data-order-by="enabled"><?php echo t('Enabled');?></a></th>
+                                <th><a href="#" class="live-label <?php is_ordered('user_type'); ?>" data-toggle="change-order" data-order-by="user_type"><?php echo t('User Type');?></a></th>
                                 <th><a href="#" class="live-label <?php is_ordered('last_visit'); ?>" data-toggle="change-order" data-order-by="last_visit"><?php echo t('Last Visit');?></a></th>
                                 <th><?php echo t('Actions');?></th>
                             </tr>

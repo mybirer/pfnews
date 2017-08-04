@@ -1,5 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php $object=$objects[0];?>
 <section class="content-header">
     <h1>
         <?php echo t('Edit Subscriber');?>
@@ -18,31 +17,31 @@
                 <div class="box-body box-profile">
                     <img class="profile-user-img img-responsive img-circle" src="../../assets/img/user4-128x128.jpg" alt="User profile picture">
 
-                    <h3 class="profile-username text-center"><?php echo $object->name;?></h3>
+                    <h3 class="profile-username text-center"><?php echo $object['name'];?></h3>
 
-                    <p class="text-muted text-center"><?php echo $object->city.' , '.$object->country;?></p>
+                    <p class="text-muted text-center"><?php echo $object['city'].' , '.$object['country'];?></p>
 
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
-                            <b><?php echo t('Email');?></b> <a class="pull-right"><?php echo $object->email;?></a>
+                            <b><?php echo t('Email');?></b> <a class="pull-right"><?php echo $object['email'];?></a>
                         </li>
                         <li class="list-group-item">
-                            <b><?php echo t('Username');?></b> <a class="pull-right"><?php echo $object->username;?></a>
+                            <b><?php echo t('Username');?></b> <a class="pull-right"><?php echo $object['username'];?></a>
                         </li>
                         <li class="list-group-item">
-                            <b><?php echo t('Last Visit');?></b> <a class="pull-right"><?php echo $object->last_visit;?></a>
+                            <b><?php echo t('Last Visit');?></b> <a class="pull-right"><?php echo $object['last_visit'];?></a>
                         </li>
                         <li class="list-group-item">
-                            <b><?php echo t('Member Date');?></b> <a class="pull-right"><?php echo $object->created_at;?></a>
+                            <b><?php echo t('Member Date');?></b> <a class="pull-right"><?php echo $object['created_at'];?></a>
                         </li>
                         <li class="list-group-item">
-                            <b><?php echo t('IP');?></b> <a class="pull-right"><?php echo $object->ip;?></a>
+                            <b><?php echo t('IP');?></b> <a class="pull-right"><?php echo $object['ip'];?></a>
                         </li>
                     </ul>
-                    <?php if ($object->banned == '1'):?>
-                    <a href="<?php echo base_url('dashboard/subscribers/enable/'.$object->pksubscriber);?>" class="btn btn-success btn-block"><b><?php echo t('Enable');?></b></a>
+                    <?php if ($object['banned'] == '1'):?>
+                    <a href="<?php echo base_url('dashboard/subscribers/enable/'.$object['pksubscriber']);?>" class="btn btn-success btn-block"><b><?php echo t('Enable');?></b></a>
                     <?php else:?>
-                    <a href="<?php echo base_url('dashboard/subscribers/disable/'.$object->pksubscriber);?>" class="btn btn-danger btn-block"><b><?php echo t('Disable');?></b></a>
+                    <a href="<?php echo base_url('dashboard/subscribers/disable/'.$object['pksubscriber']);?>" class="btn btn-danger btn-block"><b><?php echo t('Disable');?></b></a>
                     <?php endif;?>
                 </div>
                 <!-- /.box-body -->
@@ -69,19 +68,19 @@
                             <div class="form-group">
                                 <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Name');?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Name');?>" value="<?php echo $object->name;?>">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Name');?>" value="<?php echo $object['name'];?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Email');?></label>
                                 <div class="col-sm-10">
-                                    <input type="email" class="form-control" id="inputEmail3" placeholder="<?php echo t('Email');?>" value="<?php echo $object->email;?>">
+                                    <input type="email" class="form-control" id="inputEmail3" placeholder="<?php echo t('Email');?>" value="<?php echo $object['email'];?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Username');?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Username');?>" value="<?php echo $object->username;?>">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Username');?>" value="<?php echo $object['username'];?>">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -93,13 +92,13 @@
                             <div class="form-group">
                                 <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('City');?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('City');?>" value="<?php echo $object->city;?>">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('City');?>" value="<?php echo $object['city'];?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="inputEmail3" class="col-sm-2 control-label"><?php echo t('Country');?></label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Country');?>" value="<?php echo $object->country;?>">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="<?php echo t('Country');?>" value="<?php echo $object['country'];?>">
                                 </div>
                             </div>
                         </div>

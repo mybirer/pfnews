@@ -79,12 +79,13 @@
                         <thead >
                         <tr>
                             <th style="width:60px;text-align: center">#</th>
-                            <th><a href="#" class="live-label <?php is_ordered('title'); ?>" data-toggle="change-order" data-order-by="title"><?php echo t('Title');?></a></th>
-                            <th><a href="#" class="live-label <?php is_ordered('alias'); ?>" data-toggle="change-order" data-order-by="alias"><?php echo t('Alias');?></a></th>
+                            <th width="40%"><a href="#" class="live-label <?php is_ordered('title'); ?>" data-toggle="change-order" data-order-by="title"><?php echo t('Title');?></a></th>
                             <th><a href="#" class="live-label <?php is_ordered('status'); ?>" data-toggle="change-order" data-order-by="status"><?php echo t('Status');?></a></th>
+                            <th><a href="#" class="live-label <?php is_ordered('publish_date'); ?>" data-toggle="change-order" data-order-by="publish_date"><?php echo t('Published At');?></a></th>
                             <th><a href="#" class="live-label <?php is_ordered('created_at'); ?>" data-toggle="change-order" data-order-by="created_at"><?php echo t('Created At');?></a></th>
+                            <th><a href="#" class="live-label <?php is_ordered('view'); ?>" data-toggle="change-order" data-order-by="view"><?php echo t('View');?></a></th>
                             <th><a href="#" class="live-label <?php is_ordered('allow_comments'); ?>" data-toggle="change-order" data-order-by="allow_comments"><?php echo t('Comments');?></a></th>
-<!--                            <th>--><?php //echo t('Comment Count');?><!--</th>-->
+<!--                            <th><a href="#" class="live-label --><?php //is_ordered('comments'); ?><!--" data-toggle="change-order" data-order-by="comments">--><?php //echo t('Comment Count');?><!--</a></th>-->
                         </tr>
                         </thead>
                         <tbody>
@@ -95,9 +96,10 @@
                                     <a data-toggle="tooltip" title="" class="text-blue pull-right" target="_blank" href="<?php echo base_url($obj->alias);?>" data-original-title="<?php echo t('Go to Link');?>"><i class="fa fa-external-link"></i></a>
                                 </td>
                                 <td><?php echo $obj->title;?></td>
-                                <td><?php echo $obj->alias;?></td>
                                 <td><label class="label bg-<?php echo $obj->status=='published'?'green':'yellow';?>"><?php echo $obj->status == 'published'?t('Published'):t('Draft');?></label></td>
+                                <td><?php echo $obj->status=='published'?$obj->publish_date:'';?></td>
                                 <td><?php echo $obj->created_at;?></td>
+                                <td><?php echo $obj->view;?></td>
                                 <td><label class="label bg-<?php echo $obj->allow_comments==0?'red':'green';?>"><?php echo $obj->allow_comments==0?t('Closed'):t('Opened');?></label></td>
 <!--                                <td>--><?php //echo $obj->comments;?><!--</td>-->
                             </tr>

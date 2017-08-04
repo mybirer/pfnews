@@ -42,13 +42,15 @@ class Subscribers extends MY_Controller {
         backend_login_check('subscribers','edit');
         $data = array();
         $this->template->title('Printf News - Edit Subscriber');
-        $result = $this->subscribers_model->get(array('pksubscriber'=>intval($id)));
-        if (empty($result)){
-            //there is no any record
-            $this->template->build('Subscriber_edit_blank');
+        $object = $this->subscribers_model->get(array('pksubscriber'=>intval($id)));
+        if (empty($object)){
+            //subscriber sistemde yok
+            send_alert(array('error',t('The subscriber you have tried to edit is not exist')));
+            redirect(base_url('dashboard/subscribers'));
         }else{
             //load the record
-            $data['objects'] = array($result);
+            //todo subscriber update ayarla
+            $data['object'] = $object;
             $this->template->build('Subscriber_edit', $data);
         }
     }

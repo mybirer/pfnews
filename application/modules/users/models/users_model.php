@@ -117,7 +117,46 @@ class users_model extends BS_Model
             ->result_object();
     }
 
+    //bu callback'in çalışması için public metod olmaları gerekiyor.
+    //Bunları model içinde tanımlamamızın sebebi Controller da tanımlandığı zaman client tarafından erişilebilir oluyor
 
+    //============================   Add User Form Validation ========================================
+    //add user form - email validate
+    public function email_validate($email)
+    {
+        if ($this->user_auth->email_check(trim($email)) == EXIST)
+            return false;
+        return true;
+    }
+
+    //add user form - username validate
+    public function username_validate($username)
+    {
+        if ($this->user_auth->username_check(trim($username)) == EXIST)
+            return false;
+        return true;
+    }
+    //============================   Add Form Validation ========================================
+
+    //============================   Edit User Form Validation ========================================
+    //email değiştirilmiş ise validate etmeliyiz
+    //budaki mantık şu. Eğer formda gelen mail adresi, sistemde edit yapılan kullanıcı dışında herhangi
+    // bir user tarafından kayıt edilmiş ise o mail ile kayıt yapamamalı. Aynı şey username için de geçerli
+    public function edit_email_validate($email)
+    {
+        global $edit_user_id;
+        if ($this->get_total(array('pkuser !='=> $edit_user_id,'email'=>trim($email))) == 1)
+            return false;
+        return true;
+    }
+    public function edit_username_validate($username)
+    {
+        global $edit_user_id;
+        if ($this->get_total(array('pkuser !='=> $edit_user_id,'username'=>trim($username))) == 1)
+            return false;
+        return true;
+    }
+    //============================   Edit User Form Validation ========================================
 }
 
 ?>

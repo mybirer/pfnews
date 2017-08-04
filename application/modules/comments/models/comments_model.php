@@ -115,7 +115,7 @@ class comments_model extends BS_Model
         return $count;
     }
 
-    public function add_comment($object_id, $module_name, $content,$email = '', $status = 'pending')
+    public function add_comment($object_id, $module_name, $fullname = '',$email = '',$content, $status = 'pending')
     {
         if (empty(trim($object_id)) || empty(trim($module_name)) || empty(trim($content)) || empty($status)){
             //todo please fill all required contents

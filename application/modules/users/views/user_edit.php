@@ -34,26 +34,29 @@
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-8">
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('fullname')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('Fullname');?></label>
                             <div class="input-group col-xs-12">
                                 <span class="input-group-addon" style="width: 40px;"><i class="fa fa-user"></i></span>
                                 <input type="text" name="fullname" class="form-control" value="<?php echo $user['fullname'];?>" placeholder="<?php echo t('Name and Surname');?>">
                             </div>
+                            <?php echo get_error('fullname');?>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('email')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('Email');?><span class="text-red"> *</span></label>
                             <div class="input-group col-xs-12">
                                 <span class="input-group-addon" style="width: 40px;"><i class="fa fa-envelope"></i></span>
                                 <input type="email" name="email" value="<?php echo $user['email'];?>" class="form-control" placeholder="<?php echo t('User Email');?>">
                             </div>
+                            <?php echo get_error('email');?>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group <?php echo has_error('username')?'has-error':'';?>">
                             <label class="control-label"><?php echo t('Username');?><span class="text-red"> *</span></label>
                             <div class="input-group col-xs-12" >
                                 <span class="input-group-addon" style="width: 40px;">@</span>
                                 <input type="text" name="username" class="form-control" value="<?php echo $user['username'];?>" placeholder="<?php echo t('Username');?>">
                             </div>
+                            <?php echo get_error('username');?>
                         </div>
                         <div class="form-group">
                             <label class="control-label"><?php echo t('User Type');?><span class="text-red"> *</span></label>
@@ -91,19 +94,21 @@
                 </div>
                 <?php echo form_open(current_url());?>
                 <div class="box-body margin">
-                    <div class="form-group">
+                    <div class="form-group <?php echo has_error('password')?'has-error':'';?>">
                         <label class="control-label"><?php echo t('Password');?><span class="text-red"> *</span></label>
                         <div class="input-group col-xs-12" >
                             <span class="input-group-addon" style="width: 40px;"><i class="fa fa-lock"></i></span>
                             <input type="password" name="password" class="form-control" placeholder="<?php echo t('Password');?>">
                         </div>
+                        <?php echo get_error('password');?>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group <?php echo has_error('confirm_password')?'has-error':'';?>">
                         <label class="control-label"><?php echo t('Confirm Password');?><span class="text-red"> *</span></label>
                         <div class="input-group col-xs-12" >
                             <span class="input-group-addon" style="width: 40px;"><i class="fa fa-lock"></i></span>
                             <input type="password" name="confirm_password" class="form-control" placeholder="<?php echo t('Confirm Password');?>">
                         </div>
+                        <?php echo get_error('confirm_password');?>
                     </div>
                 </div>
                 <div class="box-footer">

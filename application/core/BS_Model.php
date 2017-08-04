@@ -25,7 +25,7 @@
             $result = $this->db
                 ->where($where)
                 ->get($this->table_name)
-                ->row();
+                ->row_array();
             return $result;
         }
 
@@ -74,6 +74,17 @@
         
         public function get_last_id(){
             return $this->db->insert_id();
+        }
+
+
+        //sayfa görüntülemesini 1 arttırır
+        //kullandığın tabloda view field ı var mı yok mu check etmen gerek
+        public function increment_view($where)
+        {
+            //https://stackoverflow.com/a/6447291/4133449
+            $this->db->where($where);
+            $this->db->set('view', 'view+1', FALSE);
+            $this->db->update($this->table_name);
         }
 
     }

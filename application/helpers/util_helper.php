@@ -209,3 +209,73 @@ if ( ! function_exists('get_filter_params'))
         return $params;
     }
 }
+
+
+if ( ! function_exists('add_comment_form_validate'))
+{
+    /**
+     * Bir comment gönderildiğinde Post verisi var ise doğrulama yapar.
+     * Doğrulama başarılı ise true döndürür. Post verisi yok ise false döndürür.
+     *
+     * ( Fullname required )
+     *
+     * ( Email required - valid )
+     *
+     * ( Content required )
+     * @return mixed
+     */
+    function add_comment_form_validate()
+    {
+        $ci = &get_instance();
+        $ci->form_validation->set_rules('fullname','Fullname','trim|required|min_length[3]|max_length[255]');
+        $ci->form_validation->set_rules('email','Email','trim|required|valid_email|min_length[6]|max_length[255]');
+        $ci->form_validation->set_rules('content','Content','trim|required|min_length[5]|max_length[10000]');
+        return $ci->form_validation->run();
+    }
+}
+
+
+if ( ! function_exists('title_to_url'))
+{
+    function title_to_url($str, $separator = 'dash', $lowercase = TRUE)
+    {
+        if ($separator == 'dash')
+        {
+            $replace = '-';
+        }
+        else
+        {
+            $replace = '_';
+        }
+
+        $trans = array(
+            '&\#\d+?;' => '',
+            '&\S+?;' => '',
+            '\s+' => $replace,
+            '\.' => $replace,
+            '[^a-z0-9\-_]' => '',
+            $replace . '+' => $replace,
+            $replace . '$' => $replace,
+            '^' . $replace => $replace,
+            '\.+$' => ''
+        );
+
+        $search_tr = array('ı', 'İ', 'Ğ', 'ğ', 'Ü', 'ü', 'Ş', 'ş', 'Ö', 'ö', 'Ç', 'ç');
+        $replace_tr = array('i', 'I', 'G', 'g', 'U', 'u', 'S', 's', 'O', 'o', 'C', 'c');
+        $str = str_replace($search_tr, $replace_tr, $str);
+
+        $str = strip_tags($str);
+
+        foreach ($trans as $key => $val)
+        {
+            $str = preg_replace("#" . $key . "#i", $val, $str);
+        }
+
+        if ($lowercase === TRUE)
+        {
+            $str = strtolower($str);
+        }
+
+        return trim(stripslashes($str));
+    }
+}

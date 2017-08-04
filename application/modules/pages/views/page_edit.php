@@ -1,5 +1,4 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php $page=$pages[0]?>
 <section class="content-header">
     <h1>
         <?php echo t('Edit Page');?>
@@ -13,7 +12,7 @@
 <section class="content">
     <div class="row">
         <?php echo form_open(current_url());?>
-        <div class="col-xs-9">
+        <div class="col-sm-9 col-xs-12">
             <?php get_message_helper() ?>
             <div class="box">
                 <div class="box-header">
@@ -22,28 +21,28 @@
                 <div class="box-body table-responsive">
                     <div class="box-body has-feedback <?php echo has_error('title')?'has-error':'';?>">
                         <label for="title"><?php echo t('Page Title');?></label>
-                        <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo $page->title;?>">
+                        <input id="title" name="title" class="form-control" type="text" placeholder="<?php echo t('Title');?>" value="<?php echo $object['title'];?>">
                         <?php if (has_error('title')) echo get_error('title');?>
                     </div>
                     <div class="box-body has-feedback <?php echo has_error('alias')?'has-error':'';?>">
                         <label for="alias"><?php echo t('Page link');?></label>
-                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique page name" value="<?php echo $page->alias;?>">
+                        <input class="form-control input-sm" id="alias" name="alias" type="text" placeholder="unique page name" value="<?php echo $object['alias'];?>">
                         <p class="help-block"><b><?php echo t('Pagelink');?>: </b>  <?php echo base_url('pagelink');?></p>
                         <?php if (has_error('alias')) echo get_error('alias');?>
                     </div>
                     <div class="box-body has-feedback <?php echo has_error('content')?'has-error':'';?>">
                         <textarea id="content" name="content" rows="10" cols="80">
-                            <?php echo $page->content;?>
+                            <?php echo $object['content'];?>
                         </textarea>
                         <?php if (has_error('content')) echo get_error('content');?>
                     </div>
                     <div class="box-body form-group">
-                        <a href="/pages/delete/<?php echo $page->pkpage;?>" class="btn btn-danger pull-right"><?php echo t('Delete');?></a>
+                        <a href="/pages/delete/<?php echo $object['pkpage'];?>" class="btn btn-danger pull-right"><?php echo t('Delete');?></a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xs-3">
+        <div class="col-sm-3 col-xs-12">
             <div class="box">
                 <div class="box-header">
                     <h3 class="box-title"><?php echo t('Publish');?></h3>
@@ -53,17 +52,21 @@
                     </div>
                 </div>
                 <div class="box-body table-responsive">
-                    <label><?php echo t('Status');?></label>
-                    <select id="status" name="status" class="form-control select2" style="width: 100%;">
-                        <option value="publish" <?php echo $page->status=='published'?'selected="selected"':'';?>><?php echo t('Publish');?></option>
-                        <option value="draft" <?php echo $page->status=='draft'?'selected="selected"':'';?>><?php echo t('Draft');?></option>
-                    </select>
+                    <div class="form-group">
+                        <label><?php echo t('Status');?></label>
+                        <select id="status" name="status" class="form-control select2" style="width: 100%;">
+                            <option value="publish" <?php echo $object['status']=='published'?'selected="selected"':'';?>><?php echo t('Publish');?></option>
+                            <option value="draft" <?php echo $object['status']=='draft'?'selected="selected"':'';?>><?php echo t('Draft');?></option>
+                        </select>
+                    </div>
+                    <div class="form-group margin">
+                        <label class="help-block pull-left">
+                            <input type="checkbox" name="allow_comments" id="allow_comments" <?php echo $object['allow_comments']?'checked':'';?>>
+                            &nbsp;<?php echo t('Allow Comments');?>
+                        </label>
+                    </div>
                 </div>
-                <div class="box-body table-responsive">
-                    <label class="help-block pull-left">
-                        <input type="checkbox" name="allow_comments" id="allow_comments" <?php echo $page->allow_comments?'checked':'';?>>
-                        &nbsp;<?php echo t('Allow Comments');?>
-                    </label>
+                <div class="box-footer">
                     <button type="submit" name="addPostForm" data-toggle="save" class="btn btn-success pull-right">
                         <?php echo t('Save');?>
                     </button>

@@ -63,13 +63,12 @@ class Comments extends MY_Controller
         else
         {
             $comment = $this->comments_model->get(array('pkcomment'=>$id));
-
             if (empty($comment)){
                 send_alert(array('warning','The comment doesn\'t exist in the system'));
-                redirect('dashboards/comments');
+                redirect(base_url('dashboard/comments'));
             }
             else{
-                $data['comment'] = (array)$comment;
+                $data['comment'] = $comment;
                 $this->template->build('Comment_edit',$data);
             }
         }
@@ -92,7 +91,7 @@ class Comments extends MY_Controller
         foreach ($id_array as $id_element)
             $this->comments_model->update(array('status'=>'approved'),array('pkcomment'=>$id_element));
 
-        redirect('/dashboard/comments');
+        redirect(base_url('dashboard/comments'));
     }
 
     public function delete($id = 0)
@@ -106,7 +105,7 @@ class Comments extends MY_Controller
             array_push($id_array,$id);
         foreach ($id_array as $id_element)
             $this->comments_model->delete(array('pkcomment'=>$id_element));
-        redirect('/dashboard/comments');
+        redirect(base_url('dashboard/comments'));
     }
 
     public function set_pending($id = 0)
@@ -120,7 +119,7 @@ class Comments extends MY_Controller
             array_push($id_array,$id);
         foreach ($id_array as $id_element)
             $this->comments_model->update(array('status'=>'pending'),array('pkcomment'=>$id_element));
-        redirect('/dashboard/comments');
+        redirect(base_url('dashboard/comments'));
     }
 
     public function set_spam($id = 0)
@@ -134,7 +133,7 @@ class Comments extends MY_Controller
             array_push($id_array,$id);
         foreach ($id_array as $id_element)
             $this->comments_model->update(array('status'=>'spam'),array('pkcomment'=>$id_element));
-        redirect('/dashboard/comments');
+        redirect(base_url('dashboard/comments'));
     }
 
 }

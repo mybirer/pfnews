@@ -24,7 +24,7 @@ class Authentication extends MY_Controller
                 $password = trim($this->input->post('password'));
                 if ($this->user_auth->attempt_login($email,$password)){
                     $user = $this->users_model->get(array('email'=>$email));
-                    if ($user->enabled == '1')
+                    if ($user['enabled'] == '1')
                     {
                         $this->user_auth->login($email,$password);
                         redirect('/dashboard');
